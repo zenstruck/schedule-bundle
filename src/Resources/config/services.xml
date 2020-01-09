@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services
+        https://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="Zenstruck\ScheduleBundle\Command\ScheduleListCommand">
+            <argument type="service" id="Zenstruck\ScheduleBundle\Schedule\ScheduleRunner" />
+            <argument type="service" id="Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry" />
+            <tag name="console.command" />
+        </service>
+
+        <service id="Zenstruck\ScheduleBundle\Command\ScheduleRunCommand">
+            <argument type="service" id="Zenstruck\ScheduleBundle\Schedule\ScheduleRunner" />
+            <argument type="service" id="event_dispatcher" />
+            <tag name="console.command" />
+        </service>
+
+        <service id="Zenstruck\ScheduleBundle\Schedule\ScheduleRunner">
+            <argument type="tagged_iterator" tag="schedule.task_runner" />
+            <argument type="service" id="Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry" />
+            <argument type="service" id="event_dispatcher" />
+        </service>
+
+        <service id="Zenstruck\ScheduleBundle\EventListener\ScheduleBuilderSubscriber">
+            <argument type="tagged_iterator" tag="schedule.builder" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="Zenstruck\ScheduleBundle\EventListener\ConfigureScheduleSubscriber">
+            <argument type="tagged_iterator" tag="schedule.configured_extension" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="Zenstruck\ScheduleBundle\EventListener\SelfSchedulingSubscriber">
+            <argument type="tagged_iterator" tag="schedule.self_scheduling_command" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="zenstruck_schedule.console_application" class="Symfony\Bundle\FrameworkBundle\Console\Application">
+            <argument type="service" id="kernel" />
+        </service>
+
+        <service id="Zenstruck\ScheduleBundle\Schedule\Task\Runner\CommandTaskRunner">
+            <argument type="service" id="zenstruck_schedule.console_application" />
+            <tag name="schedule.task_runner" />
+        </service>
+
+        <service id="Zenstruck\ScheduleBundle\Schedule\Task\Runner\SelfRunningTaskRunner">
+            <tag name="schedule.task_runner" />
+        </service>
+
+        <service id="Zenstruck\ScheduleBundle\EventListener\LogScheduleSubscriber">
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" channel="schedule" />
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry">
+            <argument type="tagged_iterator" tag="schedule.extension_handler" />
+        </service>
+
+        <service id="Zenstruck\ScheduleBundle\Schedule\Extension\Handler\SelfHandlingHandler">
+            <tag name="schedule.extension_handler" priority="-100" />
+        </service>
+
+        <service id="Zenstruck\ScheduleBundle\Schedule\Extension\Handler\EnvironmentHandler">
+            <argument>%kernel.environment%</argument>
+            <tag name="schedule.extension_handler" />
+        </service>
+    </services>
+</container>

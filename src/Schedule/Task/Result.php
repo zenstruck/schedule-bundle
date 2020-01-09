@@ -1,0 +1,114 @@
+<?php
+
+namespace Zenstruck\ScheduleBundle\Schedule\Task;
+
+use Zenstruck\ScheduleBundle\Schedule\Task;
+
+/**
+ * @author Kevin Bond <kevinbond@gmail.com>
+ */
+final class Result
+{
+    public const SUCCESSFUL = 'successful';
+    public const FAILED = 'failed';
+    public const SKIPPED = 'skipped';
+
+    private $task;
+    private $type;
+    private $description;
+    private $output;
+    private $exception;
+
+    private function __construct(Task $task, string $type, string $description)
+    {
+        $this->task = $task;
+        $this->type = $type;
+        $this->description = $description;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getDescription();
+    }
+
+    public static function successful(Task $task, string $output = null, string $description = 'Successful'): self
+    {
+        $result = new self($task, self::SUCCESSFUL, $description);
+        $result->output = $output;
+
+        return $result;
+    }
+
+    public static function failure(Task $task, string $description, string $output = null): self
+    {
+        $result = new self($task, self::FAILED, $description);
+        $result->output = $output;
+
+        return $result;
+    }
+
+    public static function exception(Task $task, \Throwable $exception, string $output = null, string $description = null): self
+    {
+        $description = $description ?: \sprintf('%s: %s', \get_class($exception), $exception->getMessage());
+
+        $result = self::failure($task, $description, $output);
+        $result->exception = $exception;
+
+        return $result;
+    }
+
+    public static function skipped(Task $task, string $description): self
+    {
+        return new self($task, self::SKIPPED, $description);
+    }
+
+    public function getTask(): Task
+    {
+        return $this->task;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function getOutput(): ?string
+    {
+        return $this->output;
+    }
+
+    public function getException(): ?\Throwable
+    {
+        return $this->exception;
+    }
+
+    public function isSuccessful(): bool
+    {
+        return self::SUCCESSFUL === $this->getType();
+    }
+
+    public function isFailure(): bool
+    {
+        return self::FAILED === $this->getType();
+    }
+
+    public function isException(): bool
+    {
+        return $this->isFailure() && $this->exception instanceof \Throwable;
+    }
+
+    public function isSkipped(): bool
+    {
+        return self::SKIPPED === $this->getType();
+    }
+
+    public function hasRun(): bool
+    {
+        return self::SKIPPED !== $this->getType();
+    }
+}

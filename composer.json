@@ -1,0 +1,52 @@
+{
+    "name": "zenstruck/schedule-bundle",
+    "description": "Schedule Cron jobs (Symfony commands/callbacks/bash scripts) within your Symfony application.",
+    "homepage": "https://github.com/kbond/schedule-bundle",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "keywords": ["schedule", "cron"],
+    "authors": [
+        {
+            "name": "Kevin Bond",
+            "email": "kevinbond@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "dragonmantank/cron-expression": "^2.3",
+        "symfony/console": "^3.4|^4.0|^5.0",
+        "symfony/framework-bundle": "^3.4|^4.0|^5.0"
+    },
+    "require-dev": {
+        "lorisleiva/cron-translator": "^0.1.0",
+        "matthiasnoback/symfony-dependency-injection-test": "^4.1",
+        "psr/log": "^1.1",
+        "symfony/http-client": "^4.3|^5.0",
+        "symfony/lock": "^4.4|^5.0",
+        "symfony/mailer": "^4.4|^5.0",
+        "symfony/phpunit-bridge": "^5.0",
+        "symfony/process": "^4.2|^5.0"
+    },
+    "suggest": {
+        "lorisleiva/cron-translator": "Displays human readable cron expression in schedule:list",
+        "symfony/http-client": "Allows usage of ping* extensions",
+        "symfony/lock": "Allows usage of withoutOverlapping and onSingleServer extensions (4.4+)",
+        "symfony/mailer": "Allows usage of email* extensions (4.4+)",
+        "symfony/process": "Allows usage of ProcessTask (4.2+)"
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": { "Zenstruck\\ScheduleBundle\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": { "Zenstruck\\ScheduleBundle\\Tests\\": "tests/" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    }
+}
