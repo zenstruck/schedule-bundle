@@ -15,7 +15,9 @@
         "php": "^7.2",
         "dragonmantank/cron-expression": "^2.3",
         "symfony/console": "^3.4|^4.0|^5.0",
-        "symfony/framework-bundle": "^3.4|^4.0|^5.0"
+        "symfony/dependency-injection": "^3.4|^4.0|^5.0",
+        "symfony/event-dispatcher": "^3.4|^4.0|^5.0",
+        "symfony/http-kernel": "^3.4|^4.0|^5.0"
     },
     "require-dev": {
         "lorisleiva/cron-translator": "^0.1.0",
