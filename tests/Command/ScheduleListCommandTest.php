@@ -58,16 +58,17 @@ final class ScheduleListCommandTest extends TestCase
         $commandTester = new CommandTester($command);
 
         $commandTester->execute([]);
+        $output = $this->normalizeOutput($commandTester);
 
-        $this->assertStringContainsString('[!] CommandTask   my:command   2            Every Monday at 1:30am (30 1 * * 1)', $commandTester->getDisplay());
-        $this->assertStringContainsString('[WARNING] 3 task issues:', $commandTester->getDisplay());
-        $this->assertStringContainsString('[ERROR] No task runner registered to handle "Zenstruck\ScheduleBundle\Schedule\Task\CommandTask".', $commandTester->getDisplay());
-        $this->assertStringContainsString('[ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").', $commandTester->getDisplay());
-        $this->assertStringContainsString('[ERROR] No extension handler registered for "Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension: On Task', $commandTester->getDisplay());
-        $this->assertStringContainsString('Failure, ping "https://example.com/my-command-failed"".', $commandTester->getDisplay());
-        $this->assertStringContainsString('1 Schedule Extension:', $commandTester->getDisplay());
-        $this->assertStringContainsString('On Schedule Failure, email output to "admin@example.com"', $commandTester->getDisplay());
-        $this->assertStringContainsString('[WARNING] 1 issue with schedule:', $commandTester->getDisplay());
+        $this->assertStringContainsString('[!] CommandTask my:command 2 Every Monday at 1:30am (30 1 * * 1)', $output);
+        $this->assertStringContainsString('[WARNING] 3 task issues:', $output);
+        $this->assertStringContainsString('[ERROR] No task runner registered to handle "Zenstruck\ScheduleBundle\Schedule\Task\CommandTask".', $output);
+        $this->assertStringContainsString('[ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").', $output);
+        $this->assertStringContainsString('[ERROR] No extension handler registered for "Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension: On Task', $output);
+        $this->assertStringContainsString('Failure, ping "https://example.com/my-command-failed"".', $output);
+        $this->assertStringContainsString('1 Schedule Extension:', $output);
+        $this->assertStringContainsString('On Schedule Failure, email output to "admin@example.com"', $output);
+        $this->assertStringContainsString('[WARNING] 1 issue with schedule:', $output);
     }
 
     /**
@@ -93,12 +94,13 @@ final class ScheduleListCommandTest extends TestCase
         $commandTester = new CommandTester($command);
 
         $commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
+        $output = $this->normalizeOutput($commandTester);
 
-        $this->assertStringContainsString('[WARNING] 1 task issue:', $commandTester->getDisplay());
-        $this->assertStringContainsString('In ScheduleRunner.php line', $commandTester->getDisplay());
-        $this->assertStringContainsString('[LogicException]', $commandTester->getDisplay());
-        $this->assertStringContainsString('No task runner registered to handle "Zenstruck\ScheduleBundle\Schedule\Task\CommandTask".', $commandTester->getDisplay());
-        $this->assertStringContainsString('Exception trace:', $commandTester->getDisplay());
+        $this->assertStringContainsString('[WARNING] 1 task issue:', $output);
+        $this->assertStringContainsString('In ScheduleRunner.php line', $output);
+        $this->assertStringContainsString('[LogicException]', $output);
+        $this->assertStringContainsString('No task runner registered to handle', $output);
+        $this->assertStringContainsString('Exception trace:', $output);
     }
 
     /**
@@ -128,22 +130,28 @@ final class ScheduleListCommandTest extends TestCase
         $commandTester = new CommandTester($command);
 
         $commandTester->execute(['--detail' => null]);
+        $output = $this->normalizeOutput($commandTester);
 
-        $this->assertStringContainsString('1 Scheduled Tasks Configured', $commandTester->getDisplay());
-        $this->assertStringContainsString('(1/1) CommandTask: my:command', $commandTester->getDisplay());
-        $this->assertStringContainsString('Every Monday at 1:30am (30 1 * * 1)', $commandTester->getDisplay());
-        $this->assertStringContainsString('Mon,', $commandTester->getDisplay());
-        $this->assertStringContainsString('Arguments: arg1 --option1', $commandTester->getDisplay());
-        $this->assertStringContainsString('2 Task Extensions:', $commandTester->getDisplay());
-        $this->assertStringContainsString('On Task Failure, email output to "admin@example.com"', $commandTester->getDisplay());
-        $this->assertStringContainsString('On Task Failure, ping "https://example.com/my-command-failed"', $commandTester->getDisplay());
-        $this->assertStringContainsString('[WARNING] 3 issues with this task:', $commandTester->getDisplay());
-        $this->assertStringContainsString('[ERROR] No task runner registered to handle "Zenstruck\ScheduleBundle\Schedule\Task\CommandTask".', $commandTester->getDisplay());
-        $this->assertStringContainsString('[ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").', $commandTester->getDisplay());
-        $this->assertStringContainsString('[ERROR] No extension handler registered for "Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension: On Task', $commandTester->getDisplay());
-        $this->assertStringContainsString('Failure, ping "https://example.com/my-command-failed"".', $commandTester->getDisplay());
-        $this->assertStringContainsString('1 Schedule Extension:', $commandTester->getDisplay());
-        $this->assertStringContainsString('On Schedule Failure, email output to "admin@example.com"', $commandTester->getDisplay());
-        $this->assertStringContainsString('[WARNING] 1 issue with schedule:', $commandTester->getDisplay());
+        $this->assertStringContainsString('1 Scheduled Tasks Configured', $output);
+        $this->assertStringContainsString('(1/1) CommandTask: my:command', $output);
+        $this->assertStringContainsString('Every Monday at 1:30am (30 1 * * 1)', $output);
+        $this->assertStringContainsString('Mon,', $output);
+        $this->assertStringContainsString('Arguments: arg1 --option1', $output);
+        $this->assertStringContainsString('2 Task Extensions:', $output);
+        $this->assertStringContainsString('On Task Failure, email output to "admin@example.com"', $output);
+        $this->assertStringContainsString('On Task Failure, ping "https://example.com/my-command-failed"', $output);
+        $this->assertStringContainsString('[WARNING] 3 issues with this task:', $output);
+        $this->assertStringContainsString('[ERROR] No task runner registered to handle "Zenstruck\ScheduleBundle\Schedule\Task\CommandTask".', $output);
+        $this->assertStringContainsString('[ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").', $output);
+        $this->assertStringContainsString('[ERROR] No extension handler registered for "Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension: On Task', $output);
+        $this->assertStringContainsString('Failure, ping "https://example.com/my-command-failed"".', $output);
+        $this->assertStringContainsString('1 Schedule Extension:', $output);
+        $this->assertStringContainsString('On Schedule Failure, email output to "admin@example.com"', $output);
+        $this->assertStringContainsString('[WARNING] 1 issue with schedule:', $output);
+    }
+
+    private function normalizeOutput(CommandTester $tester): string
+    {
+        return \preg_replace('/\s+/', ' ', \str_replace("\n", '', $tester->getDisplay(true)));
     }
 }
