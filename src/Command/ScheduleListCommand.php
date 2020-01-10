@@ -80,11 +80,20 @@ final class ScheduleListCommand extends Command
                 $io->comment("Arguments: <comment>{$task->getArguments()}</comment>");
             }
 
-            $io->definitionList(
-                ['Class' => \get_class($task)],
-                ['Frequency' => $this->renderFrequency($task)],
-                ['Next Run' => $task->getNextRun()->format('D, M d, Y @ g:i (e O)')]
-            );
+            // BC - Symfony 4.4 added SymfonyStyle::definitionList()
+            if (\method_exists($io, 'definitionList')) {
+                $io->definitionList(
+                    ['Class' => \get_class($task)],
+                    ['Frequency' => $this->renderFrequency($task)],
+                    ['Next Run' => $task->getNextRun()->format('D, M d, Y @ g:i (e O)')]
+                );
+            } else {
+                $io->listing([
+                    'Class: '.\get_class($task),
+                    'Frequency: '.$this->renderFrequency($task),
+                    'Next Run: '.$task->getNextRun()->format('D, M d, Y @ g:i (e O)'),
+                ]);
+            }
 
             $this->renderExtenstions($io, 'Task', $task->getExtensions());
 
@@ -210,7 +219,12 @@ final class ScheduleListCommand extends Command
                 continue;
             }
 
-            $this->getApplication()->renderThrowable($issue, $io);
+            // BC - Symfony 4.4 deprecated Application::renderException()
+            if (\method_exists($this->getApplication(), 'renderThrowable')) {
+                $this->getApplication()->renderThrowable($issue, $io);
+            } else {
+                $this->getApplication()->renderException($issue, $io);
+            }
         }
     }
 
