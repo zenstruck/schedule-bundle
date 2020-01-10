@@ -25,7 +25,7 @@ final class Configuration implements ConfigurationInterface
                 ->end()
                 ->scalarNode('single_server_handler')
                     ->info('The LockFactory service to use - be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)')
-                    ->example('lock.default.factory')
+                    ->example('lock.redis.factory')
                     ->defaultNull()
                 ->end()
                 ->scalarNode('ping_handler')
