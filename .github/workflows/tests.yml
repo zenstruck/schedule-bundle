@@ -120,4 +120,9 @@ jobs:
           vendor/bin/simple-phpunit install
 
       - name: Run code coverage
-        run: vendor/bin/simple-phpunit --coverage-text
+        run: vendor/bin/simple-phpunit -v --coverage-text --coverage-clover=coverage.clover
+
+      - name: Send code coverage
+        run: |
+          wget https://scrutinizer-ci.com/ocular.phar
+          php ocular.phar code-coverage:upload --format=php-clover coverage.clover
