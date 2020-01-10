@@ -142,6 +142,8 @@ final class ScheduleListCommand extends Command
 
         $this->renderIssues($io, ...$taskIssues);
 
+        $io->note('For more details, run php bin/console schedule:list --detail');
+
         return \count($taskIssues) ? 1 : 0;
     }
 
