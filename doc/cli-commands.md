@@ -116,7 +116,7 @@ produce output. Using the example from `schedule:list` above and assuming one of
 tasks are due at time of run, the command will output the following:
 
 ```console
-$ bin/console schedule:list
+$ bin/console schedule:run
 ```
 
 ![schedule:run](images/schedule-run.png)
@@ -124,7 +124,7 @@ $ bin/console schedule:list
 Running the command with the verbose flag (`-v`) displays task output:
 
 ```console
-$ bin/console schedule:list -v
+$ bin/console schedule:run -v
 ```
 
 ![schedule:run -v](images/schedule-run-v.png)
