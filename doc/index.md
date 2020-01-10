@@ -140,7 +140,7 @@ zenstruck_schedule:
     # The LockFactory service to use
     without_overlapping_handler: null # Example: lock.default.factory
 
-    # The LockFactory service to use
+    # The LockFactory service to use - be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)
     single_server_handler: null # Example: lock.default.factory
 
     # The HttpClient service to use

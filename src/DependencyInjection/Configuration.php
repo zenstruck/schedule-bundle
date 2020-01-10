@@ -24,7 +24,7 @@ final class Configuration implements ConfigurationInterface
                     ->defaultNull()
                 ->end()
                 ->scalarNode('single_server_handler')
-                    ->info('The LockFactory service to use')
+                    ->info('The LockFactory service to use - be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)')
                     ->example('lock.default.factory')
                     ->defaultNull()
                 ->end()
