@@ -1,7 +1,5 @@
 name: Tests
 on: [push]
-env:
-  SYMFONY_PHPUNIT_DIR: ~/symfony-bridge/.phpunit
 
 jobs:
   symfony-version-tests:
@@ -30,12 +28,6 @@ jobs:
         with:
           path: ~/.composer/cache/files
           key: dependencies-${{ matrix.php }}-${{ matrix.symfony }}-${{ hashFiles('composer.json') }}
-
-      - name: Cache phpunit
-        uses: actions/cache@v1
-        with:
-          path: ${{ env.SYMFONY_PHPUNIT_DIR }}
-          key: phpunit-${{ hashFiles('composer.json') }}
 
       - name: Install dependencies
         run: |
@@ -75,12 +67,6 @@ jobs:
           path: ~/.composer/cache/files
           key: dependencies-${{ matrix.php }}-${{ matrix.dependency-version }}-${{ hashFiles('composer.json') }}
 
-      -  name: Cache phpunit
-         uses: actions/cache@v1
-         with:
-           path: ${{ env.SYMFONY_PHPUNIT_DIR }}
-           key: phpunit-${{ hashFiles('composer.json') }}
-
       - name: Install dependencies
         run: |
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
@@ -107,12 +93,6 @@ jobs:
         with:
           path: ~/.composer/cache/files
           key: dependencies-coverage-${{ hashFiles('composer.json') }}
-
-      - name: Cache phpunit
-        uses: actions/cache@v1
-        with:
-          path: ${{ env.SYMFONY_PHPUNIT_DIR }}
-          key: phpunit-${{ hashFiles('composer.json') }}
 
       - name: Install dependencies
         run: |
