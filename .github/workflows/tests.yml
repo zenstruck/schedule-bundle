@@ -35,7 +35,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ env.SYMFONY_PHPUNIT_DIR }}
-          key: phpunit
+          key: phpunit-${{ hashFiles('composer.json') }}
 
       - name: Install dependencies
         run: |
@@ -79,7 +79,7 @@ jobs:
          uses: actions/cache@v1
          with:
            path: ${{ env.SYMFONY_PHPUNIT_DIR }}
-           key: phpunit
+           key: phpunit-${{ hashFiles('composer.json') }}
 
       - name: Install dependencies
         run: |
@@ -112,7 +112,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ env.SYMFONY_PHPUNIT_DIR }}
-          key: phpunit
+          key: phpunit-${{ hashFiles('composer.json') }}
 
       - name: Install dependencies
         run: |
