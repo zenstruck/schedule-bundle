@@ -1,5 +1,8 @@
 name: Tests
-on: [push]
+on:
+  push:
+  schedule:
+    - cron: '0 0 1,16 * *'
 
 jobs:
   symfony-version-tests:
