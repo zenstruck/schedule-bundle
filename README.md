@@ -1,7 +1,7 @@
 # The ScheduleBundle
 
-[![Test Status](https://github.com/kbond/schedule-bundle/workflows/Tests/badge.svg)](https://github.com/kbond/schedule-bundle/actions?query=workflow%3ATests)
-[![Standards](https://github.com/kbond/schedule-bundle/workflows/Standards/badge.svg)](https://github.com/kbond/schedule-bundle/actions?query=workflow%3AStandards)
+[![Test Status](https://github.com/kbond/schedule-bundle/workflows/Tests/badge.svg?branch=master)](https://github.com/kbond/schedule-bundle/actions?query=workflow%3ATests+branch%3Amaster)
+[![Standards](https://github.com/kbond/schedule-bundle/workflows/Standards/badge.svg?branch=master)](https://github.com/kbond/schedule-bundle/actions?query=workflow%3AStandards+branch%3Amaster)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/kbond/schedule-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/kbond/schedule-bundle/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/kbond/schedule-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/kbond/schedule-bundle/?branch=master)
 
