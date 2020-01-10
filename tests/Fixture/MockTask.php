@@ -39,6 +39,14 @@ final class MockTask extends Task implements SelfRunningTask
         return $task;
     }
 
+    public static function skipped(string $description = 'skip reason', string $name = 'my task')
+    {
+        $task = new self($name);
+        $task->result = Result::skipped($task, $description);
+
+        return $task;
+    }
+
     public static function exception(\Throwable $e, string $name = 'my task', string $output = null): self
     {
         $task = new self($name);

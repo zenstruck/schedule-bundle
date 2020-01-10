@@ -4,6 +4,7 @@ namespace Zenstruck\ScheduleBundle\Tests\Fixture;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Zenstruck\ScheduleBundle\Event\AfterScheduleEvent;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleBuilderSubscriber;
 use Zenstruck\ScheduleBundle\Schedule;
@@ -76,9 +77,9 @@ final class MockScheduleBuilder implements ScheduleBuilder
         return $this->getRunner()();
     }
 
-    public function getRunner(): ScheduleRunner
+    public function getRunner(EventDispatcherInterface $dispatcher = null): ScheduleRunner
     {
-        $dispatcher = new EventDispatcher();
+        $dispatcher = $dispatcher ?: new EventDispatcher();
         $dispatcher->addSubscriber(new ScheduleBuilderSubscriber(\array_merge($this->builders, [$this])));
 
         foreach ($this->subscribers as $subscriber) {
