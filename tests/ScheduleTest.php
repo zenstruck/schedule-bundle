@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\FlockStore;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Process\Process;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Zenstruck\ScheduleBundle\Event\AfterScheduleEvent;
 use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
@@ -31,10 +32,11 @@ class ScheduleTest extends TestCase
         $schedule->add(new CallbackTask(function () {}))->description('task1');
         $schedule->addCallback(function () {})->description('task2');
         $schedule->addProcess('php -v')->description('task3');
-        $schedule->addCommand('my:command')->description('task4');
+        $schedule->addProcess(new Process(['php -v']))->description('task4');
+        $schedule->addCommand('my:command')->description('task5');
 
-        $this->assertCount(4, $schedule->all());
-        $this->assertSame(['task1', 'task2', 'task3', 'task4'], \array_map(
+        $this->assertCount(5, $schedule->all());
+        $this->assertSame(['task1', 'task2', 'task3', 'task4', 'task5'], \array_map(
             function (Task $task) {
                 return $task->getDescription();
             },
@@ -54,8 +56,9 @@ class ScheduleTest extends TestCase
             ->addCommand('another:command', [], 'task2')
             ->addCallback(function () {}, 'task3')
             ->addProcess('php -v', 'task4')
+            ->addProcess(new Process(['php -v']), 'task5')
             ->add((new CommandTask('yet:another:command'))
-                ->description('task5')
+                ->description('task6')
                 ->sundays()
                 ->timezone('America/Los_Angeles')
             )
@@ -64,7 +67,7 @@ class ScheduleTest extends TestCase
             ->onSingleServer()
         ;
 
-        $this->assertCount(5, $schedule->all());
+        $this->assertCount(6, $schedule->all());
         $this->assertSame('task1', $schedule->all()[0]->getDescription());
         $this->assertSame('* * * * 2', $schedule->all()[0]->getExpression());
         $this->assertNull($schedule->all()[0]->getTimezone());
@@ -85,6 +88,10 @@ class ScheduleTest extends TestCase
         $this->assertSame('* * * * 1', $schedule->all()[4]->getExpression());
         $this->assertSame('UTC', $schedule->all()[4]->getTimezone()->getName());
         $this->assertCount(1, $schedule->all()[4]->getExtensions());
+        $this->assertSame('task6', $schedule->all()[5]->getDescription());
+        $this->assertSame('* * * * 1', $schedule->all()[5]->getExpression());
+        $this->assertSame('UTC', $schedule->all()[5]->getTimezone()->getName());
+        $this->assertCount(1, $schedule->all()[5]->getExtensions());
     }
 
     /**

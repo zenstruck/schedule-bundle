@@ -2,6 +2,7 @@
 
 namespace Zenstruck\ScheduleBundle;
 
+use Symfony\Component\Process\Process;
 use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
@@ -64,9 +65,12 @@ final class Schedule
         return $this->add(new CallbackTask($callback));
     }
 
-    public function addProcess(string $command): ProcessTask
+    /**
+     * @param string|Process $process
+     */
+    public function addProcess($process): ProcessTask
     {
-        return $this->add(new ProcessTask($command));
+        return $this->add(new ProcessTask($process));
     }
 
     public function addCompound(): CompoundTask

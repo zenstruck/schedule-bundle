@@ -42,10 +42,14 @@ This task executes shell commands. `symfony/process` is required.
 ```php
 /* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
 
-$schedule->addProcess('/bin/my-script')
-    ->cwd('/home/user') // optionally set the current working directory
-    ->timeout(10) // optionally set the timeout in seconds
-;
+$schedule->addProcess('/bin/my-script');
+
+// alternatively, add your own Process instance
+$process = new \Symfony\Component\Process\Process(['/bin/my-script']);
+$process->setWorkingDirectory('/home/user');
+$process->setTimeout(10);
+
+$schedule->addProcess($process);
 ```
 
 ### CompoundTask

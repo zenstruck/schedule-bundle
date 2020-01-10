@@ -10,51 +10,38 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
  */
 final class ProcessTask extends Task implements SelfRunningTask
 {
-    private $command;
-    private $cwd;
-    private $timeout = 60;
+    private $process;
 
-    public function __construct(string $command)
+    /**
+     * @param string|Process $process
+     */
+    public function __construct($process)
     {
         if (!\class_exists(Process::class)) {
             throw new \LogicException(\sprintf('"symfony/process" is required to use "%s". Install with "composer require symfony/process".', self::class));
         }
 
-        parent::__construct($command);
+        if (!$process instanceof Process) {
+            $process = Process::fromShellCommandline($process);
+        }
 
-        $this->command = $command;
+        $this->process = $process;
+
+        parent::__construct($process->getCommandLine());
     }
 
     public function __invoke(): Result
     {
-        $process = Process::fromShellCommandline($this->command, $this->cwd)
-            ->setTimeout($this->timeout)
-        ;
+        $this->process->run();
 
-        $process->run();
-
-        if ($process->isSuccessful()) {
-            return Result::successful($this, $process->getOutput());
+        if ($this->process->isSuccessful()) {
+            return Result::successful($this, $this->process->getOutput());
         }
 
         return Result::failure(
             $this,
-            "Exit {$process->getExitCode()}: {$process->getExitCodeText()}",
-            $process->getErrorOutput()
+            "Exit {$this->process->getExitCode()}: {$this->process->getExitCodeText()}",
+            $this->process->getErrorOutput()
         );
-    }
-
-    public function cwd(string $cwd): self
-    {
-        $this->cwd = $cwd;
-
-        return $this;
-    }
-
-    public function timeout(?float $seconds): self
-    {
-        $this->timeout = $seconds;
-
-        return $this;
     }
 }

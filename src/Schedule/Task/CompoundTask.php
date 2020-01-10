@@ -2,6 +2,7 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Task;
 
+use Symfony\Component\Process\Process;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 
 /**
@@ -44,9 +45,12 @@ final class CompoundTask extends Task implements \IteratorAggregate
         return $this->addWithDescription(new CallbackTask($callback), $description);
     }
 
-    public function addProcess(string $command, string $description = null): self
+    /**
+     * @param string|Process $process
+     */
+    public function addProcess($process, string $description = null): self
     {
-        return $this->addWithDescription(new ProcessTask($command), $description);
+        return $this->addWithDescription(new ProcessTask($process), $description);
     }
 
     /**
