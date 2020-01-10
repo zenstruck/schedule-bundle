@@ -8,6 +8,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
+use Zenstruck\ScheduleBundle\EventListener\TimezoneSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EnvironmentExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
@@ -75,18 +76,23 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
         }
 
         if ($mergedConfig['timezone']) {
-            $container->setParameter('zenstruck_schedule.timezone', $mergedConfig['timezone']);
             $loader->load('timezone.xml');
+            $container
+                ->getDefinition(TimezoneSubscriber::class)
+                ->setArgument(0, $mergedConfig['timezone'])
+            ;
         }
 
         if ($mergedConfig['email_handler']['enabled']) {
             $loader->load('email_handler.xml');
-            $container->setParameter('zenstruck_schedule.email_handler.default_from', $mergedConfig['email_handler']['default_from']);
-            $container->setParameter('zenstruck_schedule.email_handler.default_to', $mergedConfig['email_handler']['default_to']);
 
             $container
                 ->getDefinition(EmailHandler::class)
-                ->setArgument(0, new Reference($mergedConfig['email_handler']['service']))
+                ->setArguments([
+                    new Reference($mergedConfig['email_handler']['service']),
+                    $mergedConfig['email_handler']['default_from'],
+                    $mergedConfig['email_handler']['default_to'],
+                ])
             ;
         }
 

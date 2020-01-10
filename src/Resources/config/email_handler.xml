@@ -7,8 +7,8 @@
     <services>
         <service id="Zenstruck\ScheduleBundle\Schedule\Extension\Handler\EmailHandler">
             <argument /> <!-- MailerInterface -->
-            <argument>%zenstruck_schedule.email_handler.default_from%</argument>
-            <argument>%zenstruck_schedule.email_handler.default_to%</argument>
+            <argument /> <!-- default_from -->
+            <argument /> <!-- default_to -->
             <tag name="schedule.extension_handler" />
         </service>
     </services>

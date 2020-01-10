@@ -6,7 +6,7 @@
 
     <services>
         <service id="Zenstruck\ScheduleBundle\EventListener\TimezoneSubscriber">
-            <argument>%zenstruck_schedule.timezone%</argument>
+            <argument /> <!-- timezone -->
             <tag name="kernel.event_subscriber" />
         </service>
     </services>

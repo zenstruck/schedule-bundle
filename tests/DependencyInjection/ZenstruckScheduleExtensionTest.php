@@ -72,6 +72,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->load(['timezone' => 'UTC']);
 
         $this->assertContainerBuilderHasService(TimezoneSubscriber::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(TimezoneSubscriber::class, 0, 'UTC');
         $this->assertContainerBuilderHasServiceDefinitionWithTag(TimezoneSubscriber::class, 'kernel.event_subscriber');
     }
 
@@ -132,10 +133,8 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
 
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 0, 'my_mailer');
         $this->assertContainerBuilderHasServiceDefinitionWithTag(EmailHandler::class, 'schedule.extension_handler');
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 1, '%zenstruck_schedule.email_handler.default_from%');
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 2, '%zenstruck_schedule.email_handler.default_to%');
-        $this->assertContainerBuilderHasParameter('zenstruck_schedule.email_handler.default_from', 'from@example.com');
-        $this->assertContainerBuilderHasParameter('zenstruck_schedule.email_handler.default_to', 'to@example.com');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 1, 'from@example.com');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 2, 'to@example.com');
     }
 
     /**
