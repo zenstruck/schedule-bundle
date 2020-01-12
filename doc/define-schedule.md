@@ -94,206 +94,194 @@ if you have autoconfigure enabled.
 
 ## Schedule Hooks
 
-The following hooks are available when defining your schedule (on the `$schedule` object):
+The following hooks are available when defining your schedule:
 
 ### Filters
 
 ```php
-/**
- * Prevent schedule from running if callback throws \Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule.
- *
- * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent
- */
-public function filter(callable $callback)
+use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 
-/**
- * Only run schedule if true.
- *
- * @param bool|callable $callback bool: skip if false, callable: skip if return value is false
- *                                callable receives an instance of \Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent
- */
-public function when(string $description, $callback)
+/* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
 
-/**
- * Skip schedule if true.
- *
- * @param bool|callable $callback bool: skip if true, callable: skip if return value is true
- *                                callable receives an instance of \Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent
- */
-public function skip(string $description, $callback)
+$schedule->filter(function () {
+    if (some_condition()) {
+        throw new SkipSchedule('skipped because...');
+    }
+});
+
+$schedule->when('skipped because...', some_condition()); // only runs if true
+$schedule->when('skipped because...', function () { // only runs if return value is true
+    return some_condition();
+});
+
+$schedule->skip('skipped because...', some_condition()); // skips if true
+$schedule->skip('skipped because...', function () { // skips if return value is true
+    return some_condition();
+});
 ```
 
 ### Callbacks
 
 ```php
-/**
- * Execute callback before tasks run (even if no tasks are due).
- *
- * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent
- */
-public function before(callable $callback)
+/* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
 
-/**
- * Execute callback after tasks run (even if no tasks ran).
- *
- * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Event\AfterScheduleEvent
- */
-public function after(callable $callback)
+$schedule->before(function () {
+    // executes before tasks run (even if none are due)
+});
 
-/**
- * Alias for after().
- */
-public function then(callable $callback)
+$schedule->after(function () {
+    // executes after tasks run (even if none ran)
+});
 
-/**
- * Execute callback after tasks run if all tasks succeeded
- *  - even if no tasks ran
- *  - skipped tasks are considered successful.
- *
- * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Event\AfterScheduleEvent
- */
-public function onSuccess(callable $callback)
+$schedule->then(function () {
+    // alias for ->after()
+});
 
-/**
- * Execute callback after tasks run if one or more tasks failed
- *  - even if no tasks ran
- *  - skipped tasks are considered successful.
- *
- * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Event\AfterScheduleEvent
- */
-public function onFailure(callable $callback)
+$schedule->onSuccess(function () {
+    // executes if all tasks succeeded
+});
+
+$schedule->onFailure(function () {
+    // executes if 1 or more tasks failed
+});
 ```
 
 ### Ping Webhook
 
 ```php
-/**
- * Ping a webhook before any tasks run (even if none are due).
- * If you want to control the HttpClientInterface used, configure `zenstruck_schedule.ping_handler`.
- *
- * @param array $options See HttpClientInterface::OPTIONS_DEFAULTS
- */
-public function pingBefore(string $url, string $method = 'GET', array $options = [])
+/* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
 
-/**
- * Ping a webhook after tasks ran (even if none ran).
- * If you want to control the HttpClientInterface used, configure `zenstruck_schedule.ping_handler`.
- *
- * @param array $options See HttpClientInterface::OPTIONS_DEFAULTS
- */
-public function pingAfter(string $url, string $method = 'GET', array $options = [])
+$schedule->pingBefore('https://example.com/before-tasks-run');
 
-/**
- * Alias for pingAfter().
- */
-public function thenPing(string $url, string $method = 'GET', array $options = [])
+// even if none ran
+$schedule->pingAfter('https://example.com/after-tasks-run', 'POST');
 
-/**
- * Ping a webhook after tasks run if all tasks succeeded (skipped tasks are considered successful).
- * If you want to control the HttpClientInterface used, configure `zenstruck_schedule.ping_handler`.
- *
- * @param array $options See HttpClientInterface::OPTIONS_DEFAULTS
- */
-public function pingOnSuccess(string $url, string $method = 'GET', array $options = [])
+// alias for ->pingAfter()
+$schedule->thenPing('https://example.com/after-tasks-run');
 
-/**
- * Ping a webhook after tasks run if one or more tasks failed.
- * If you want to control the HttpClientInterface used, configure `zenstruck_schedule.ping_handler`.
- *
- * @param array $options See HttpClientInterface::OPTIONS_DEFAULTS
- */
-public function pingOnFailure(string $url, string $method = 'GET', array $options = [])
+// even if none ran, skipped tasks are considered successful
+$schedule->pingOnSuccess('https://example.com/all-tasks-succeeded');
+
+$schedule->pingOnFailure('https://example.com/some-tasks-failed');
 ```
+
+#### Notes
+
+1. Optionally customize the `HttpClient` service in your configuration:
+
+    ```yaml
+   # config/packages/zenstruck_schedule.yaml
+   
+    zenstruck_schedule:
+        ping_handler: my_http_client
+    ```
+
+2. These extensions can alternatively be enabled in your configuration:
+
+    ```yaml
+   # config/packages/zenstruck_schedule.yaml
+   
+    zenstruck_schedule:
+        schedule_extensions:
+            ping_before:
+                url: https://example.com/before-tasks-run
+            ping_after:
+                url: https://example.com/after-tasks-run
+                method: POST
+            ping_on_success:
+                url: https://example.com/all-tasks-succeeded
+            ping_on_failure:
+                url: https://example.com/some-tasks-failed
+    ```
 
 ### Email On Failure
 
 ```php
-/**
- * Email failed task detail after tasks run if one or more tasks failed.
- * Be sure to configure `zenstruck_schedule.email_handler`.
- *
- * @param string|string[] $to       Email address(es)
- * @param callable|null   $callback Add your own headers etc
- *                                  Receives an instance of \Symfony\Component\Mime\Email
- */
-public function emailOnFailure($to = null, string $subject = null, callable $callback = null)
+use Symfony\Component\Mime\Email;
+
+/* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
+
+$schedule->emailOnFailure('admin@example.com');
+
+// default "to" address can be configured (see below)
+$schedule->emailOnFailure();
+
+// add custom headers/etc
+$schedule->emailOnFailure('admin@example.com', 'my email subject', function (Email $email) {
+    $email->addCc('sales@example.com');
+    $email->getHeaders()->addTextHeader('X-TRACKING', 'enabled');
+});
 ```
+
+#### Notes:
+
+1. This extension requires configuration:
+
+    ```yaml
+    # config/packages/zenstruck_schedule.yaml
+    
+    zenstruck_schedule:
+        email_handler:
+            service: mailer # required
+            default_to: admin@hammfg.com # optional (exclude if defined in code/config)
+            default_from: webmaster@hammfg.com # exclude only if a "global from" is defined for your application
+    ```
+
+2. This extension can alternatively be enabled in your configuration:
+
+    ```yaml
+    # config/packages/zenstruck_schedule.yaml
+
+    zenstruck_schedule:
+        schedule_extensions:
+            email_on_failure:
+               to: admin@example.com # optional if configured
+               subject: my subject # optional, leave empty to use default
+    ```
 
 ### Run on Single Server
 
 ```php
-/**
- * Restrict running of schedule to a single server.
- * Be sure to configure `zenstruck_schedule.single_server_handler`.
- *
- * @param int $ttl Maximum expected lock duration in seconds
- */
-public function onSingleServer(int $ttl = 3600)
+/* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
+
+$schedule->onSingleServer();
 ```
+
+### Notes:
+
+1. This extension requires configuration:
+
+    ```yaml
+    # config/packages/zenstruck_schedule.yaml
+
+    zenstruck_schedule:
+        single_server_handler: my_lock_factory_service # Be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)
+    ```
+
+2. This extension can alternatively be enabled in your configuration:
+
+    ```yaml
+    # config/packages/zenstruck_schedule.yaml
+
+    zenstruck_schedule:
+        schedule_extensions:
+            on_single_server: ~
+    ```
 
 ### Limit to specific environment(s)
 
 ```php
-/**
- * Define the application environment(s) you wish to run the schedule in. Trying to
- * run in another environment will skip the schedule.
- */
-public function inEnvironment(string ...$environment)
+/* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
+
+$schedule->environments('prod');
 ```
 
-### Example
-
-Here is an example using all the above hooks:
-
-```php
-use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
-
-/* @var Schedule $schedule */
-$schedule
-    ->filter(function () {
-        throw new SkipSchedule('always skip schedule');
-    })
-    ->when('using boolean - will skip schedule', false)
-    ->when('using callback - will skip schedule', function () { return false; })
-    ->skip('using boolean - will skip schedule', true)
-    ->skip('using callback - will skip schedule', function () { return true; })
-    ->before(function () { /* runs before any tasks run */ })
-    ->after(function () { /* runs after all due tasks run */ })
-    ->then(function () { /* runs after all due tasks run */ })
-    ->onSuccess(function () { /* runs after all due tasks run if no tasks failed */ })
-    ->onFailure(function () { /* runs after all due tasks run if 1 or more tasks failed */ })
-    ->pingBefore('https://example.com/before-any-tasks-run')
-    ->pingAfter('https://example.com/after-due-tasks-run')
-    ->thenPing('https://example.com/after-due-tasks-run')
-    ->pingOnSuccess('https://example.com/no-tasks-failed')
-    ->pingOnFailure('https://example.com/some-tasks-failed')
-    ->emailOnFailure()
-    ->onSingleServer()
-    ->environments('prod')
-;
-```
-
-Alternatively, some of the above hooks can be configured:
+This extension can alternatively be enabled in your configuration:
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
+
 zenstruck_schedule:
-    single_server_handler: lock.default.factory # required to use "onSingleServer"
-    email_handler:
-        service: mailer
-        default_from: webmaster@example.com
-        default_to: webteam@example.com
     schedule_extensions:
         environments: prod
-        on_single_server: ~
-        email_on_failure: ~
-        ping_before:
-            url: https://example.com/before-any-tasks-run
-        ping_after:
-            url: https://example.com/after-due-tasks-run
-        ping_on_success:
-            url: https://example.com/no-tasks-failed
-        ping_on_failure:
-            url: https://example.com/some-tasks-failed
 ```

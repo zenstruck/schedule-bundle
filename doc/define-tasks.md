@@ -23,7 +23,7 @@ $schedule->addCommand(\App\Command\MyCommand::class)
 ### CallbackTask
 
 This task runs a callback. The optional return value of the callback is considered the
-task "output".
+task *output*.
 
 ```php
 /* @var \Zenstruck\ScheduleBundle\Schedule $schedule */

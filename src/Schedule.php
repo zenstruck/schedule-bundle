@@ -175,7 +175,6 @@ final class Schedule
 
     /**
      * Execute callback after tasks run if one or more tasks failed
-     *  - even if no tasks ran
      *  - skipped tasks are considered successful.
      *
      * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Event\AfterScheduleEvent
