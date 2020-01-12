@@ -13,7 +13,8 @@ task and [`CommandTask`](../src/Schedule/Task/CommandTask.php) for an example of
 a *runner*.
 
 If your task requires a *runner*, the runner must be a service with the `schedule.task_runner` tag
-(this is autoconfigurable).
+(this is autoconfigurable). Runners must implement the `supports()` method which should return
+true when passed the task it handles.
 
 As an example, let's create a Task that sends a *Message* to your *MessageBus* (`symfony/messenger`
 required).
@@ -82,26 +83,15 @@ class MessageTaskRunner implements TaskRunner
 Finally, use this task in your schedule:
 
 ```php
-// src/Kernel.php
-
 use App\Message\DoSomething;
 use App\Schedule\MessageTask;
-use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
-// ...
 
-class Kernel extends BaseKernel implements ScheduleBuilder
-{
-    public function buildSchedule(Schedule $schedule): void
-    {
-        $schedule->add(new MessageTask(new DoSomething()))
-            ->daily()
-            ->at('13:30')
-        ;
-    }
+/* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
 
-    // ...
-}
+$schedule->add(new MessageTask(new DoSomething()))
+    ->daily()
+    ->at('13:30')
+;
 ```
 
 ## Custom Extensions
@@ -112,124 +102,12 @@ can be added to both tasks and the schedule as a whole. Extensions must implemen
 [`ExtensionHandler`](../src/Schedule/Extension/ExtensionHandler.php). If your
 extension is capable of handling itself, the extension can extend
 [`SelfHandlingExtension`](../src/Schedule/Extension/SelfHandlingExtension.php) (a
-handler is not required).
+handler is not required). Override the hooks that are applicable to your extension.
 
 If your extension requires a *handler*, the handler must be a service with the
-`schedule.extension_handler` tag (this is autoconfigurable).
-
-Extension handlers must implement the `supports()` method and have the following
-methods available (they do nothing by default):
-
-```php
-/**
- * Skip entire schedule if \Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule
- * exception is thrown.
- */
-public function filterSchedule(BeforeScheduleEvent $event, Extension $extension): void
-
-/**
- * Executes before the schedule runs.
- */
-public function beforeSchedule(BeforeScheduleEvent $event, Extension $extension): void
-
-/**
- * Executes after the schedule runs.
- */
-public function afterSchedule(AfterScheduleEvent $event, Extension $extension): void
-
-/**
- * Executes if the schedule ran with no failures.
- */
-public function onScheduleSuccess(AfterScheduleEvent $event, Extension $extension): void
-
-/**
- * Executes if the schedule ran with failures.
- */
-public function onScheduleFailure(AfterScheduleEvent $event, Extension $extension): void
-
-/**
- * Skip task if \Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask exception
- * is thrown.
- */
-public function filterTask(BeforeTaskEvent $event, Extension $extension): void
-
-/**
- * Executes before the task runs (not if skipped).
- */
-public function beforeTask(BeforeTaskEvent $event, Extension $extension): void
-
-/**
- * Executes after the task runs (not if skipped).
- */
-public function afterTask(AfterTaskEvent $event, Extension $extension): void
-
-/**
- * Executes if the task ran successfully (not if skipped).
- */
-public function onTaskSuccess(AfterTaskEvent $event, Extension $extension): void
-
-/**
- * Executes if the task failed (not if skipped).
- */
-public function onTaskFailure(AfterTaskEvent $event, Extension $extension): void
-```
-
-[`SelfHandling`](../src/Schedule/Extension/SelfHandlingExtension.php) extensions have the
-following methods available (they do nothing by default):
-
-```php
-/**
- * Skip entire schedule if \Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule
- * exception is thrown.
- */
-public function filterSchedule(BeforeScheduleEvent $event): void
-
-/**
- * Executes before the schedule runs.
- */
-public function beforeSchedule(BeforeScheduleEvent $event): void
-
-/**
- * Executes after the schedule runs.
- */
-public function afterSchedule(AfterScheduleEvent $event): void
-
-/**
- * Executes if the schedule ran with no failures.
- */
-public function onScheduleSuccess(AfterScheduleEvent $event): void
-
-/**
- * Executes if the schedule ran with failures.
- */
-public function onScheduleFailure(AfterScheduleEvent $event): void
-
-/**
- * Skip task if \Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask exception
- * is thrown.
- */
-public function filterTask(BeforeTaskEvent $event): void
-
-/**
- * Executes before the task runs (not if skipped).
- */
-public function beforeTask(BeforeTaskEvent $event): void
-
-/**
- * Executes after the task runs (not if skipped).
- */
-public function afterTask(AfterTaskEvent $event): void
-
-/**
- * Executes if the task ran successfully (not if skipped).
- */
-public function onTaskSuccess(AfterTaskEvent $event): void
-
-/**
- * Executes if the task failed (not if skipped).
- */
-public function onTaskFailure(AfterTaskEvent $event): void
-```
+`schedule.extension_handler` tag (this is autoconfigurable). Extension handlers must
+implement the `supports()` method which should return true when passed the extension
+it handles.
 
 Below are some examples of custom extensions:
 
@@ -296,24 +174,11 @@ class NotInMaintenanceModeHandler extends ExtensionHandler
 Add to your schedule:
 
 ```php
-// src/Kernel.php
-
 use App\Schedule\Extension\NotInMaintenanceMode;
-use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
-// ...
 
-class Kernel extends BaseKernel implements ScheduleBuilder
-{
-    public function buildSchedule(Schedule $schedule): void
-    {
-        $schedule->addExtension(new NotInMaintenanceMode());
+/* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
 
-        //
-    }
-
-    // ...
-}
+$schedule->addExtension(new NotInMaintenanceMode());
 ```
 
 ### Example 2: Send Failing Task Output to Webhook
@@ -368,41 +233,24 @@ class SendFailingTaskToWebhook extends SelfHandlingExtension
 Add to a scheduled task:
 
 ```php
-// src/Kernel.php
-
 use App\Schedule\Extension\SendFailingTaskToWebhook;
-use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
-// ...
 
-class Kernel extends BaseKernel implements ScheduleBuilder
-{
-    public function buildSchedule(Schedule $schedule): void
-    {
-        $schedule->addCommand('send-sales-report', '--hourly')
-            ->weekdays()
-            ->hourly()
-            ->addExtension(new SendFailingTaskToWebhook('https://example.com/failing-task'))
-        ;
+/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
 
-        //
-    }
-
-    // ...
-}
+$task->addExtension(new SendFailingTaskToWebhook('https://example.com/failing-task'));
 ```
 
 ## Events
 
 The following Symfony events are available:
 
-| Event | Description |
-| ----- | ----------- |
+| Event                                                         | Description                   |
+| ------------------------------------------------------------- | ----------------------------- |
 | [`BeforeScheduleEvent`](../src/Event/BeforeScheduleEvent.php) | Runs before the schedule runs |
-| [`AfterScheduleEvent`](../src/Event/AfterScheduleEvent.php) | Runs after the schedule runs |
-| [`BeforeTaskEvent`](../src/Event/BeforeTaskEvent.php) | Runs before task runs |
-| [`AfterTaskEvent`](../src/Event/AfterTaskEvent.php) | Runs after task runs |
-| [`ScheduleBuildEvent`](../src/Event/ScheduleBuildEvent.php) | *see below* |
+| [`AfterScheduleEvent`](../src/Event/AfterScheduleEvent.php)   | Runs after the schedule runs  |
+| [`BeforeTaskEvent`](../src/Event/BeforeTaskEvent.php)         | Runs before task runs         |
+| [`AfterTaskEvent`](../src/Event/AfterTaskEvent.php)           | Runs after task runs          |
+| [`ScheduleBuildEvent`](../src/Event/ScheduleBuildEvent.php)   | *see below*                   |
 
 ### ScheduleBuildEvent
 
