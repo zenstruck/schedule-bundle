@@ -14,6 +14,15 @@ final class ProcessTaskTest extends TestCase
     /**
      * @test
      */
+    public function has_default_description()
+    {
+        $this->assertSame('$(which php) -v', (new ProcessTask('$(which php) -v'))->getDescription());
+        $this->assertSame('$(which php) -v', (new ProcessTask(Process::fromShellCommandline('$(which php) -v')))->getDescription());
+    }
+
+    /**
+     * @test
+     */
     public function can_create_successful_result()
     {
         $result = (new ProcessTask('$(which php) -v'))();

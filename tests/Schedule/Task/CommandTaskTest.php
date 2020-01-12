@@ -17,6 +17,15 @@ final class CommandTaskTest extends TestCase
     /**
      * @test
      */
+    public function has_default_description()
+    {
+        $this->assertSame('my:command', (new CommandTask('my:command', '--option'))->getDescription());
+        $this->assertSame(DummyCommand::class, (new CommandTask(DummyCommand::class, '--option'))->getDescription());
+    }
+
+    /**
+     * @test
+     */
     public function can_create_with_arguments()
     {
         $task1 = new CommandTask('my:command');
