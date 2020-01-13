@@ -60,12 +60,12 @@ You can make your application's console commands schedule themselves:
     }
     ```
 
-2. _(optional)_ Add the `schedule.self_scheduling_command` tag to the console 
+2. *(optional)* Add the `schedule.self_scheduling_command` tag to the console 
 service. This isn't necessary if you have autoconfigure enabled.
 
 ## ScheduleBuilder Service
 
-Alternatively, you can define one or more services that implement
+You can define one or more services that implement
 [`ScheduleBuilder`](../src/Schedule/ScheduleBuilder.php):
 
 1. Create the service class:
@@ -89,7 +89,7 @@ Alternatively, you can define one or more services that implement
     }
     ```
 
-2. _(optional)_ Add the `schedule.builder` tag to the service. This isn't necessary
+2. *(optional)* Add the `schedule.builder` tag to the service. This isn't necessary
 if you have autoconfigure enabled.
 
 ## Schedule Hooks
@@ -165,22 +165,28 @@ $schedule->pingOnSuccess('https://example.com/all-tasks-succeeded');
 $schedule->pingOnFailure('https://example.com/some-tasks-failed');
 ```
 
-#### Notes
+**Notes**:
 
-1. Optionally customize the `HttpClient` service in your configuration:
+1. This extension **requires** `symfony/http-client`:
+
+    ```console
+    $ composer require symfony/http-client
+    ```
+
+2. *Optionally* customize the `HttpClient` service in your configuration:
 
     ```yaml
-   # config/packages/zenstruck_schedule.yaml
-   
+    # config/packages/zenstruck_schedule.yaml
+
     zenstruck_schedule:
         ping_handler: my_http_client
     ```
 
-2. These extensions can alternatively be enabled in your configuration:
+3. These extensions can *alternatively* be enabled in your configuration:
 
     ```yaml
-   # config/packages/zenstruck_schedule.yaml
-   
+    # config/packages/zenstruck_schedule.yaml
+
     zenstruck_schedule:
         schedule_extensions:
             ping_before:
@@ -197,8 +203,6 @@ $schedule->pingOnFailure('https://example.com/some-tasks-failed');
 ### Email On Failure
 
 ```php
-use Symfony\Component\Mime\Email;
-
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
 
 $schedule->emailOnFailure('admin@example.com');
@@ -207,19 +211,25 @@ $schedule->emailOnFailure('admin@example.com');
 $schedule->emailOnFailure();
 
 // add custom headers/etc
-$schedule->emailOnFailure('admin@example.com', 'my email subject', function (Email $email) {
+$schedule->emailOnFailure('admin@example.com', 'my email subject', function (\Symfony\Component\Mime\Email $email) {
     $email->addCc('sales@example.com');
     $email->getHeaders()->addTextHeader('X-TRACKING', 'enabled');
 });
 ```
 
-#### Notes:
+**Notes:**
 
-1. This extension requires configuration:
+1. This extension **requires** `symfony/mailer`:
+
+    ```console
+    $ composer require symfony/mailer
+    ```
+
+2. This extension **requires** configuration:
 
     ```yaml
     # config/packages/zenstruck_schedule.yaml
-    
+
     zenstruck_schedule:
         email_handler:
             service: mailer # required
@@ -227,7 +237,7 @@ $schedule->emailOnFailure('admin@example.com', 'my email subject', function (Ema
             default_from: webmaster@hammfg.com # exclude only if a "global from" is defined for your application
     ```
 
-2. This extension can alternatively be enabled in your configuration:
+3. This extension can *alternatively* be enabled in your configuration:
 
     ```yaml
     # config/packages/zenstruck_schedule.yaml
@@ -241,15 +251,27 @@ $schedule->emailOnFailure('admin@example.com', 'my email subject', function (Ema
 
 ### Run on Single Server
 
+This extension *locks* the schedule so it only runs on one server. The server
+that starts running the schedule first wins. Other servers trying to run a *locked*
+schedule will have their schedule skip. Be sure to configure this extension (see
+below) with a **[remote store](https://symfony.com/doc/current/components/lock.html#remote-stores)**.
+If you use a *local store* it will not be able to lock other servers.
+
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
 
 $schedule->onSingleServer();
 ```
 
-### Notes:
+**Notes:**
 
-1. This extension requires configuration:
+1. This extension **requires** `symfony/lock`:
+
+    ```console
+    $ composer require symfony/lock
+    ```
+
+2. This extension **requires** configuration:
 
     ```yaml
     # config/packages/zenstruck_schedule.yaml
@@ -258,7 +280,7 @@ $schedule->onSingleServer();
         single_server_handler: my_lock_factory_service # Be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)
     ```
 
-2. This extension can alternatively be enabled in your configuration:
+3. This extension can *alternatively* be enabled in your configuration:
 
     ```yaml
     # config/packages/zenstruck_schedule.yaml
@@ -276,7 +298,7 @@ $schedule->onSingleServer();
 $schedule->environments('prod');
 ```
 
-This extension can alternatively be enabled in your configuration:
+This extension can *alternatively* be enabled in your configuration:
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml

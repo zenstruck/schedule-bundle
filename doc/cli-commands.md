@@ -67,6 +67,7 @@ There are two issues that need to be resolved in the bundle config:
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
+
 zenstruck_schedule:
     single_server_handler: lock.default.factory # required to use "onSingleServer"
     email_handler: # required to use "emailOnFailure"

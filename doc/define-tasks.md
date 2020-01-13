@@ -37,7 +37,8 @@ $schedule->addCallback(function () {
 
 ### ProcessTask
 
-This task executes shell commands. `symfony/process` is required.
+This task executes shell commands.
+
 
 ```php
 /* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
@@ -50,6 +51,12 @@ $process->setWorkingDirectory('/home/user');
 $process->setTimeout(10);
 
 $schedule->addProcess($process);
+```
+
+**Note:** this task requires `symfony/process`:
+
+```console
+$ composer require symfony/process
 ```
 
 ### CompoundTask
@@ -89,88 +96,63 @@ $schedule->addCommand('my:command')
 These are the options for defining how often your task runs:
 
 ```php
-public function everyMinute()
+/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
 
-public function everyFiveMinutes()
+$task->everyMinute();
 
-public function everyTenMinutes()
+$task->everyFiveMinutes();
 
-public function everyFifteenMinutes()
+$task->everyTenMinutes();
 
-public function everyThirtyMinutes()
+$task->everyFifteenMinutes();
 
-public function hourly()
+$task->everyThirtyMinutes();
 
-/**
- * @param int $minute 0-59
- */
-public function hourlyAt(int $minute)
+$task->hourly();
 
-public function daily()
+$task->hourlyAt(15); // 0-59
 
-/**
- * @param string $time "HH:MM" (ie "14:30")
- */
-public function at(string $time)
+$task->daily();
 
-/**
- * Alias for at().
- */
-public function dailyAt(string $time)
+$task->at('14:30');
 
-/**
- * @param int $firstHour  0-23
- * @param int $secondHour 0-23
- */
-public function twiceDaily(int $firstHour = 1, int $secondHour = 13)
+$task->dailyAt('14:30'); // alias for ->at()
 
-public function weekdays()
+$task->twiceDaily();
 
-public function weekends()
+$task->weekdays();
 
-/**
- * @param int ...$days 0 = Sunday, 6 = Saturday
- */
-public function days(int ...$days)
+$task->weekends();
 
-public function mondays()
+$task->days(2, 4); //0 = Sunday, 6 = Saturday
 
-public function tuesdays()
+$task->mondays();
 
-public function wednesdays()
+$task->tuesdays();
 
-public function thursdays()
+$task->wednesdays();
 
-public function fridays()
+$task->thursdays();
 
-public function saturdays()
+$task->fridays();
 
-public function sundays()
+$task->saturdays();
 
-public function weekly()
+$task->sundays();
 
-public function monthly()
+$task->weekly();
 
-/**
- * @param int    $day  1-31
- * @param string $time "HH:MM" (ie "14:30")
- */
-public function monthlyOn(int $day, string $time = '0:0')
+$task->monthly();
 
-/**
- * @param int $firstDay  1-31
- * @param int $secondDay 1-31
- */
-public function twiceMonthly(int $firstDay = 1, int $secondDay = 16)
+$task->monthlyOn(5);
 
-public function quarterly()
+$task->twiceMonthly();
 
-public function yearly()
+$task->quarterly();
 
-/**
- * Set your own cron expression (ie "15 3 * * 1,4").
- */
-public function cron(string $expression)
+$task->yearly();
+
+$task->cron('15 3 * * 1,4');
 ```
 
 ## Timezone
@@ -179,20 +161,17 @@ You may optionally define the timezone to use when determining when to
 run a task. If none is provided, it will use PHP's default timezone.
 
 ```php
-/* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
+/* @var \Zenstruck\ScheduleBundle\Schedule\Task $task */
 
-$schedule->addCommand('my:command')
-    ->mondays()
-    ->at('1:30')
-    ->timezone('UTC')
-;
+$task->timezone('UTC');
 ```
 
 Alternatively, you can configure the timezone for all tasks (timezone defined
-on task will take precedence):
+on a task will take precedence):
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
+
 zenstruck_schedule:
     timezone: UTC
 ```
@@ -204,229 +183,201 @@ The following hooks are available when defining a task:
 ### Filters
 
 ```php
-/**
- * Prevent task from running if callback throws \Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask.
- *
- * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Event\BeforeTaskEvent
- */
-public function filter(callable $callback)
+use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 
-/**
- * Only run task if true.
- *
- * @param bool|callable $callback bool: skip if false, callable: skip if return value is false
- *                                callable receives an instance of \Zenstruck\ScheduleBundle\Event\BeforeTaskEvent
- */
-public function when(string $description, $callback)
+/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
 
-/**
- * Skip task if true.
- *
- * @param bool|callable $callback bool: skip if true, callable: skip if return value is true
- *                                callable receives an instance of \Zenstruck\ScheduleBundle\Event\BeforeTaskEvent
- */
-public function skip(string $description, $callback)
+$task->filter(function () {
+    if (some_condition()) {
+        throw new SkipTask('skipped because...');
+    }
+});
+
+$task->when('skipped because...', some_condition()); // only runs if true
+$task->when('skipped because...', function () { // only runs if return value is true
+    return some_condition();
+});
+
+$task->skip('skipped because...', some_condition()); // skips if true
+$task->skip('skipped because...', function () { // skips if return value is true
+    return some_condition();
+});
 ```
 
 ### Callbacks
 
 ```php
-/**
- * Execute callback before task runs.
- *
- * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Event\BeforeTaskEvent
- */
-public function before(callable $callback)
+/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
 
-/**
- * Execute callback after task has run (will not execute if skipped).
- *
- * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Event\AfterTaskEvent
- */
-public function after(callable $callback)
+$task->before(function () {
+    // executes before task runs
+});
 
-/**
- * Alias for after().
- */
-public function then(callable $callback)
+$task->after(function () {
+    // executes after task runs
+});
 
-/**
- * Execute callback if task was successful (will not execute if skipped).
- *
- * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Event\AfterTaskEvent
- */
-public function onSuccess(callable $callback)
+$task->then(function () {
+    // alias for ->after()
+});
 
-/**
- * Execute callback if task failed (will not execute if skipped).
- *
- * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Event\AfterTaskEvent
- */
-public function onFailure(callable $callback)
+$task->onSuccess(function () {
+    // executes if task succeeded
+});
+
+$task->onFailure(function () {
+    // executes if task failed
+});
 ```
 
 ### Ping Webhook
 
 ```php
-/**
- * Ping a webhook before task runs (will not ping if task was skipped).
- * If you want to control the HttpClientInterface used, configure `zenstruck_schedule.ping_handler`.
- *
- * @param array $options See HttpClientInterface::OPTIONS_DEFAULTS
- */
-public function pingBefore(string $url, string $method = 'GET', array $options = [])
+/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
 
-/**
- * Ping a webhook after task has run (will not ping if task was skipped).
- * If you want to control the HttpClientInterface used, configure `zenstruck_schedule.ping_handler`.
- *
- * @param array $options See HttpClientInterface::OPTIONS_DEFAULTS
- */
-public function pingAfter(string $url, string $method = 'GET', array $options = [])
+$task->pingBefore('https://example.com/before-task-run');
 
-/**
- * Alias for pingAfter().
- */
-public function thenPing(string $url, string $method = 'GET', array $options = [])
+$task->pingAfter('https://example.com/after-task-runs', 'POST');
 
-/**
- * Ping a webhook if task was successful (will not ping if task was skipped).
- * If you want to control the HttpClientInterface used, configure `zenstruck_schedule.ping_handler`.
- *
- * @param array $options See HttpClientInterface::OPTIONS_DEFAULTS
- */
-public function pingOnSuccess(string $url, string $method = 'GET', array $options = [])
+// alias for ->pingAfter()
+$task->thenPing('https://example.com/after-task-runs');
 
-/**
- * Ping a webhook if task failed (will not ping if task was skipped).
- * If you want to control the HttpClientInterface used, configure `zenstruck_schedule.ping_handler`.
- *
- * @param array $options See HttpClientInterface::OPTIONS_DEFAULTS
- */
-public function pingOnFailure(string $url, string $method = 'GET', array $options = [])
+$task->pingOnSuccess('https://example.com/task-succeeded');
+
+$task->pingOnFailure('https://example.com/task-failed');
 ```
+
+**Notes**:
+
+1. This extension **requires** `symfony/http-client`:
+
+    ```console
+    $ composer require symfony/http-client
+    ```
+
+2. *Optionally* customize the `HttpClient` service in your configuration:
+
+    ```yaml
+    # config/packages/zenstruck_schedule.yaml
+
+    zenstruck_schedule:
+        ping_handler: my_http_client
+    ```
+
 
 ### Email Output
 
 ```php
-/**
- * Email task detail after run (on success or failure, not if skipped).
- * Be sure to configure `zenstruck_schedule.email_handler`.
- *
- * @param string|string[] $to       Email address(es)
- * @param callable|null   $callback Add your own headers etc
- *                                  Receives an instance of \Symfony\Component\Mime\Email
- */
-public function emailAfter($to = null, string $subject = null, callable $callback = null)
+/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
 
-/**
- * Alias for emailAfter().
- */
-public function thenEmail($to = null, string $subject = null, callable $callback = null)
+$task->emailAfter('admin@example.com');
 
-/**
- * Email task/failure details if failed (not if skipped).
- * Be sure to configure `zenstruck_schedule.email_handler`.
- *
- * @param string|string[] $to       Email address(es)
- * @param callable|null   $callback Add your own headers etc
- *                                  Receives an instance of \Symfony\Component\Mime\Email
- */
-public function emailOnFailure($to = null, string $subject = null, callable $callback = null)
+$task->thenEmail('admin@example.com'); // alias for ->emailAfter()
+
+$task->emailOnFailure('admin@example.com');
+
+// default "to" address can be configured (see below)
+$task->emailAfter();
+$task->emailOnFailure();
+
+// add custom headers/etc
+$task->emailAfter('admin@example.com', 'my email subject', function (Symfony\Component\Mime\Email $email) {
+    $email->addCc('sales@example.com');
+    $email->getHeaders()->addTextHeader('X-TRACKING', 'enabled');
+});
+$task->emailOnFailure('admin@example.com', 'my email subject', function (Symfony\Component\Mime\Email $email) {
+    $email->addCc('sales@example.com');
+    $email->getHeaders()->addTextHeader('X-TRACKING', 'enabled');
+});
 ```
+
+**Notes:**
+
+1. This extension **requires** `symfony/mailer`:
+
+    ```console
+    $ composer require symfony/mailer
+    ```
+
+2. This extension **requires** configuration:
+
+    ```yaml
+    # config/packages/zenstruck_schedule.yaml
+
+    zenstruck_schedule:
+        email_handler:
+            service: mailer # required
+            default_to: admin@hammfg.com # optional (exclude if defined in code)
+            default_from: webmaster@hammfg.com # exclude only if a "global from" is defined for your application
+    ```
 
 ### Prevent Overlap
 
+This extension *locks* the task so it cannot run if it is still running from
+a previous instance. If it is still running, the task is skipped.
+
 ```php
-/**
- * Prevent task from running if still running from previous run.
- *
- * @param int $ttl Maximum expected lock duration in seconds
- */
-public function withoutOverlapping(int $ttl = 3600)
+/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
+
+$task->withoutOverlapping();
 ```
+
+**Notes:**
+
+1. This extension **requires** `symfony/lock`:
+
+    ```console
+    $ composer require symfony/lock
+    ```
+   
+2. *Optionally* customize the `LockFactory` service in your configuration:
+
+    ```yaml
+    # config/packages/zenstruck_schedule.yaml
+
+    zenstruck_schedule:
+        without_overlapping_handler: my_lock_factory
+    ```
 
 ### Run on Single Server
 
+This extension *locks* the task so it only runs on one server. The server
+that starts running the task first wins. Other servers trying to run a *locked*
+task will have their task skip. Be sure to configure this extension (see
+below) with a **[remote store](https://symfony.com/doc/current/components/lock.html#remote-stores)**.
+If you use a *local store* it will not be able to lock other servers.
+
 ```php
-/**
- * Restrict running of schedule to a single server.
- * Be sure to configure `zenstruck_schedule.single_server_handler`.
- *
- * @param int $ttl Maximum expected lock duration in seconds
- */
-public function onSingleServer(int $ttl = 86400)
+/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
+
+$task->onSingleServer();
 ```
+
+**Notes:**
+
+1. This extension **requires** `symfony/lock`:
+
+    ```console
+    $ composer require symfony/lock
+    ```
+
+2. This extension **requires** configuration:
+
+    ```yaml
+    # config/packages/zenstruck_schedule.yaml
+
+    zenstruck_schedule:
+        single_server_handler: my_lock_factory_service # Be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)
+    ```
 
 ### Between
 
 ```php
-/**
- * Only run between given times.
- *
- * @param string $startTime "HH:MM" (ie "09:00")
- * @param string $endTime   "HH:MM" (ie "14:30")
- * @param bool   $inclusive Whether to include the start and end time
- */
-public function between(string $startTime, string $endTime, bool $inclusive = true)
+/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
 
-/**
- * Skip when between given times.
- *
- * @param string $startTime "HH:MM" (ie "09:00")
- * @param string $endTime   "HH:MM" (ie "14:30")
- * @param bool   $inclusive Whether to include the start and end time
- */
-public function unlessBetween(string $startTime, string $endTime, bool $inclusive = true)
-```
+$task->between(9, 17); // only runs between 9am and 5pm (skips otherwise)
+$task->between('21:30', '6:15'); // only runs between 9:30pm and 6:15am (skips otherwise)
 
-### Example
-
-Below is an example using most of the above hooks:
-
-```php
-use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
-
-/* @var Schedule $schedule */
-$schedule->addCommand('my:command')
-    ->everyTenMinutes()
-    ->timezone('UTC')
-    ->filter(function () {
-        throw new SkipTask('always skip task');
-    })
-    ->when('using boolean - will skip task', false)
-    ->when('using callback - will skip task', function () { return false; })
-    ->skip('using boolean - will skip task', true)
-    ->skip('using callback - will skip task', function () { return true; })
-    ->before(function () { /* runs before task runs */ })
-    ->after(function () { /* runs after task runs */ })
-    ->then(function () { /* runs after task runs */ })
-    ->onSuccess(function () { /* runs after task runs if it was successful */ })
-    ->onFailure(function () { /* runs after task runs if it failed */ })
-    ->pingBefore('https://example.com/before-task-run')
-    ->pingAfter('https://example.com/after-task-run')
-    ->thenPing('https://example.com/after-task-run')
-    ->pingOnSuccess('https://example.com/task-succeeded')
-    ->pingOnFailure('https://example.com/task-failed')
-    ->emailAfter()
-    ->thenEmail()
-    ->emailOnFailure()
-    ->withoutOverlapping()
-    ->onSingleServer()
-    ->between(9, 5)
-    ->unlessBetween(12, 13)
-;
-```
-
-The following configuration is required for the above examples:
-
-```yaml
-# config/packages/zenstruck_schedule.yaml
-zenstruck_schedule:
-    single_server_handler: lock.default.factory # required to use "onSingleServer"
-    email_handler: # required to use email hooks
-        service: mailer
-        default_from: webmaster@example.com
-        default_to: webteam@example.com # required because not defining "to"
+$task->unlessBetween(9, 17); // skips if between 9am and 5pm
+$task->unlessBetween('21:30', '6:15'); // skips if between 9:30pm and 6:15am
 ```
