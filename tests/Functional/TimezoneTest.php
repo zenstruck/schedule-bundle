@@ -23,7 +23,7 @@ final class TimezoneTest extends TestCase
             ->addTask((new MockTask())->timezone('America/Edmonton'))
             ->addTask((new CompoundTask())
                 ->add(new MockTask())
-                ->add((new MockTask())->timezone('America/Edmonton'))
+                ->add((new MockTask())->timezone(new \DateTimeZone('America/Edmonton')))
             )
             ->addSubscriber(new TimezoneSubscriber('America/Toronto'))
             ->getRunner()

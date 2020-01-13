@@ -45,6 +45,10 @@ final class TaskTest extends TestCase
         $task->timezone('UTC');
 
         $this->assertSame('UTC', $task->getTimezone()->getName());
+
+        $task->timezone(new \DateTimeZone('America/Los_Angeles'));
+
+        $this->assertSame('America/Los_Angeles', $task->getTimezone()->getName());
     }
 
     /**

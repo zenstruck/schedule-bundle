@@ -164,6 +164,9 @@ run a task. If none is provided, it will use PHP's default timezone.
 /* @var \Zenstruck\ScheduleBundle\Schedule\Task $task */
 
 $task->timezone('UTC');
+
+// alternatively, pass \DateTimeZone instance
+$task->timezone(new \DateTimeZone('UTC'));
 ```
 
 Alternatively, you can configure the timezone for all tasks (timezone defined

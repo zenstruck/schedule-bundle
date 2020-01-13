@@ -97,10 +97,16 @@ abstract class Task
 
     /**
      * The timezone this task should run in.
+     *
+     * @param string|\DateTimeZone $value
      */
-    final public function timezone(string $value): self
+    final public function timezone($value): self
     {
-        $this->timezone = new \DateTimeZone($value);
+        if (!$value instanceof \DateTimeZone) {
+            $value = new \DateTimeZone($value);
+        }
+
+        $this->timezone = $value;
 
         return $this;
     }
