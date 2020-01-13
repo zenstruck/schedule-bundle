@@ -163,6 +163,7 @@ zenstruck_schedule:
 
         # The prefix to use for email subjects (use to distinguish between different application schedules)
         subject_prefix:       null # Example: "[Acme Inc Website]"
+
     schedule_extensions:
 
         # Set the environment(s) you only want the schedule to run in.
