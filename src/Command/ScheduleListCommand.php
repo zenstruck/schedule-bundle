@@ -203,6 +203,14 @@ final class ScheduleListCommand extends Command
             yield $e;
         }
 
+        if ($task instanceof CommandTask) {
+            try {
+                $task->createCommandInput($this->getApplication());
+            } catch (\Throwable $e) {
+                yield $e;
+            }
+        }
+
         foreach ($task->getExtensions() as $extension) {
             try {
                 $this->handlerRegistry->handlerFor($extension);
