@@ -44,8 +44,7 @@ final class Schedule
 
     public function add(Task $task): Task
     {
-        $this->allTasks = null;
-        $this->dueTasks = null;
+        $this->resetCache();
 
         return $this->tasks[] = $task;
     }
@@ -277,6 +276,8 @@ final class Schedule
      */
     public function timezone($value): self
     {
+        $this->resetCache();
+
         if (!$value instanceof \DateTimeZone) {
             $value = new \DateTimeZone($value);
         }
@@ -310,24 +311,14 @@ final class Schedule
 
         $this->allTasks = [];
 
-        foreach ($this->tasks as $task) {
-            if ($task instanceof CompoundTask) {
-                foreach ($task as $subTask) {
-                    $this->allTasks[] = $subTask;
-                }
+        foreach ($this->taskIterator() as $task) {
+            $task = clone $task;
 
-                continue;
+            if ($this->getTimezone() && !$task->getTimezone()) {
+                $task->timezone($this->getTimezone());
             }
 
             $this->allTasks[] = $task;
-        }
-
-        if ($timezone = $this->getTimezone()) {
-            foreach ($this->allTasks as $task) {
-                if (!$task->getTimezone()) {
-                    $task->timezone($timezone);
-                }
-            }
         }
 
         return $this->allTasks;
@@ -351,5 +342,26 @@ final class Schedule
         }
 
         return $this->dueTasks;
+    }
+
+    /**
+     * @return Task[]
+     */
+    private function taskIterator(): \Generator
+    {
+        foreach ($this->tasks as $task) {
+            if ($task instanceof CompoundTask) {
+                yield from $task;
+
+                continue;
+            }
+
+            yield $task;
+        }
+    }
+
+    private function resetCache(): void
+    {
+        $this->allTasks = $this->dueTasks = null;
     }
 }

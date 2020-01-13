@@ -16,6 +16,7 @@ use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\CallbackTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
+use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -42,6 +43,12 @@ class ScheduleTest extends TestCase
             },
             $schedule->all()
         ));
+
+        $this->assertCount(5, $schedule->all(), 'Caches the tasks');
+
+        $schedule->addCommand('another:command')->description('task6');
+
+        $this->assertCount(6, $schedule->all(), 'Resets the task cache on add');
     }
 
     /**
@@ -112,6 +119,10 @@ class ScheduleTest extends TestCase
         $this->assertCount(1, $schedule->due());
         $this->assertCount(1, $schedule->due(), 'Due tasks are cached');
         $this->assertSame('task1', $schedule->due()[0]->getDescription());
+
+        $schedule->addCommand('my:command')->description('task3');
+
+        $this->assertCount(2, $schedule->due(), 'Resets the due task cache');
     }
 
     /**
@@ -368,15 +379,29 @@ class ScheduleTest extends TestCase
     public function can_set_timezone()
     {
         $schedule = new Schedule();
+        $schedule->add((new MockTask())->description('task1'));
+        $schedule->add((new MockTask())->description('task2')->timezone('America/Toronto'));
 
         $this->assertNull($schedule->getTimezone());
+        $this->assertNull($schedule->all()[0]->getTimezone());
+        $this->assertNull($schedule->due()[0]->getTimezone());
+        $this->assertSame('America/Toronto', $schedule->all()[1]->getTimezone()->getName());
+        $this->assertSame('America/Toronto', $schedule->due()[1]->getTimezone()->getName());
 
         $schedule->timezone('UTC');
 
         $this->assertSame('UTC', $schedule->getTimezone()->getName());
+        $this->assertSame('UTC', $schedule->all()[0]->getTimezone()->getName());
+        $this->assertSame('UTC', $schedule->due()[0]->getTimezone()->getName());
+        $this->assertSame('America/Toronto', $schedule->all()[1]->getTimezone()->getName());
+        $this->assertSame('America/Toronto', $schedule->due()[1]->getTimezone()->getName());
 
         $schedule->timezone(new \DateTimeZone('America/Los_Angeles'));
 
         $this->assertSame('America/Los_Angeles', $schedule->getTimezone()->getName());
+        $this->assertSame('America/Los_Angeles', $schedule->all()[0]->getTimezone()->getName());
+        $this->assertSame('America/Los_Angeles', $schedule->due()[0]->getTimezone()->getName());
+        $this->assertSame('America/Toronto', $schedule->all()[1]->getTimezone()->getName());
+        $this->assertSame('America/Toronto', $schedule->due()[1]->getTimezone()->getName());
     }
 }
