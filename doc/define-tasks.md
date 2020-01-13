@@ -340,6 +340,7 @@ $task->emailOnFailure('admin@example.com', 'my email subject', function (Symfony
             service: mailer # required
             default_to: admin@hammfg.com # optional (exclude if defined in code)
             default_from: webmaster@hammfg.com # exclude only if a "global from" is defined for your application
+            subject_prefix: "[Acme Inc]" # optional
     ```
 
 ### Prevent Overlap

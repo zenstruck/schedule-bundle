@@ -239,6 +239,7 @@ $schedule->emailOnFailure('admin@example.com', 'my email subject', function (\Sy
             service: mailer # required
             default_to: admin@hammfg.com # optional (exclude if defined in code/config)
             default_from: webmaster@hammfg.com # exclude only if a "global from" is defined for your application
+            subject_prefix: "[Acme Inc]" # optional
     ```
 
 3. This extension can *alternatively* be enabled in your configuration:

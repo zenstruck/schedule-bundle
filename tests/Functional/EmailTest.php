@@ -5,6 +5,7 @@ namespace Zenstruck\ScheduleBundle\Tests\Functional;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\RawMessage;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\EmailHandler;
@@ -53,6 +54,58 @@ final class EmailTest extends TestCase
     /**
      * @test
      */
+    public function sends_schedule_failure_email_with_overrides()
+    {
+        $mailer = $this->createMailer();
+
+        (new MockScheduleBuilder())
+            ->addHandler(new EmailHandler($mailer, 'webmaster@example.com', 'kevin@example.com'))
+            ->addBuilder(new class() implements ScheduleBuilder {
+                public function buildSchedule(Schedule $schedule): void
+                {
+                    $schedule->emailOnFailure('to@example.com', 'my subject', function (Email $email) {
+                        $email->cc('cc@example.com');
+                    });
+                }
+            })
+            ->addTask(MockTask::exception(new \Exception('task 1 exception message'), 'my task 1'))
+            ->addTask(MockTask::success('my task 2'))
+            ->addTask(MockTask::exception(new \Exception('task 3 exception message'), 'my task 3'))
+            ->run()
+        ;
+
+        $this->assertSame('to@example.com', $mailer->lastMessage->getTo()[0]->getAddress());
+        $this->assertSame('my subject', $mailer->lastMessage->getSubject());
+        $this->assertSame('cc@example.com', $mailer->lastMessage->getCc()[0]->getAddress());
+    }
+
+    /**
+     * @test
+     */
+    public function sends_schedule_failure_email_with_configured_subject_prefix()
+    {
+        $mailer = $this->createMailer();
+
+        (new MockScheduleBuilder())
+            ->addHandler(new EmailHandler($mailer, 'webmaster@example.com', 'kevin@example.com', '[Acme Inc]'))
+            ->addBuilder(new class() implements ScheduleBuilder {
+                public function buildSchedule(Schedule $schedule): void
+                {
+                    $schedule->emailOnFailure();
+                }
+            })
+            ->addTask(MockTask::exception(new \Exception('task 1 exception message'), 'my task 1'))
+            ->addTask(MockTask::success('my task 2'))
+            ->addTask(MockTask::exception(new \Exception('task 3 exception message'), 'my task 3'))
+            ->run()
+        ;
+
+        $this->assertSame('[Acme Inc][Scheduled Failed] 2 tasks failed', $mailer->lastMessage->getSubject());
+    }
+
+    /**
+     * @test
+     */
     public function sends_task_failure_email()
     {
         $mailer = $this->createMailer();
@@ -71,6 +124,46 @@ final class EmailTest extends TestCase
         $this->assertStringContainsString('Exit 127: Command not found', $mailer->lastMessage->getTextBody());
         $this->assertStringContainsString('## Task Output:', $mailer->lastMessage->getTextBody());
         $this->assertStringContainsString('sh: 1: sdsdsd: not found', $mailer->lastMessage->getTextBody());
+    }
+
+    /**
+     * @test
+     */
+    public function sends_task_failure_email_with_overrides()
+    {
+        $mailer = $this->createMailer();
+
+        (new MockScheduleBuilder())
+            ->addHandler(new EmailHandler($mailer, 'webmaster@example.com', 'kevin@example.com'))
+            ->addTask(MockTask::failure('Exit 127: Command not found', 'my task', 'sh: 1: sdsdsd: not found')
+                ->emailOnFailure('to@example.com', 'my subject', function (Email $email) {
+                    $email->cc('cc@example.com');
+                })
+            )
+            ->run()
+        ;
+
+        $this->assertSame('to@example.com', $mailer->lastMessage->getTo()[0]->getAddress());
+        $this->assertSame('my subject', $mailer->lastMessage->getSubject());
+        $this->assertSame('cc@example.com', $mailer->lastMessage->getCc()[0]->getAddress());
+    }
+
+    /**
+     * @test
+     */
+    public function sends_task_failure_email_with_configured_subject_prefix()
+    {
+        $mailer = $this->createMailer();
+
+        (new MockScheduleBuilder())
+            ->addHandler(new EmailHandler($mailer, 'webmaster@example.com', 'kevin@example.com', '[Acme Inc]'))
+            ->addTask(MockTask::failure('Exit 127: Command not found', 'my task', 'sh: 1: sdsdsd: not found')
+                ->emailOnFailure()
+            )
+            ->run()
+        ;
+
+        $this->assertSame('[Acme Inc][Scheduled Task Failed] MockTask: my task', $mailer->lastMessage->getSubject());
     }
 
     /**
@@ -97,6 +190,44 @@ final class EmailTest extends TestCase
     /**
      * @test
      */
+    public function sends_after_task_email_with_overrides()
+    {
+        $mailer = $this->createMailer();
+
+        (new MockScheduleBuilder())
+            ->addHandler(new EmailHandler($mailer, 'webmaster@example.com', 'kevin@example.com'))
+            ->addTask(MockTask::success('my task', 'my task output')
+                ->emailAfter('to@example.com', 'my subject', function (Email $email) {
+                    $email->cc('cc@example.com');
+                })
+            )
+            ->run()
+        ;
+
+        $this->assertSame('to@example.com', $mailer->lastMessage->getTo()[0]->getAddress());
+        $this->assertSame('my subject', $mailer->lastMessage->getSubject());
+        $this->assertSame('cc@example.com', $mailer->lastMessage->getCc()[0]->getAddress());
+    }
+
+    /**
+     * @test
+     */
+    public function sends_after_task_email_with_configured_subject_prefix()
+    {
+        $mailer = $this->createMailer();
+
+        (new MockScheduleBuilder())
+            ->addHandler(new EmailHandler($mailer, 'webmaster@example.com', 'kevin@example.com', '[Acme Inc]'))
+            ->addTask(MockTask::success('my task', 'my task output')->emailAfter())
+            ->run()
+        ;
+
+        $this->assertSame('[Acme Inc][Scheduled Task Succeeded] MockTask: my task', $mailer->lastMessage->getSubject());
+    }
+
+    /**
+     * @test
+     */
     public function provides_helpful_message_if_handler_not_configured()
     {
         $this->expectException(\LogicException::class);
@@ -116,7 +247,7 @@ final class EmailTest extends TestCase
     /**
      * @test
      */
-    public function to_address_must_be_configured()
+    public function to_address_must_be_configured_or_passed_to_extension()
     {
         $event = (new MockScheduleBuilder())
             ->addHandler(new EmailHandler($this->createMailer()))

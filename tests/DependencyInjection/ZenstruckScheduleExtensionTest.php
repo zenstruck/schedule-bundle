@@ -129,12 +129,30 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
             'service' => 'my_mailer',
             'default_from' => 'from@example.com',
             'default_to' => 'to@example.com',
+            'subject_prefix' => '[Acme Inc]',
         ]]);
 
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 0, 'my_mailer');
         $this->assertContainerBuilderHasServiceDefinitionWithTag(EmailHandler::class, 'schedule.extension_handler');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 1, 'from@example.com');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 2, 'to@example.com');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 3, '[Acme Inc]');
+    }
+
+    /**
+     * @test
+     */
+    public function minimum_email_handler_configuration()
+    {
+        $this->load(['email_handler' => [
+            'service' => 'my_mailer',
+        ]]);
+
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 0, 'my_mailer');
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(EmailHandler::class, 'schedule.extension_handler');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 1, null);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 2, null);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 3, null);
     }
 
     /**

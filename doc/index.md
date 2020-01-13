@@ -160,6 +160,9 @@ zenstruck_schedule:
 
         # The default "to" email address (can be overridden by extension)
         default_to:           null
+
+        # The prefix to use for email subjects (use to distinguish between different application schedules)
+        subject_prefix:       null # Example: "[Acme Inc Website]"
     schedule_extensions:
 
         # Set the environment(s) you only want the schedule to run in.

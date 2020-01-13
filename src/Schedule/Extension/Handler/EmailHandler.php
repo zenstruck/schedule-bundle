@@ -20,12 +20,14 @@ final class EmailHandler extends ExtensionHandler
     private $mailer;
     private $defaultFrom;
     private $defaultTo;
+    private $subjectPrefix;
 
-    public function __construct(MailerInterface $mailer, string $defaultFrom = null, string $defaultTo = null)
+    public function __construct(MailerInterface $mailer, string $defaultFrom = null, string $defaultTo = null, string $subjectPrefix = null)
     {
         $this->mailer = $mailer;
         $this->defaultFrom = $defaultFrom;
         $this->defaultTo = $defaultTo;
+        $this->subjectPrefix = $subjectPrefix;
     }
 
     /**
@@ -71,10 +73,7 @@ final class EmailHandler extends ExtensionHandler
         $text = $summary;
 
         $email->priority(Email::PRIORITY_HIGHEST);
-
-        if (!$email->getSubject()) {
-            $email->subject("[Scheduled Failed] {$summary}");
-        }
+        $this->prefixSubject($email, "[Scheduled Failed] {$summary}");
 
         foreach ($event->getFailures() as $i => $failure) {
             $task = $failure->getTask();
@@ -110,13 +109,11 @@ final class EmailHandler extends ExtensionHandler
     {
         $email = $this->emailHeaderFor($extension);
 
-        if (!$email->getSubject()) {
-            $email->subject(\sprintf('[Scheduled Task %s] %s: %s',
-                $result->isFailure() ? 'Failed' : 'Succeeded',
-                $result->getTask()->getType(),
-                $result->getTask()
-            ));
-        }
+        $this->prefixSubject($email, \sprintf('[Scheduled Task %s] %s: %s',
+            $result->isFailure() ? 'Failed' : 'Succeeded',
+            $result->getTask()->getType(),
+            $result->getTask()
+        ));
 
         if ($result->isFailure()) {
             $email->priority(Email::PRIORITY_HIGHEST);
@@ -144,5 +141,12 @@ final class EmailHandler extends ExtensionHandler
         }
 
         return $email;
+    }
+
+    private function prefixSubject(Email $email, string $defaultSubject): void
+    {
+        $subject = $email->getSubject() ?: $defaultSubject;
+
+        $email->subject($this->subjectPrefix.$subject);
     }
 }

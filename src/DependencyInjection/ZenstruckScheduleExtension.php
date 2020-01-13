@@ -92,6 +92,7 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
                     new Reference($mergedConfig['email_handler']['service']),
                     $mergedConfig['email_handler']['default_from'],
                     $mergedConfig['email_handler']['default_to'],
+                    $mergedConfig['email_handler']['subject_prefix'],
                 ])
             ;
         }
