@@ -19,15 +19,11 @@ final class TimezoneSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
-        return [ScheduleBuildEvent::class => ['setTimezone', ScheduleBuildEvent::POST_REGISTER]];
+        return [ScheduleBuildEvent::class => 'setTimezone'];
     }
 
     public function setTimezone(ScheduleBuildEvent $event): void
     {
-        foreach ($event->getSchedule()->all() as $task) {
-            if (!$task->getTimezone()) {
-                $task->timezone($this->timezone);
-            }
-        }
+        $event->getSchedule()->timezone($this->timezone);
     }
 }

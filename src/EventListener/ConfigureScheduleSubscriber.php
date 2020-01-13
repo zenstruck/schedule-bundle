@@ -23,7 +23,7 @@ final class ConfigureScheduleSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
-        return [ScheduleBuildEvent::class => ['configureSchedule', ScheduleBuildEvent::POST_REGISTER]];
+        return [ScheduleBuildEvent::class => 'configureSchedule'];
     }
 
     public function configureSchedule(ScheduleBuildEvent $event): void

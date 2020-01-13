@@ -7,7 +7,7 @@ The simplest place to define your schedule is within your application's
 
 ```php
 // src/Kernel.php
-    
+
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
 // ...

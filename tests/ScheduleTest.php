@@ -361,4 +361,22 @@ class ScheduleTest extends TestCase
 
         $this->assertSame(['prod', 'stage'], $schedule->getExtensions()[0]->getRunEnvironments());
     }
+
+    /**
+     * @test
+     */
+    public function can_set_timezone()
+    {
+        $schedule = new Schedule();
+
+        $this->assertNull($schedule->getTimezone());
+
+        $schedule->timezone('UTC');
+
+        $this->assertSame('UTC', $schedule->getTimezone()->getName());
+
+        $schedule->timezone(new \DateTimeZone('America/Los_Angeles'));
+
+        $this->assertSame('America/Los_Angeles', $schedule->getTimezone()->getName());
+    }
 }

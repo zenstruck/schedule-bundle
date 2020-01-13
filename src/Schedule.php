@@ -25,6 +25,7 @@ final class Schedule
     private $tasks = [];
     private $allTasks;
     private $dueTasks;
+    private $timezone;
 
     /** @var Extension[] */
     private $extensions = [];
@@ -270,11 +271,32 @@ final class Schedule
     }
 
     /**
+     * The default timezone for tasks (tasks can override).
+     *
+     * @param string|\DateTimeZone $value
+     */
+    public function timezone($value): self
+    {
+        if (!$value instanceof \DateTimeZone) {
+            $value = new \DateTimeZone($value);
+        }
+
+        $this->timezone = $value;
+
+        return $this;
+    }
+
+    /**
      * @return Extension[]
      */
     public function getExtensions(): array
     {
         return $this->extensions;
+    }
+
+    public function getTimezone(): ?\DateTimeZone
+    {
+        return $this->timezone;
     }
 
     /**
@@ -298,6 +320,14 @@ final class Schedule
             }
 
             $this->allTasks[] = $task;
+        }
+
+        if ($timezone = $this->getTimezone()) {
+            foreach ($this->allTasks as $task) {
+                if (!$task->getTimezone()) {
+                    $task->timezone($timezone);
+                }
+            }
         }
 
         return $this->allTasks;

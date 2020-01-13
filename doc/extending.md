@@ -250,13 +250,4 @@ The following Symfony events are available:
 | [`AfterScheduleEvent`](../src/Event/AfterScheduleEvent.php)   | Runs after the schedule runs  |
 | [`BeforeTaskEvent`](../src/Event/BeforeTaskEvent.php)         | Runs before task runs         |
 | [`AfterTaskEvent`](../src/Event/AfterTaskEvent.php)           | Runs after task runs          |
-| [`ScheduleBuildEvent`](../src/Event/ScheduleBuildEvent.php)   | *see below*                   |
-
-### ScheduleBuildEvent
-
-The [`ScheduleBuildEvent`](../src/Event/ScheduleBuildEvent.php) has two purposes:
-
-1. Defining your schedule: use the `ScheduleBuildEvent::REGISTER` priority
-(see [`ScheduleBuilderSubscriber`](../src/EventListener/ScheduleBuilderSubscriber.php) for an example)
-2. Adjusting the schedule after it is build: use the `ScheduleBuildEvent::POST_REGISTER`
-priority (see [`TimezoneSubscriber`](../src/EventListener/TimezoneSubscriber.php) for an example)
+| [`ScheduleBuildEvent`](../src/Event/ScheduleBuildEvent.php)   | Defining your schedule        |
