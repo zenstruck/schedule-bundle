@@ -148,6 +148,10 @@ $schedule->onFailure(function () {
 
 ### Ping Webhook
 
+These hooks are useful for Cron health monitoring tools like
+[Cronitor](https://cronitor.io/), [Laravel Envoyer](https://envoyer.io/) and
+[Healthchecks](https://healthchecks.io/).
+
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
 
