@@ -46,7 +46,7 @@ class ScheduleTest extends TestCase
 
         $this->assertCount(5, $schedule->all(), 'Caches the tasks');
 
-        $schedule->addCommand('another:command')->description('task6');
+        $schedule->addNull('task6');
 
         $this->assertCount(6, $schedule->all(), 'Resets the task cache on add');
     }
@@ -64,8 +64,9 @@ class ScheduleTest extends TestCase
             ->addCallback(function () {}, 'task3')
             ->addProcess('php -v', 'task4')
             ->addProcess(new Process(['php -v']), 'task5')
+            ->addNull('task6')
             ->add((new CommandTask('yet:another:command'))
-                ->description('task6')
+                ->description('task7')
                 ->sundays()
                 ->timezone('America/Los_Angeles')
             )
@@ -74,7 +75,7 @@ class ScheduleTest extends TestCase
             ->onSingleServer()
         ;
 
-        $this->assertCount(6, $schedule->all());
+        $this->assertCount(7, $schedule->all());
         $this->assertSame('task1', $schedule->all()[0]->getDescription());
         $this->assertSame('* * * * 2', $schedule->all()[0]->getExpression());
         $this->assertNull($schedule->all()[0]->getTimezone());
@@ -99,6 +100,10 @@ class ScheduleTest extends TestCase
         $this->assertSame('* * * * 1', $schedule->all()[5]->getExpression());
         $this->assertSame('UTC', $schedule->all()[5]->getTimezone()->getName());
         $this->assertCount(1, $schedule->all()[5]->getExtensions());
+        $this->assertSame('task7', $schedule->all()[6]->getDescription());
+        $this->assertSame('* * * * 1', $schedule->all()[6]->getExpression());
+        $this->assertSame('UTC', $schedule->all()[6]->getTimezone()->getName());
+        $this->assertCount(1, $schedule->all()[6]->getExtensions());
     }
 
     /**

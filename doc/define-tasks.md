@@ -39,7 +39,6 @@ $schedule->addCallback(function () {
 
 This task executes shell commands.
 
-
 ```php
 /* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
 
@@ -57,6 +56,30 @@ $schedule->addProcess($process);
 
 ```console
 $ composer require symfony/process
+```
+
+### NullTask
+
+This task does nothing (is always successful) but allows you to register hooks
+that run at this task's frequency. This can be useful for Cron health monitoring
+tools like [Cronitor](https://cronitor.io/), [Laravel Envoyer](https://envoyer.io/)
+and [Healthchecks](https://healthchecks.io/). You may want to ping their health
+check endpoint every hour. Alternatively, you may want to receive an email once a
+day to let you know your schedule is running as expected.
+
+```php
+/* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
+
+$schedule->addNull('hourly health check')
+    ->hourly()
+    ->pingOnSuccess('https://example.com/health-check')
+;
+
+$schedule->addNull('daily email')
+    ->daily()
+    ->at(7)
+    ->thenEmail('admin@example.com', 'The schedule is running!')
+;
 ```
 
 ### CompoundTask
@@ -114,7 +137,8 @@ $task->hourlyAt(15); // 0-59
 
 $task->daily();
 
-$task->at('14:30');
+$task->at('14:00');
+$task->at(14); // can pass an integer as the hour and exclude the minutes
 
 $task->dailyAt('14:30'); // alias for ->at()
 
@@ -124,7 +148,7 @@ $task->weekdays();
 
 $task->weekends();
 
-$task->days(2, 4); //0 = Sunday, 6 = Saturday
+$task->days(2, 4); // 0 = Sunday, 6 = Saturday
 
 $task->mondays();
 

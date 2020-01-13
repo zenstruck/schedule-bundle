@@ -53,6 +53,11 @@ final class CompoundTask extends Task implements \IteratorAggregate
         return $this->addWithDescription(new ProcessTask($process), $description);
     }
 
+    public function addNull(string $description): self
+    {
+        return $this->add(new NullTask($description));
+    }
+
     /**
      * @return Task[]
      */
