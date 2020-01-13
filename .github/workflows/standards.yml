@@ -1,5 +1,11 @@
 name: Standards
-on: [push]
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 0 1,16 * *'
+
 jobs:
   composer-validate:
     name: Validate composer.json
