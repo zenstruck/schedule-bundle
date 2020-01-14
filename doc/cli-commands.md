@@ -11,10 +11,17 @@ Usage:
 
 Options:
       --detail          Show detailed task list
+
+Help:
+  Exit code 0: no issues.
+  Exit code 1: some issues.
 ```
 
 This command lists your currently defined schedule. It displays useful information
 and potential issues. The `--detail` option gives even more detail.
+
+Run this command as a CI build step to ensure your schedule does not make it
+to production with issues.
 
 Consider the following schedule definition:
 

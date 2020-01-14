@@ -38,6 +38,11 @@ final class ScheduleListCommand extends Command
         $this
             ->setDescription('List configured scheduled tasks')
             ->addOption('detail', null, null, 'Show detailed task list')
+            ->setHelp(<<<EOF
+Exit code 0: no issues.
+Exit code 1: some issues.
+EOF
+            )
         ;
     }
 

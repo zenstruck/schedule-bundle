@@ -36,7 +36,7 @@ final class ScheduleRunCommand extends Command
 Exit code 0: no tasks ran, schedule skipped or all tasks run were successful.
 Exit code 1: some of the tasks ran failed.
 EOF
-        )
+            )
         ;
     }
 
