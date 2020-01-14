@@ -4,6 +4,7 @@ namespace Zenstruck\ScheduleBundle\Tests\Command;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -66,7 +67,7 @@ final class ScheduleListCommandTest extends TestCase
         $this->assertStringContainsString('[ERROR] No task runner registered to handle "Zenstruck\ScheduleBundle\Schedule\Task\CommandTask".', $output);
         $this->assertStringContainsString('[ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").', $output);
         $this->assertStringContainsString('[ERROR] No extension handler registered for "Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension: On Task', $output);
-        $this->assertStringContainsString('[ERROR] Command "my:command" not found.', $output);
+        $this->assertStringContainsString('[ERROR] Command "my:command" not registered.', $output);
         $this->assertStringContainsString('Failure, ping "https://example.com/my-command-failed"".', $output);
         $this->assertStringContainsString('1 Schedule Extension:', $output);
         $this->assertStringContainsString('On Schedule Failure, email output to "admin@example.com"', $output);
@@ -104,7 +105,7 @@ final class ScheduleListCommandTest extends TestCase
         $this->assertStringContainsString('No task runner registered to handle', $output);
         $this->assertStringContainsString('In CommandTask.php line', $output);
         $this->assertStringContainsString('[Symfony\Component\Console\Exception\CommandNotFoundException]', $output);
-        $this->assertStringContainsString('Command "my:command" not found.', $output);
+        $this->assertStringContainsString('Command "my:command" not registered.', $output);
         $this->assertStringContainsString('Exception trace:', $output);
     }
 
@@ -149,11 +150,44 @@ final class ScheduleListCommandTest extends TestCase
         $this->assertStringContainsString('[ERROR] No task runner registered to handle "Zenstruck\ScheduleBundle\Schedule\Task\CommandTask".', $output);
         $this->assertStringContainsString('[ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").', $output);
         $this->assertStringContainsString('[ERROR] No extension handler registered for "Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension: On Task', $output);
-        $this->assertStringContainsString('[ERROR] Command "my:command" not found.', $output);
+        $this->assertStringContainsString('[ERROR] Command "my:command" not registered.', $output);
         $this->assertStringContainsString('Failure, ping "https://example.com/my-command-failed"".', $output);
         $this->assertStringContainsString('1 Schedule Extension:', $output);
         $this->assertStringContainsString('On Schedule Failure, email output to "admin@example.com"', $output);
         $this->assertStringContainsString('[WARNING] 1 issue with schedule:', $output);
+    }
+
+    /**
+     * @test
+     */
+    public function command_task_with_invalid_argument_shows_as_error()
+    {
+        $runner = (new MockScheduleBuilder())
+            ->addTask(new Schedule\Task\CommandTask('my:command -v --option1'))
+            ->getRunner()
+        ;
+
+        $application = new Application();
+        $application->add(new class() extends Command {
+            protected static $defaultName = 'my:command';
+
+            protected function configure()
+            {
+                $this->addArgument('arg1');
+            }
+        });
+        $command = new ScheduleListCommand($runner, new ExtensionHandlerRegistry([]));
+        $command->setHelperSet(new HelperSet([new FormatterHelper()]));
+        $command->setApplication($application);
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute([]);
+        $output = $this->normalizeOutput($commandTester);
+
+        $this->assertStringContainsString('1 Scheduled Tasks Configured', $output);
+        $this->assertStringContainsString('CommandTask my:command', $output);
+        $this->assertStringContainsString('[WARNING] 2 task issues:', $output);
+        $this->assertStringContainsString('[ERROR] The "--option1" option does not exist.', $output);
     }
 
     private function normalizeOutput(CommandTester $tester): string

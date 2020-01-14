@@ -48,12 +48,12 @@ final class CommandTask extends Task
     public function createCommandInput(Application $application): InputInterface
     {
         return new StringInput(\implode(' ', \array_filter([
-            $this->getCommand($application)->getName(),
+            $this->createCommand($application)->getName(),
             $this->getArguments(),
         ])));
     }
 
-    private function getCommand(Application $application): Command
+    public function createCommand(Application $application): Command
     {
         $registeredCommands = $application->all();
 
@@ -67,6 +67,6 @@ final class CommandTask extends Task
             }
         }
 
-        throw new CommandNotFoundException("Command \"{$this->name}\" not found.");
+        throw new CommandNotFoundException("Command \"{$this->name}\" not registered.");
     }
 }

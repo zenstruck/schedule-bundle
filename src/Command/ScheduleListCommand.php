@@ -5,6 +5,7 @@ namespace Zenstruck\ScheduleBundle\Command;
 use Lorisleiva\CronTranslator\CronTranslator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Zenstruck\ScheduleBundle\Schedule;
@@ -203,9 +204,13 @@ final class ScheduleListCommand extends Command
             yield $e;
         }
 
-        if ($task instanceof CommandTask) {
+        if ($task instanceof CommandTask && $application = $this->getApplication()) {
             try {
-                $task->createCommandInput($this->getApplication());
+                $definition = $task->createCommand($application)->getDefinition();
+                $definition->addOptions($application->getDefinition()->getOptions());
+                $input = new StringInput($task->getArguments());
+
+                $input->bind($definition);
             } catch (\Throwable $e) {
                 yield $e;
             }

@@ -78,7 +78,7 @@ final class CommandTaskTest extends TestCase
         $task = new CommandTask('invalid:command');
 
         $this->expectExceptionMessage(CommandNotFoundException::class);
-        $this->expectExceptionMessage('Command "invalid:command" not found.');
+        $this->expectExceptionMessage('Command "invalid:command" not registered.');
 
         $task->createCommandInput(new Application());
     }
