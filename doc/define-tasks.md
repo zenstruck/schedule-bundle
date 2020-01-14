@@ -9,7 +9,7 @@ to see where to add these.
 
 This task runs a Symfony console command.
 
-Using [Configuration](define-schedule.md#bundle-configuration):
+**Using [Configuration](define-schedule.md#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -20,7 +20,7 @@ zenstruck_schedule:
             frequency: 0 * * * *
 ```
 
-Using PHP:
+**Using [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
 /* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
@@ -38,7 +38,7 @@ $schedule->addCommand(\App\Command\MyCommand::class)
 This task runs a callback. The optional return value of the callback is considered the
 task *output*.
 
-*This task can only be configured in PHP.*
+*This task can only be configured in [PHP](define-schedule.md#schedulebuilder-service).*
 
 ```php
 /* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
@@ -54,7 +54,7 @@ $schedule->addCallback(function () {
 
 This task executes shell commands.
 
-Using [Configuration](define-schedule.md#bundle-configuration):
+**Using [Configuration](define-schedule.md#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -65,7 +65,7 @@ zenstruck_schedule:
             frequency: 0 * * * *
 ```
 
-Using PHP:
+**Using [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
 /* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
@@ -95,7 +95,7 @@ and [Healthchecks](https://healthchecks.io/). You may want to ping their health
 check endpoint every hour. Alternatively, you may want to receive an email once a
 day to let you know your schedule is running as expected.
 
-*This task can only be configured in PHP.*
+*This task can only be configured in [PHP](define-schedule.md#schedulebuilder-service).*
 
 ```php
 use Zenstruck\ScheduleBundle\Schedule\Task\NullTask;
@@ -119,7 +119,7 @@ $schedule->add(new NullTask('daily email'))
 This is a special task that allows you to group other tasks together that share a
 frequency, timezone and extensions.
 
-Using [Configuration](define-schedule.md#bundle-configuration):
+**Using [Configuration](define-schedule.md#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -130,13 +130,15 @@ zenstruck_schedule:
                 - my:command arg --option
                 - bash:/bin/my-script
             frequency: 0 * * * *
+            timezone: UTC
+            email_on_failure: ~
 
         -   command: # optionally key by the desired task description
                 "run my command": my:command arg --option
                 "run my bash bash script": bash:/bin/my-script
 ```
 
-In PHP:
+**Using [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
 /* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
@@ -157,7 +159,7 @@ $schedule->addCompound()
 Optionally add a unique description to your task. If none is provided, tasks define a
 default description based on their input.
 
-Using [Configuration](define-schedule.md#bundle-configuration):
+**Using [Configuration](define-schedule.md#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -169,7 +171,7 @@ zenstruck_schedule:
             description: this describes my task
 ```
 
-In PHP:
+**Using [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
 /* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
@@ -183,7 +185,7 @@ $schedule->addCommand('my:command')
 
 These are the options for defining how often your task runs:
 
-Using [Configuration](define-schedule.md#bundle-configuration):
+**Using [Configuration](define-schedule.md#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -194,7 +196,7 @@ zenstruck_schedule:
             frequency: 0 * * * *
 ```
 
-In PHP:
+**Using [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
 /* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
@@ -265,7 +267,7 @@ run a task. If none is provided, it will use PHP's default timezone.
 Alternatively, you can configure the [timezone for all tasks](define-schedule.md#timezone)
 (timezone defined on a task will take precedence).
 
-Using [Configuration](define-schedule.md#bundle-configuration):
+**Using [Configuration](define-schedule.md#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -277,7 +279,7 @@ zenstruck_schedule:
             timezone: UTC
 ```
 
-Using PHP:
+**Using [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
 /* @var \Zenstruck\ScheduleBundle\Schedule\Task $task */
@@ -294,7 +296,7 @@ The following extensions are available when defining a task:
 
 ### Filters
 
-*These extensions can only be configured in PHP.*
+*These extensions can only be configured in [PHP](define-schedule.md#schedulebuilder-service).*
 
 ```php
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
@@ -320,7 +322,7 @@ $task->skip('skipped because...', function () { // skips if return value is true
 
 ### Callbacks
 
-*These extensions can only be configured in PHP.*
+*These extensions can only be configured in [PHP](define-schedule.md#schedulebuilder-service).*
 
 ```php
 /* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
@@ -352,7 +354,7 @@ This extension is useful for Cron health monitoring tools like
 [Cronitor](https://cronitor.io/), [Laravel Envoyer](https://envoyer.io/) and
 [Healthchecks](https://healthchecks.io/).
 
-Using [Configuration](define-schedule.md#bundle-configuration):
+**Using [Configuration](define-schedule.md#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -369,7 +371,7 @@ zenstruck_schedule:
             ping_on_failure: https://example.com/task-failed
 ```
 
-Using PHP:
+**Using [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
 /* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
@@ -405,7 +407,7 @@ $task->pingOnFailure('https://example.com/task-failed');
 
 ### Email Output
 
-Using [Configuration](define-schedule.md#bundle-configuration):
+**Using [Configuration](define-schedule.md#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -424,7 +426,7 @@ zenstruck_schedule:
                 subject: my custom subject
 ```
 
-Using PHP:
+**Using [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
 /* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
@@ -476,7 +478,7 @@ $task->emailOnFailure('admin@example.com', 'my email subject', function (Symfony
 This extension *locks* the task so it cannot run if it is still running from
 a previous instance. If it is still running, the task is skipped.
 
-Using [Configuration](define-schedule.md#bundle-configuration):
+**Using [Configuration](define-schedule.md#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -488,7 +490,7 @@ zenstruck_schedule:
             without_overlapping: ~
 ```
 
-Using PHP:
+**Using [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
 /* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
@@ -521,7 +523,7 @@ task will have their task skip. Be sure to configure this extension (see
 below) with a **[remote store](https://symfony.com/doc/current/components/lock.html#remote-stores)**.
 If you use a *local store* it will not be able to lock other servers.
 
-*This extension can only be configured in PHP.*
+*This extension can only be configured in [PHP](define-schedule.md#schedulebuilder-service).*
 
 ```php
 /* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
@@ -548,7 +550,7 @@ $task->onSingleServer();
 
 ### Between
 
-Using [Configuration](define-schedule.md#bundle-configuration):
+**Using [Configuration](define-schedule.md#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -576,7 +578,7 @@ zenstruck_schedule:
                 end: 6:15
 ```
 
-Using PHP:
+**Using [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
 /* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */

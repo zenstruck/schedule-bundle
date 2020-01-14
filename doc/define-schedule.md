@@ -29,31 +29,29 @@ zenstruck_schedule:
 You can define one or more services that implement
 [`ScheduleBuilder`](../src/Schedule/ScheduleBuilder.php):
 
-1. Create the service class:
+```php
+// src/Schedule/MyScheduleBuilder.php
 
-    ```php
-    // src/Schedule/MyScheduleBuilder.php
-    
-    use Zenstruck\ScheduleBundle\Schedule;
-    use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
-    
-    class MyScheduleBuilder implements ScheduleBuilder
+use Zenstruck\ScheduleBundle\Schedule;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
+
+class MyScheduleBuilder implements ScheduleBuilder
+{
+    public function buildSchedule(Schedule $schedule): void
     {
-        public function buildSchedule(Schedule $schedule): void
-        {
-            $schedule->timezone('UTC');
+        $schedule->timezone('UTC');
 
-            $schedule->addCommand('app:send-weekly-report --detailed')
-                ->description('Send the weekly report to users.')
-                ->sundays()
-                ->at(1)
-            ;
-        }
+        $schedule->addCommand('app:send-weekly-report --detailed')
+            ->description('Send the weekly report to users.')
+            ->sundays()
+            ->at(1)
+        ;
     }
-    ```
+}
+```
 
-2. *(optional)* Add the `schedule.builder` tag to the service. This isn't necessary
-if you have autoconfigure enabled.
+**NOTE:** If *autoconfiguration* is not enabled, add the `schedule.builder` tag to
+the service.
 
 ## Your Kernel
 
@@ -91,41 +89,41 @@ class Kernel extends BaseKernel implements ScheduleBuilder
 
 ## Self-Scheduling Commands
 
-You can make your application's console commands schedule themselves:
+You can make your application's console commands schedule themselves. Have your command
+implement [`SelfSchedulingCommand`](../src/Schedule/SelfSchedulingCommand.php):
 
-1. Have your command implement [`SelfSchedulingCommand`](../src/Schedule/SelfSchedulingCommand.php):
+```php
+// src/Command/WeeklyReportCommand.php
 
-    ```php
-    // src/Command/WeeklyReportCommand.php
-    
-    use Symfony\Component\Console\Command\Command;
-    use Zenstruck\ScheduleBundle\Schedule\SelfSchedulingCommand;
-    use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
-    
-    class WeeklyReportCommand extends Command implements SelfSchedulingCommand
+use Symfony\Component\Console\Command\Command;
+use Zenstruck\ScheduleBundle\Schedule\SelfSchedulingCommand;
+use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
+
+class WeeklyReportCommand extends Command implements SelfSchedulingCommand
+{
+    // ...
+
+    public function schedule(CommandTask $task) : void
     {
-        // ...
-    
-        public function schedule(CommandTask $task) : void
-        {
-            $task
-                ->arguments('--detailed')
-                ->sundays()
-                ->at(1)
-            ;
-        }
+        $task
+            ->arguments('--detailed')
+            ->sundays()
+            ->at(1)
+        ;
     }
-    ```
+}
+```
 
-2. *(optional)* Add the `schedule.self_scheduling_command` tag to the console 
-service. This isn't necessary if you have autoconfigure enabled.
+**NOTE:** If *autoconfiguration* is not enabled, add the `schedule.self_scheduling_command`
+tag to the service.
 
 ## Timezone
 
-You may optionally define the timezone for all tasks to use. If none is provided,
-it will use PHP's default timezone. Tasks can override the *schedule* timezone.
+You may optionally define the *schedule* timezone for all tasks to use. If none is provided,
+it will use PHP's default timezone. [Tasks can override](define-tasks.md#timezone)
+the *schedule* timezone.
 
-Using [Configuration](#bundle-configuration):
+**Using [Configuration](#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -134,7 +132,7 @@ zenstruck_schedule:
     timezone: America/New_York
 ```
 
-Using PHP:
+**Using [PHP](#schedulebuilder-service):**
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -148,7 +146,7 @@ The following extensions are available when defining your schedule:
 
 ### Filters
 
-*These extensions can only be configured in PHP.*
+*These extensions can only be configured in [PHP](#schedulebuilder-service).*
 
 ```php
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
@@ -174,7 +172,7 @@ $schedule->skip('skipped because...', function () { // skips if return value is 
 
 ### Callbacks
 
-*These extensions can only be configured in PHP.*
+*These extensions can only be configured in [PHP](#schedulebuilder-service).*
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -206,7 +204,7 @@ This extension is useful for Cron health monitoring tools like
 [Cronitor](https://cronitor.io/), [Laravel Envoyer](https://envoyer.io/) and
 [Healthchecks](https://healthchecks.io/).
 
-Using [Configuration](#bundle-configuration):
+**Using [Configuration](#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -224,7 +222,7 @@ zenstruck_schedule:
             url: https://example.com/some-tasks-failed
 ```
 
-Using PHP:
+**Using [PHP](#schedulebuilder-service):**
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -262,7 +260,7 @@ $schedule->pingOnFailure('https://example.com/some-tasks-failed');
 
 ### Email On Failure
 
-Using [Configuration](#bundle-configuration):
+**Using [Configuration](#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -274,7 +272,7 @@ zenstruck_schedule:
            subject: my subject # optional, leave empty to use default
 ```
 
-Using PHP:
+**Using [PHP](#schedulebuilder-service):**
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -320,7 +318,7 @@ schedule will have their schedule skip. Be sure to configure this extension (see
 below) with a **[remote store](https://symfony.com/doc/current/components/lock.html#remote-stores)**.
 If you use a *local store* it will not be able to lock other servers.
 
-Using [Configuration](#bundle-configuration):
+**Using [Configuration](#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -330,7 +328,7 @@ zenstruck_schedule:
         on_single_server: ~
 ```
 
-Using PHP:
+**Using [PHP](#schedulebuilder-service):**
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -357,7 +355,7 @@ $schedule->onSingleServer();
 
 ### Limit to specific environment(s)
 
-Using [Configuration](#bundle-configuration):
+**Using [Configuration](#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -367,7 +365,7 @@ zenstruck_schedule:
         environments: prod
 ```
 
-Using PHP:
+**Using [PHP](#schedulebuilder-service):**
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */

@@ -5,16 +5,17 @@
 You can define your own task types. Tasks consist of a *task* object that extends
 [`Task`](../src/Schedule/Task.php) and a *runner* that implements
 [`TaskRunner`](../src/Schedule/Task/TaskRunner.php). The runner is responsible
-for running the command and returning a *result* ([`Result`](../src/Schedule/Task/Result.php)).
-If your task is capable of running itself, have your task implement
+for running the command and returning a [`Result`](../src/Schedule/Task/Result.php).
+If your task is capable of running itself, have it implement
 [`SelfRunningTask`](../src/Schedule/Task/SelfRunningTask.php) (a *runner* is not required).
-See [`CallbackTask`](../src/Schedule/Task/CallbackTask.php) for an example of a *self-running*
-task and [`CommandTask`](../src/Schedule/Task/CommandTask.php) for an example of a task with
-a *runner*.
 
 If your task requires a *runner*, the runner must be a service with the `schedule.task_runner` tag
 (this is autoconfigurable). Runners must implement the `supports()` method which should return
 true when passed the task it handles.
+
+See [`CallbackTask`](../src/Schedule/Task/CallbackTask.php) for an example of a *self-running*
+task and [`CommandTask`](../src/Schedule/Task/CommandTask.php) for an example of a task with
+a *[runner](../src/Schedule/Task/Runner/CommandTaskRunner.php)*.
 
 As an example, let's create a Task that sends a *Message* to your *MessageBus* (`symfony/messenger`
 required).
@@ -34,7 +35,8 @@ class MessageTask extends Task
     {
         $this->message = $message;
 
-        parent::__construct(get_class($message)); // be sure to call the parent constructor with a default description
+        // be sure to call the parent constructor with a default description
+        parent::__construct(get_class($message));
     }
 
     public function getMessage(): object
@@ -109,6 +111,12 @@ If your extension requires a *handler*, the handler must be a service with the
 implement the `supports()` method which should return true when passed the extension
 it handles.
 
+See [`CallbackExtension`](../src/Schedule/Extension/CallbackExtension.php) for an example
+of a *self-handling* extension and
+[`EnvironmentExtension`](../src/Schedule/Extension/EnvironmentExtension.php)
+for an example of an extension with a
+*[handler](../src/Schedule/Extension/Handler/EnvironmentHandler.php)*.
+
 Below are some examples of custom extensions:
 
 ### Example 1: Skip Schedule if in maintenance mode
@@ -116,7 +124,7 @@ Below are some examples of custom extensions:
 Say your application has the concept of maintenance mode. You want to prevent the
 schedule from running in maintenance mode. 
 
-This example assumes your `Kernel` has a `isInMaintenanceMode()` method.
+This example assumes your `Kernel` has an `isInMaintenanceMode()` method.
 
 The *extension*:
 

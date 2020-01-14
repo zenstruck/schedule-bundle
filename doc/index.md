@@ -93,7 +93,7 @@ $ composer require zenstruck/schedule-bundle
             default_from: webmaster@example.com
             default_to: admin@example.com
 
-        timezone: America/New_York # all tasks will run on this timezone
+        timezone: America/New_York # all tasks will run in this timezone
 
         schedule_extensions:
             environiments: prod # only run when in production
@@ -108,7 +108,7 @@ $ composer require zenstruck/schedule-bundle
             -   command: app:send-hourly-report --to=accounting@example.com --to=sales@example.com
                 frequency: 0 * * * 1-5 # Hourly on weekdays
                 between: 9-17 # only between 9am and 5pm
-                without_overlapping: ~ # prevent tasks from running over each other
+                without_overlapping: ~ # prevent running over itself
                 ping_on_success: https://www.example.com/hourly-report-healthcheck
     ```
 
@@ -138,7 +138,7 @@ zenstruck_schedule:
     # The HttpClient service to use
     ping_handler:         null # Example: http_client
 
-    # The timezone for tasks (override at task level), null for system default
+    # The default timezone for tasks (override at task level), null for system default
     timezone:             null # Example: America/New_York
 
     email_handler:
@@ -247,7 +247,7 @@ zenstruck_schedule:
             # Defaults to CommandTask, prefix with "bash:" to create ProcessTask, pass array of commands to create CompoundTask (optionally keyed by description)
             command:              ~ # Required, Example: "my:command arg1 --option1=value" or "bash:/bin/my-script"
 
-            # Cron string
+            # Cron expression
             frequency:            ~ # Required, Example: 0 * * * *
 
             # Task description

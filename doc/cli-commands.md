@@ -25,36 +25,26 @@ to production with issues.
 
 Consider the following schedule definition:
 
-```php
-// src/Kernel.php
+```yaml
+# config/packages/zenstruck_schedule.yaml
 
-use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
-// ...
+zenstruck_schedule:
+    schedule_extensions:
+        on_single_server: ~
+    
+    tasks:
+        -   command: send-sales-report --hourly
+            frequency: 15 * * * 1-5 # hourly on weekdays
+            without_overlapping: ~
+            email_on_failure: admin@example.com
 
-class Kernel extends BaseKernel implements ScheduleBuilder
-{
-    public function buildSchedule(Schedule $schedule): void
-    {
-        $schedule->onSingleServer();
-        
-        $schedule->addCommand('send-sales-report', '--hourly')
-            ->emailOnFailure('admin@example.com')
-            ->withoutOverlapping()
-        ;
-
-        $schedule->addCommand('send-sales-report', 'daily')
-            ->weekdays()
-            ->at(1)
-            ->pingOnSuccess('https://example.com/daily-sales-report')
-        ;
-    }
-
-    // ...
-}
+        -   command: send-sales-report --daily
+            frequency: 0 1 * * 1-5 # 1am on weekdays
+            ping_on_success: https://example.com/daily-sales-report
 ```
 
-Assuming the bundle has no configuration, running `schedule:list` shows the following output:
+Assuming the bundle has no other configuration, running `schedule:list` shows the
+following output:
 
 ```console
 $ bin/console schedule:list
