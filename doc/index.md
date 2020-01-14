@@ -13,10 +13,12 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
 1. [Installation](#installation)
 2. [Quick Start](#quick-start)
 3. [Defining the Schedule](define-schedule.md)
-    1. [Your Kernel](define-schedule.md#your-kernel)
-    2. [Self-Scheduling Commands](define-schedule.md#self-scheduling-commands)
-    3. [ScheduleBuilder Service](define-schedule.md#schedulebuilder-service)
-    4. [Schedule Hooks](define-schedule.md#schedule-hooks)
+    1. [Bundle Configuration](define-schedule.md#bundle-configuration)
+    2. [ScheduleBuilder Service](define-schedule.md#schedulebuilder-service)
+    3. [Self-Scheduling Commands](define-schedule.md#self-scheduling-commands)
+    4. [Your Kernel](define-schedule.md#your-kernel)
+    5. [Timezone](define-schedule.md#timezone)
+    6. [Schedule Extensions](define-schedule.md#schedule-extensions)
         1. [Filters](define-schedule.md#filters)
         2. [Callbacks](define-schedule.md#callbacks)
         3. [Ping Webhook](define-schedule.md#ping-webhook)
@@ -34,7 +36,7 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
     2. [Task Description](define-tasks.md#task-description)
     3. [Frequency Options](define-tasks.md#frequency-options)
     4. [Timezone](define-tasks.md#timezone)
-    5. [Task Hooks](define-tasks.md#task-hooks)
+    5. [Task Extensions](define-tasks.md#task-extensions)
         1. [Filters](define-tasks.md#filters)
         2. [Callbacks](define-tasks.md#callbacks)
         3. [Ping Webhook](define-tasks.md#ping-webhook)
@@ -81,46 +83,35 @@ $ composer require zenstruck/schedule-bundle
 
 ## Quick Start
 
-1. Have your `Kernel` implement [`ScheduleBuilder`](../src/Schedule/ScheduleBuilder.php)
-   and add tasks to your schedule:
+1. Add tasks and schedule configuration to your bundle config:
 
-    ```php
-    // src/Kernel.php
+    ```yaml
+    # config/packages/zenstruck_schedule.yaml
+
+    zenstruck_schedule:
+        email_handler: # enable email notifications
+            default_from: webmaster@example.com
+            default_to: admin@example.com
+
+        timezone: America/New_York # all tasks will run on this timezone
+
+        schedule_extensions:
+            environiments: prod # only run when in production
+            email_on_failure: ~ # send email if some tasks fail
+
+        tasks:
+            -   command: app:send-weekly-report
+                frequency: 0 * * * 0 # Sundays @ 1am
+                email_on_failure: ~ # send email if this task fails
+                ping_on_success: https://www.example.com/weekly-report-healthcheck
     
-    use Zenstruck\ScheduleBundle\Schedule;
-    use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
-    // ...
-    
-    class Kernel extends BaseKernel implements ScheduleBuilder
-    {
-        public function buildSchedule(Schedule $schedule): void
-        {
-            $schedule
-                ->onSingleServer()
-                ->emailOnFailure('admin@example.com')
-            ;
-   
-            $schedule->addCommand('app:send-weekly-report')
-                ->description('Send the weekly report to users.')
-                ->sundays()
-                ->at(1)
-                ->emailOnFailure('admin@example.com')
-                ->pingOnSuccess('https://www.example.com/weekly-report-healthcheck')
-            ;
-    
-            $schedule->addCommand('app:send-hourly-report', '--to=accounting@example.com', '--to=sales@example.com')
-                ->hourly()
-                ->between(9, 5)
-                ->withoutOverlapping()
-                ->emailOnFailure('admin@example.com')
-                ->pingOnSuccess('https://www.example.com/hourly-report-healthcheck')
-            ;
-        }
-    
-        // ...
-    }
+            -   command: app:send-hourly-report --to=accounting@example.com --to=sales@example.com
+                frequency: 0 * * * 1-5 # Hourly on weekdays
+                between: 9-17 # only between 9am and 5pm
+                without_overlapping: ~ # prevent tasks from running over each other
+                ping_on_success: https://www.example.com/hourly-report-healthcheck
     ```
-   
+
 2. List your tasks to diagnose any problems:
 
     ```console
@@ -177,7 +168,7 @@ zenstruck_schedule:
             # Maximum expected lock duration in seconds
             ttl:                  3600
 
-        # Send email if schedule fails
+        # Send email if schedule fails (alternatively enable by passing a "to" email)
         email_on_failure:
             enabled:              false
 
@@ -187,7 +178,7 @@ zenstruck_schedule:
             # Email subject (leave blank to use extension default)
             subject:              null
 
-        # Ping a url before schedule runs
+        # Ping a url before schedule runs (alternatively enable by passing a url)
         ping_before:
             enabled:              false
 
@@ -200,7 +191,7 @@ zenstruck_schedule:
             # See HttpClientInterface::OPTIONS_DEFAULTS
             options:              []
 
-        # Ping a url after schedule runs
+        # Ping a url after schedule runs (alternatively enable by passing a url)
         ping_after:
             enabled:              false
 
@@ -213,7 +204,7 @@ zenstruck_schedule:
             # See HttpClientInterface::OPTIONS_DEFAULTS
             options:              []
 
-        # Ping a url if the schedule successfully ran
+        # Ping a url if the schedule successfully ran (alternatively enable by passing a url)
         ping_on_success:
             enabled:              false
 
@@ -226,7 +217,7 @@ zenstruck_schedule:
             # See HttpClientInterface::OPTIONS_DEFAULTS
             options:              []
 
-        # Ping a url if the schedule failed
+        # Ping a url if the schedule failed (alternatively enable by passing a url)
         ping_on_failure:
             enabled:              false
 
@@ -238,4 +229,121 @@ zenstruck_schedule:
 
             # See HttpClientInterface::OPTIONS_DEFAULTS
             options:              []
+    tasks:
+
+        # Example:
+        - 
+            command:             send:sales-report --detailed
+            frequency:           0 * * * *
+            description:         Send sales report hourly
+            without_overlapping: ~
+            between:             9-17
+            ping_on_success:     https://example.com/hourly-report-health-check
+            email_on_failure:    sales@example.com
+
+        # Prototype
+        -
+
+            # Defaults to CommandTask, prefix with "bash:" to create ProcessTask, pass array of commands to create CompoundTask (optionally keyed by description)
+            command:              ~ # Required, Example: "my:command arg1 --option1=value" or "bash:/bin/my-script"
+
+            # Cron string
+            frequency:            ~ # Required, Example: 0 * * * *
+
+            # Task description
+            description:          null
+
+            # The timezone for this task, null for system default
+            timezone:             null # Example: America/New_York
+
+            # Prevent task from running if still running from previous run
+            without_overlapping:
+                enabled:              false
+
+                # Maximum expected lock duration in seconds
+                ttl:                  86400
+
+            # Only run between given times (alternatively enable by passing a range, ie "9:00-17:00"
+            between:
+                enabled:              false
+                start:                ~ # Required, Example: 9:00
+                end:                  ~ # Required, Example: 17:00
+
+            # Skip when between given times (alternatively enable by passing a range, ie "17:00-06:00"
+            unless_between:
+                enabled:              false
+                start:                ~ # Required, Example: 17:00
+                end:                  ~ # Required, Example: 06:00
+
+            # Ping a url before task runs (alternatively enable by passing a url)
+            ping_before:
+                enabled:              false
+
+                # The url to ping
+                url:                  ~ # Required
+
+                # The HTTP method to use
+                method:               GET
+
+                # See HttpClientInterface::OPTIONS_DEFAULTS
+                options:              []
+
+            # Ping a url after task runs (alternatively enable by passing a url)
+            ping_after:
+                enabled:              false
+
+                # The url to ping
+                url:                  ~ # Required
+
+                # The HTTP method to use
+                method:               GET
+
+                # See HttpClientInterface::OPTIONS_DEFAULTS
+                options:              []
+
+            # Ping a url if the task successfully ran (alternatively enable by passing a url)
+            ping_on_success:
+                enabled:              false
+
+                # The url to ping
+                url:                  ~ # Required
+
+                # The HTTP method to use
+                method:               GET
+
+                # See HttpClientInterface::OPTIONS_DEFAULTS
+                options:              []
+
+            # Ping a url if the task failed (alternatively enable by passing a url)
+            ping_on_failure:
+                enabled:              false
+
+                # The url to ping
+                url:                  ~ # Required
+
+                # The HTTP method to use
+                method:               GET
+
+                # See HttpClientInterface::OPTIONS_DEFAULTS
+                options:              []
+
+            # Send email after task runs (alternatively enable by passing a "to" email)
+            email_after:
+                enabled:              false
+
+                # Email address to send email to (leave blank to use "zenstruck_schedule.email_handler.default_to")
+                to:                   null
+
+                # Email subject (leave blank to use extension default)
+                subject:              null
+
+            # Send email if task fails (alternatively enable by passing a "to" email)
+            email_on_failure:
+                enabled:              false
+
+                # Email address to send email to (leave blank to use "zenstruck_schedule.email_handler.default_to")
+                to:                   null
+
+                # Email subject (leave blank to use extension default)
+                subject:              null
 ```

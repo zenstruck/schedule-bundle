@@ -28,6 +28,11 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
+        <service id="Zenstruck\ScheduleBundle\EventListener\ConfigureTasksSubscriber">
+            <argument /> <!-- task config -->
+            <tag name="kernel.event_subscriber" />
+        </service>
+
         <service id="Zenstruck\ScheduleBundle\EventListener\ConfigureScheduleSubscriber">
             <argument type="tagged_iterator" tag="schedule.configured_extension" />
             <tag name="kernel.event_subscriber" />

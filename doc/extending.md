@@ -102,7 +102,7 @@ can be added to both tasks and the schedule as a whole. Extensions must implemen
 [`ExtensionHandler`](../src/Schedule/Extension/ExtensionHandler.php). If your
 extension is capable of handling itself, the extension can extend
 [`SelfHandlingExtension`](../src/Schedule/Extension/SelfHandlingExtension.php) (a
-handler is not required). Override the hooks that are applicable to your extension.
+handler is not required). Override the methods that are applicable to your extension.
 
 If your extension requires a *handler*, the handler must be a service with the
 `schedule.extension_handler` tag (this is autoconfigurable). Extension handlers must

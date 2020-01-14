@@ -8,6 +8,7 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
+use Zenstruck\ScheduleBundle\EventListener\ConfigureTasksSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\TimezoneSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EnvironmentExtension;
@@ -47,6 +48,11 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+
+        $container
+            ->getDefinition(ConfigureTasksSubscriber::class)
+            ->setArgument(0, $mergedConfig['tasks'])
+        ;
 
         if ($mergedConfig['without_overlapping_handler']) {
             $loader->load('without_overlapping.xml');
