@@ -340,8 +340,8 @@ $task->emailOnFailure('admin@example.com', 'my email subject', function (Symfony
     zenstruck_schedule:
         email_handler:
             service: mailer # required
-            default_to: admin@hammfg.com # optional (exclude if defined in code)
-            default_from: webmaster@hammfg.com # exclude only if a "global from" is defined for your application
+            default_to: admin@example.com # optional (exclude if defined in code)
+            default_from: webmaster@example.com # exclude only if a "global from" is defined for your application
             subject_prefix: "[Acme Inc]" # optional
     ```
 
