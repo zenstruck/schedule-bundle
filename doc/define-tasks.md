@@ -68,14 +68,16 @@ check endpoint every hour. Alternatively, you may want to receive an email once 
 day to let you know your schedule is running as expected.
 
 ```php
+use Zenstruck\ScheduleBundle\Schedule\Task\NullTask;
+
 /* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
 
-$schedule->addNull('hourly health check')
+$schedule->add(new NullTask('hourly health check'))
     ->hourly()
     ->pingOnSuccess('https://example.com/health-check')
 ;
 
-$schedule->addNull('daily email')
+$schedule->add(new NullTask('daily email'))
     ->daily()
     ->at(7)
     ->thenEmail('admin@example.com', 'The schedule is running!')

@@ -149,6 +149,7 @@ zenstruck_schedule:
 
     # The timezone for tasks (override at task level), null for system default
     timezone:             null # Example: America/New_York
+
     email_handler:
         enabled:              false
 

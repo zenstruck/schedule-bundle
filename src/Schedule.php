@@ -15,7 +15,6 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\CallbackTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\CompoundTask;
-use Zenstruck\ScheduleBundle\Schedule\Task\NullTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\ProcessTask;
 
 /**
@@ -72,11 +71,6 @@ final class Schedule
     public function addProcess($process): ProcessTask
     {
         return $this->add(new ProcessTask($process));
-    }
-
-    public function addNull(string $description): NullTask
-    {
-        return $this->add(new NullTask($description));
     }
 
     public function addCompound(): CompoundTask
