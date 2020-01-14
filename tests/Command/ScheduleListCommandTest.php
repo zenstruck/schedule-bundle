@@ -138,7 +138,7 @@ final class ScheduleListCommandTest extends TestCase
         $commandTester->execute(['--detail' => null]);
         $output = $this->normalizeOutput($commandTester);
 
-        $this->assertStringContainsString('1 Scheduled Tasks Configured', $output);
+        $this->assertStringContainsString('1 Scheduled Task Configured', $output);
         $this->assertStringContainsString('(1/1) CommandTask: my:command', $output);
         $this->assertStringContainsString('Every Monday at 1:30am (30 1 * * 1)', $output);
         $this->assertStringContainsString('Mon,', $output);
@@ -184,7 +184,7 @@ final class ScheduleListCommandTest extends TestCase
         $commandTester->execute([]);
         $output = $this->normalizeOutput($commandTester);
 
-        $this->assertStringContainsString('1 Scheduled Tasks Configured', $output);
+        $this->assertStringContainsString('1 Scheduled Task Configured', $output);
         $this->assertStringContainsString('CommandTask my:command', $output);
         $this->assertStringContainsString('[WARNING] 2 task issues:', $output);
         $this->assertStringContainsString('[ERROR] The "--option1" option does not exist.', $output);

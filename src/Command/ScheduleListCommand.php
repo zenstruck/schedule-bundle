@@ -56,7 +56,7 @@ EOF
 
         $io = new SymfonyStyle($input, $output);
 
-        $io->title(\sprintf('<info>%d</info> Scheduled Tasks Configured', \count($schedule->all())));
+        $io->title(\sprintf('<info>%d</info> Scheduled Task%s Configured', \count($schedule->all()), \count($schedule->all()) > 1 ? 's' : ''));
 
         $exit = $input->getOption('detail') ? $this->renderDetail($schedule, $io) : $this->renderTable($schedule, $io);
 
