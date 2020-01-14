@@ -47,6 +47,7 @@ final class Configuration implements ConfigurationInterface
                     ->children()
                         ->scalarNode('service')
                             ->defaultValue('mailer')
+                            ->cannotBeEmpty()
                             ->info('The mailer service to use')
                         ->end()
                         ->scalarNode('default_from')
