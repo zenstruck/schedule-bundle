@@ -1,6 +1,6 @@
 <?php
 
-namespace Zenstruck\ScheduleBundle\Tests\Functional;
+namespace Zenstruck\ScheduleBundle\Tests\EventListener;
 
 use PHPUnit\Framework\TestCase;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleTimezoneSubscriber;
@@ -11,7 +11,7 @@ use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class ScheduleTimezoneTest extends TestCase
+final class ScheduleTimezoneSubscriberTest extends TestCase
 {
     /**
      * @test

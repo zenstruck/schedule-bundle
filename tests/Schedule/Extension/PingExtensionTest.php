@@ -1,6 +1,6 @@
 <?php
 
-namespace Zenstruck\ScheduleBundle\Tests\Functional;
+namespace Zenstruck\ScheduleBundle\Tests\Schedule\Extension;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -14,7 +14,7 @@ use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class PingWebhookTest extends TestCase
+final class PingExtensionTest extends TestCase
 {
     /**
      * @test

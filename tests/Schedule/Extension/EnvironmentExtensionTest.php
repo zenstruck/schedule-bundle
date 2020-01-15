@@ -1,6 +1,6 @@
 <?php
 
-namespace Zenstruck\ScheduleBundle\Tests\Functional;
+namespace Zenstruck\ScheduleBundle\Tests\Schedule\Extension;
 
 use PHPUnit\Framework\TestCase;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EnvironmentExtension;
@@ -10,7 +10,7 @@ use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class EnvironmentTest extends TestCase
+final class EnvironmentExtensionTest extends TestCase
 {
     /**
      * @test

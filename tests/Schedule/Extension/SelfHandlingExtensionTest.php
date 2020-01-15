@@ -1,6 +1,6 @@
 <?php
 
-namespace Zenstruck\ScheduleBundle\Tests\Functional;
+namespace Zenstruck\ScheduleBundle\Tests\Schedule\Extension;
 
 use PHPUnit\Framework\TestCase;
 use Zenstruck\ScheduleBundle\Schedule;

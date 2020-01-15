@@ -1,6 +1,6 @@
 <?php
 
-namespace Zenstruck\ScheduleBundle\Tests\Functional;
+namespace Zenstruck\ScheduleBundle\Tests\Schedule\Extension;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\Test\TestLogger;
@@ -13,7 +13,7 @@ use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class WithoutOverlappingTest extends TestCase
+final class WithoutOverlappingExtensionTest extends TestCase
 {
     /**
      * @test

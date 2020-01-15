@@ -1,6 +1,6 @@
 <?php
 
-namespace Zenstruck\ScheduleBundle\Tests\Functional;
+namespace Zenstruck\ScheduleBundle\Tests\Schedule\Extension;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mailer\Envelope;
@@ -16,7 +16,7 @@ use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class EmailTest extends TestCase
+final class EmailExtensionTest extends TestCase
 {
     /**
      * @test

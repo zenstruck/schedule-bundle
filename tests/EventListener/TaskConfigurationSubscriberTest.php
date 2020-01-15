@@ -1,6 +1,6 @@
 <?php
 
-namespace Zenstruck\ScheduleBundle\Tests\Functional;
+namespace Zenstruck\ScheduleBundle\Tests\EventListener;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Processor;
@@ -14,7 +14,7 @@ use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class TaskConfigurationTest extends TestCase
+final class TaskConfigurationSubscriberTest extends TestCase
 {
     /**
      * @test

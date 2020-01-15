@@ -1,6 +1,6 @@
 <?php
 
-namespace Zenstruck\ScheduleBundle\Tests\Functional;
+namespace Zenstruck\ScheduleBundle\Tests\Schedule;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
