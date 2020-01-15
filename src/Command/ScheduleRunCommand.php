@@ -7,7 +7,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Zenstruck\ScheduleBundle\EventListener\ConsoleOutputScheduleSubscriber;
+use Zenstruck\ScheduleBundle\EventListener\ScheduleConsoleOutputSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunner;
 
 /**
@@ -44,7 +44,7 @@ EOF
     {
         $io = new SymfonyStyle($input, $output);
 
-        $this->dispatcher->addSubscriber(new ConsoleOutputScheduleSubscriber($io));
+        $this->dispatcher->addSubscriber(new ScheduleConsoleOutputSubscriber($io));
 
         return ($this->scheduleRunner)()->isSuccessful() ? 0 : 1;
     }

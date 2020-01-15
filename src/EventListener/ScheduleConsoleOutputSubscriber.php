@@ -13,7 +13,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task\Result;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class ConsoleOutputScheduleSubscriber implements EventSubscriberInterface
+final class ScheduleConsoleOutputSubscriber implements EventSubscriberInterface
 {
     private $io;
 
