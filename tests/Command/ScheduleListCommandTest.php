@@ -13,7 +13,9 @@ use Zenstruck\ScheduleBundle\Command\ScheduleListCommand;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
+use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
+use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -62,6 +64,7 @@ final class ScheduleListCommandTest extends TestCase
         $commandTester->execute([]);
         $output = $this->normalizeOutput($commandTester);
 
+        $this->assertSame(1, $commandTester->getStatusCode());
         $this->assertStringContainsString('[!] CommandTask my:command 2 Every Monday at 1:30am (30 1 * * 1)', $output);
         $this->assertStringContainsString('[WARNING] 4 task issues:', $output);
         $this->assertStringContainsString('[ERROR] No task runner registered to handle "Zenstruck\ScheduleBundle\Schedule\Task\CommandTask".', $output);
@@ -99,6 +102,7 @@ final class ScheduleListCommandTest extends TestCase
         $commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]);
         $output = $this->normalizeOutput($commandTester);
 
+        $this->assertSame(1, $commandTester->getStatusCode());
         $this->assertStringContainsString('[WARNING] 2 task issues:', $output);
         $this->assertStringContainsString('In ScheduleRunner.php line', $output);
         $this->assertStringContainsString('[LogicException]', $output);
@@ -138,6 +142,7 @@ final class ScheduleListCommandTest extends TestCase
         $commandTester->execute(['--detail' => null]);
         $output = $this->normalizeOutput($commandTester);
 
+        $this->assertSame(1, $commandTester->getStatusCode());
         $this->assertStringContainsString('1 Scheduled Task Configured', $output);
         $this->assertStringContainsString('(1/1) CommandTask: my:command', $output);
         $this->assertStringContainsString('Every Monday at 1:30am (30 1 * * 1)', $output);
@@ -163,7 +168,7 @@ final class ScheduleListCommandTest extends TestCase
     public function command_task_with_invalid_argument_shows_as_error()
     {
         $runner = (new MockScheduleBuilder())
-            ->addTask(new Schedule\Task\CommandTask('my:command -v --option1'))
+            ->addTask(new CommandTask('my:command -v --option1'))
             ->getRunner()
         ;
 
@@ -184,10 +189,35 @@ final class ScheduleListCommandTest extends TestCase
         $commandTester->execute([]);
         $output = $this->normalizeOutput($commandTester);
 
+        $this->assertSame(1, $commandTester->getStatusCode());
         $this->assertStringContainsString('1 Scheduled Task Configured', $output);
         $this->assertStringContainsString('CommandTask my:command', $output);
         $this->assertStringContainsString('[WARNING] 2 task issues:', $output);
         $this->assertStringContainsString('[ERROR] The "--option1" option does not exist.', $output);
+    }
+
+    /**
+     * @test
+     */
+    public function no_issues_returns_successful_exit_code()
+    {
+        $runner = (new MockScheduleBuilder())
+            ->addTask(new MockTask('my task'))
+            ->getRunner()
+        ;
+
+        $command = new ScheduleListCommand($runner, new ExtensionHandlerRegistry([]));
+        $command->setHelperSet(new HelperSet([new FormatterHelper()]));
+        $command->setApplication(new Application());
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute([]);
+        $output = $this->normalizeOutput($commandTester);
+
+        $this->assertSame(0, $commandTester->getStatusCode());
+        $this->assertStringContainsString('1 Scheduled Task Configured', $output);
+        $this->assertStringContainsString('MockTask', $output);
+        $this->assertStringContainsString('my task', $output);
     }
 
     private function normalizeOutput(CommandTester $tester): string
