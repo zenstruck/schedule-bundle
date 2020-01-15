@@ -117,6 +117,10 @@ of a *self-handling* extension and
 for an example of an extension with a
 *[handler](../src/Schedule/Extension/Handler/EnvironmentHandler.php)*.
 
+If your extension is applicable to the schedule, you can auto-add it by registering
+it as a service and adding the `schedule.extension` tag (autoconfiguration is not
+available).
+
 Below are some examples of custom extensions:
 
 ### Example 1: Skip Schedule if in maintenance mode
@@ -142,7 +146,7 @@ class NotInMaintenanceMode implements Extension
 }
 ```
 
-The *handler*:
+The *handler* service:
 
 ```php
 // src/Schedule/Extension/NotInMaintenanceModeHandler.php
@@ -179,7 +183,11 @@ class NotInMaintenanceModeHandler extends ExtensionHandler
 }
 ```
 
-Add to your schedule:
+The easiest way to add this extension to your schedule is to register the *extension*
+(`App\Schedule\Extension\NotInMaintenanceMode`) as a service and tag it with
+`schedule.extension`.
+
+Alternatively, you can add it to the schedule in PHP:
 
 ```php
 use App\Schedule\Extension\NotInMaintenanceMode;
