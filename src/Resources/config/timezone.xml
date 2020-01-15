@@ -5,7 +5,7 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="Zenstruck\ScheduleBundle\EventListener\TimezoneSubscriber">
+        <service id="Zenstruck\ScheduleBundle\EventListener\ScheduleTimezoneSubscriber">
             <argument /> <!-- timezone -->
             <tag name="kernel.event_subscriber" />
         </service>

@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Zenstruck\ScheduleBundle\EventListener\ConfigureTasksSubscriber;
-use Zenstruck\ScheduleBundle\EventListener\TimezoneSubscriber;
+use Zenstruck\ScheduleBundle\EventListener\ScheduleTimezoneSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EnvironmentExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
@@ -84,7 +84,7 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
         if ($mergedConfig['timezone']) {
             $loader->load('timezone.xml');
             $container
-                ->getDefinition(TimezoneSubscriber::class)
+                ->getDefinition(ScheduleTimezoneSubscriber::class)
                 ->setArgument(0, $mergedConfig['timezone'])
             ;
         }

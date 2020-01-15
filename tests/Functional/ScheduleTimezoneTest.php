@@ -3,7 +3,7 @@
 namespace Zenstruck\ScheduleBundle\Tests\Functional;
 
 use PHPUnit\Framework\TestCase;
-use Zenstruck\ScheduleBundle\EventListener\TimezoneSubscriber;
+use Zenstruck\ScheduleBundle\EventListener\ScheduleTimezoneSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\Task\CompoundTask;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
@@ -11,7 +11,7 @@ use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class TimezoneTest extends TestCase
+final class ScheduleTimezoneTest extends TestCase
 {
     /**
      * @test
@@ -25,7 +25,7 @@ final class TimezoneTest extends TestCase
                 ->add(new MockTask())
                 ->add((new MockTask())->timezone(new \DateTimeZone('America/Edmonton')))
             )
-            ->addSubscriber(new TimezoneSubscriber('America/Toronto'))
+            ->addSubscriber(new ScheduleTimezoneSubscriber('America/Toronto'))
             ->getRunner()
             ->buildSchedule()
             ->all()

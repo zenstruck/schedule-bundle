@@ -8,7 +8,7 @@ use Zenstruck\ScheduleBundle\Event\ScheduleBuildEvent;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class TimezoneSubscriber implements EventSubscriberInterface
+final class ScheduleTimezoneSubscriber implements EventSubscriberInterface
 {
     private $timezone;
 

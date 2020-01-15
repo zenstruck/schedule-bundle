@@ -12,7 +12,7 @@ use Zenstruck\ScheduleBundle\EventListener\ConfigureTasksSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\LogScheduleSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleBuilderSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\SelfSchedulingSubscriber;
-use Zenstruck\ScheduleBundle\EventListener\TimezoneSubscriber;
+use Zenstruck\ScheduleBundle\EventListener\ScheduleTimezoneSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EnvironmentExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry;
@@ -88,9 +88,9 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     {
         $this->load(['timezone' => 'UTC']);
 
-        $this->assertContainerBuilderHasService(TimezoneSubscriber::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(TimezoneSubscriber::class, 0, 'UTC');
-        $this->assertContainerBuilderHasServiceDefinitionWithTag(TimezoneSubscriber::class, 'kernel.event_subscriber');
+        $this->assertContainerBuilderHasService(ScheduleTimezoneSubscriber::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(ScheduleTimezoneSubscriber::class, 0, 'UTC');
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(ScheduleTimezoneSubscriber::class, 'kernel.event_subscriber');
     }
 
     /**
