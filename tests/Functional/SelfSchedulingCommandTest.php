@@ -4,7 +4,7 @@ namespace Zenstruck\ScheduleBundle\Tests\Functional;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
-use Zenstruck\ScheduleBundle\EventListener\SelfSchedulingSubscriber;
+use Zenstruck\ScheduleBundle\EventListener\SelfSchedulingCommandSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\SelfSchedulingCommand;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
@@ -28,7 +28,7 @@ final class SelfSchedulingCommandTest extends TestCase
         };
 
         $tasks = (new MockScheduleBuilder())
-            ->addSubscriber(new SelfSchedulingSubscriber([$command]))
+            ->addSubscriber(new SelfSchedulingCommandSubscriber([$command]))
             ->getRunner()
             ->buildSchedule()
             ->all()
@@ -53,7 +53,7 @@ final class SelfSchedulingCommandTest extends TestCase
         $this->expectExceptionMessageRegExp('/is not a console command/');
 
         (new MockScheduleBuilder())
-            ->addSubscriber(new SelfSchedulingSubscriber([$command]))
+            ->addSubscriber(new SelfSchedulingCommandSubscriber([$command]))
             ->run()
         ;
     }

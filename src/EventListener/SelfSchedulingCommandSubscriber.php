@@ -11,12 +11,12 @@ use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class SelfSchedulingSubscriber implements EventSubscriberInterface
+final class SelfSchedulingCommandSubscriber implements EventSubscriberInterface
 {
     private $commands;
 
     /**
-     * @param \Zenstruck\ScheduleBundle\Schedule\SelfSchedulingCommand[] $commands
+     * @param SelfSchedulingCommand[] $commands
      */
     public function __construct(iterable $commands)
     {

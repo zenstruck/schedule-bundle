@@ -38,7 +38,7 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="Zenstruck\ScheduleBundle\EventListener\SelfSchedulingSubscriber">
+        <service id="Zenstruck\ScheduleBundle\EventListener\SelfSchedulingCommandSubscriber">
             <argument type="tagged_iterator" tag="schedule.self_scheduling_command" />
             <tag name="kernel.event_subscriber" />
         </service>

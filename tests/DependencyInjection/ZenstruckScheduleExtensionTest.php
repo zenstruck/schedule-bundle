@@ -11,8 +11,8 @@ use Zenstruck\ScheduleBundle\EventListener\ConfigureScheduleSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\ConfigureTasksSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\LogScheduleSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleBuilderSubscriber;
-use Zenstruck\ScheduleBundle\EventListener\SelfSchedulingSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleTimezoneSubscriber;
+use Zenstruck\ScheduleBundle\EventListener\SelfSchedulingCommandSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EnvironmentExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry;
@@ -55,8 +55,8 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService(ConfigureScheduleSubscriber::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(ConfigureScheduleSubscriber::class, 'kernel.event_subscriber');
 
-        $this->assertContainerBuilderHasService(SelfSchedulingSubscriber::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithTag(SelfSchedulingSubscriber::class, 'kernel.event_subscriber');
+        $this->assertContainerBuilderHasService(SelfSchedulingCommandSubscriber::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(SelfSchedulingCommandSubscriber::class, 'kernel.event_subscriber');
 
         $this->assertContainerBuilderHasService(CommandTaskRunner::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(CommandTaskRunner::class, 'schedule.task_runner');
