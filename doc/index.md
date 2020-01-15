@@ -1,10 +1,10 @@
 # The ScheduleBundle
 
-Schedule Cron jobs (Symfony commands/callbacks/bash scripts) within your Symfony
+Schedule Cron jobs (commands/callbacks/bash scripts) within your Symfony
 application. Most applications have jobs that need to run at specific intervals.
 This bundle enables you to define these jobs in your code. Job definitions (tasks)
 are version controlled like any other feature of your application. A single Cron
-entry (`schedule:run` command) on your server running every minute executes due
+entry (`bin/console schedule:run`) on your server running every minute executes due
 tasks.
 
 The inspiration and some of the API/code for this Bundle comes from [Laravel's
@@ -31,8 +31,8 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
         1. [CommandTask](define-tasks.md#commandtask)
         2. [CallbackTask](define-tasks.md#callbacktask)
         3. [ProcessTask](define-tasks.md#processtask)
-        4. [NullTask](define-tasks.md#nulltask)
-        5. [CompoundTask](define-tasks.md#compoundtask)
+        4. [CompoundTask](define-tasks.md#compoundtask)
+        5. [NullTask](define-tasks.md#nulltask)
     2. [Task Description](define-tasks.md#task-description)
     3. [Frequency Options](define-tasks.md#frequency-options)
     4. [Timezone](define-tasks.md#timezone)

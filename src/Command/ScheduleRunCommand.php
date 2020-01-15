@@ -33,8 +33,12 @@ final class ScheduleRunCommand extends Command
         $this
             ->setDescription('Runs scheduled tasks that are due')
             ->setHelp(<<<EOF
-Exit code 0: no tasks ran, schedule skipped or all tasks run were successful.
-Exit code 1: some of the tasks ran failed.
+Exit code 0: no tasks ran, schedule skipped, or all tasks run were successful.
+Exit code 1: one or more tasks failed.
+
+Add this command as a Cron job to your production server(s) running every minute:
+
+* * * * * cd /path-to-your-project && bin/console schedule:run >> /dev/null 2>&1
 EOF
             )
         ;

@@ -98,20 +98,25 @@ Usage:
   schedule:run
 
 Help:
-  Exit code 0: no tasks ran, schedule skipped or all tasks run were successful.
-  Exit code 1: some of the tasks ran failed.
+  Exit code 0: no tasks ran, schedule skipped, or all tasks run were successful.
+  Exit code 1: one or more tasks failed.
+
+  Add this command as a Cron job to your production server(s) running every minute:
+
+  * * * * * cd /path-to-your-project && bin/console schedule:run >> /dev/null 2>&1
 ```
 
 This is the command that runs currently due tasks. It should be added as a Cron
-job to your production server running every minute:
+job to your production server(s) running every minute:
 
 ```
 * * * * * cd /path-to-your-project && bin/console schedule:run >> /dev/null 2>&1
 ```
 
 The above Cron job sends the command output to `/dev/null` but the command does
-produce output. Using the example from `schedule:list` above and assuming one of the
-tasks are due at time of run, the command will output the following:
+produce output if you wish to store that somewhere. Using the example from
+`schedule:list` above and assuming one of the tasks are due at time of run, the
+command will output the following:
 
 ```console
 $ bin/console schedule:run

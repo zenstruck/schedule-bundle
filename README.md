@@ -5,11 +5,11 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/kbond/schedule-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/kbond/schedule-bundle/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/kbond/schedule-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/kbond/schedule-bundle/?branch=master)
 
-Schedule Cron jobs (Symfony commands/callbacks/bash scripts) within your Symfony
+Schedule Cron jobs (commands/callbacks/bash scripts) within your Symfony
 application. Most applications have jobs that need to run at specific intervals.
 This bundle enables you to define these jobs in your code. Job definitions (tasks)
 are version controlled like any other feature of your application. A single Cron
-entry (`schedule:run` command) on your server running every minute executes due
+entry (`bin/console schedule:run`) on your server running every minute executes due
 tasks.
 
 The inspiration and some of the API/code for this Bundle comes from [Laravel's

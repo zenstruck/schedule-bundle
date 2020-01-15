@@ -86,34 +86,6 @@ $schedule->addProcess($process);
 $ composer require symfony/process
 ```
 
-### NullTask
-
-This task does nothing (is always successful) but allows you to register extensions
-that run at this task's frequency. This can be useful for Cron health monitoring
-tools like [Cronitor](https://cronitor.io/), [Laravel Envoyer](https://envoyer.io/)
-and [Healthchecks](https://healthchecks.io/). You may want to ping their health
-check endpoint every hour. Alternatively, you may want to receive an email once a
-day to let you know your schedule is running as expected.
-
-*This task can only be configured in [PHP](define-schedule.md#schedulebuilder-service).*
-
-```php
-use Zenstruck\ScheduleBundle\Schedule\Task\NullTask;
-
-/* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
-
-$schedule->add(new NullTask('hourly health check'))
-    ->hourly()
-    ->pingOnSuccess('https://example.com/health-check')
-;
-
-$schedule->add(new NullTask('daily email'))
-    ->daily()
-    ->at(7)
-    ->thenEmail('admin@example.com', 'The schedule is running!')
-;
-```
-
 ### CompoundTask
 
 This is a special task that allows you to group other tasks together that share a
@@ -151,6 +123,34 @@ $schedule->addCompound()
     ->at('1:30')
     ->timezone('UTC')
     ->emailOnFailure('admin@example.com')
+;
+```
+
+### NullTask
+
+This task does nothing (is always successful) but allows you to register extensions
+that run at this task's frequency. This can be useful for Cron health monitoring
+tools like [Cronitor](https://cronitor.io/), [Laravel Envoyer](https://envoyer.io/)
+and [Healthchecks](https://healthchecks.io/). You may want to ping their health
+check endpoint every hour. Alternatively, you may want to receive an email once a
+day to let you know your schedule is running as expected.
+
+*This task can only be configured in [PHP](define-schedule.md#schedulebuilder-service).*
+
+```php
+use Zenstruck\ScheduleBundle\Schedule\Task\NullTask;
+
+/* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
+
+$schedule->add(new NullTask('hourly health check'))
+    ->hourly()
+    ->pingOnSuccess('https://example.com/health-check')
+;
+
+$schedule->add(new NullTask('daily email'))
+    ->daily()
+    ->at(7)
+    ->thenEmail('admin@example.com', 'The schedule is running!')
 ;
 ```
 
