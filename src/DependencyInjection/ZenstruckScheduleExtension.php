@@ -159,7 +159,7 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
         }
 
         foreach ($definitions as $definition) {
-            $definition->addTag('schedule.configured_extension');
+            $definition->addTag('schedule.extension');
         }
 
         $container->addDefinitions($definitions);

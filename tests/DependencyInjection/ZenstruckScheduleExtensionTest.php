@@ -4,11 +4,12 @@ namespace Zenstruck\ScheduleBundle\Tests\DependencyInjection;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
+use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Zenstruck\ScheduleBundle\Command\ScheduleListCommand;
 use Zenstruck\ScheduleBundle\Command\ScheduleRunCommand;
 use Zenstruck\ScheduleBundle\DependencyInjection\ZenstruckScheduleExtension;
-use Zenstruck\ScheduleBundle\EventListener\ConfigureScheduleSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleBuilderSubscriber;
+use Zenstruck\ScheduleBundle\EventListener\ScheduleExtensionSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleLoggerSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleTimezoneSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\SelfSchedulingCommandSubscriber;
@@ -52,8 +53,8 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService(ScheduleBuilderSubscriber::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(ScheduleBuilderSubscriber::class, 'kernel.event_subscriber');
 
-        $this->assertContainerBuilderHasService(ConfigureScheduleSubscriber::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithTag(ConfigureScheduleSubscriber::class, 'kernel.event_subscriber');
+        $this->assertContainerBuilderHasService(ScheduleExtensionSubscriber::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(ScheduleExtensionSubscriber::class, 'kernel.event_subscriber');
 
         $this->assertContainerBuilderHasService(SelfSchedulingCommandSubscriber::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(SelfSchedulingCommandSubscriber::class, 'kernel.event_subscriber');
@@ -183,7 +184,12 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
 
         $this->assertContainerBuilderHasService('zenstruck_schedule.extension.environments', EnvironmentExtension::class);
         $this->assertContainerBuilderHasServiceDefinitionWithArgument('zenstruck_schedule.extension.environments', 0, ['prod']);
-        $this->assertContainerBuilderHasServiceDefinitionWithTag('zenstruck_schedule.extension.environments', 'schedule.configured_extension');
+        $this->assertContainerBuilderHasServiceDefinitionWithTag('zenstruck_schedule.extension.environments', 'schedule.extension');
+
+        $extensionIterator = $this->container->getDefinition(ScheduleExtensionSubscriber::class)->getArgument(0);
+
+        $this->assertInstanceOf(TaggedIteratorArgument::class, $extensionIterator);
+        $this->assertSame('schedule.extension', $extensionIterator->getTag());
     }
 
     /**
@@ -208,7 +214,12 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         ]]);
 
         $this->assertContainerBuilderHasService('zenstruck_schedule.extension.on_single_server', SingleServerExtension::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithTag('zenstruck_schedule.extension.on_single_server', 'schedule.configured_extension');
+        $this->assertContainerBuilderHasServiceDefinitionWithTag('zenstruck_schedule.extension.on_single_server', 'schedule.extension');
+
+        $extensionIterator = $this->container->getDefinition(ScheduleExtensionSubscriber::class)->getArgument(0);
+
+        $this->assertInstanceOf(TaggedIteratorArgument::class, $extensionIterator);
+        $this->assertSame('schedule.extension', $extensionIterator->getTag());
     }
 
     /**
@@ -224,12 +235,17 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         ]]);
 
         $this->assertContainerBuilderHasService('zenstruck_schedule.extension.email_on_failure', EmailExtension::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithTag('zenstruck_schedule.extension.email_on_failure', 'schedule.configured_extension');
+        $this->assertContainerBuilderHasServiceDefinitionWithTag('zenstruck_schedule.extension.email_on_failure', 'schedule.extension');
 
         $definition = $this->container->getDefinition('zenstruck_schedule.extension.email_on_failure');
 
         $this->assertSame([EmailExtension::class, 'scheduleFailure'], $definition->getFactory());
         $this->assertSame(['to@example.com', 'my subject'], $definition->getArguments());
+
+        $extensionIterator = $this->container->getDefinition(ScheduleExtensionSubscriber::class)->getArgument(0);
+
+        $this->assertInstanceOf(TaggedIteratorArgument::class, $extensionIterator);
+        $this->assertSame('schedule.extension', $extensionIterator->getTag());
     }
 
     /**
@@ -245,12 +261,17 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         ]]);
 
         $this->assertContainerBuilderHasService('zenstruck_schedule.extension.'.$key, PingExtension::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithTag('zenstruck_schedule.extension.'.$key, 'schedule.configured_extension');
+        $this->assertContainerBuilderHasServiceDefinitionWithTag('zenstruck_schedule.extension.'.$key, 'schedule.extension');
 
         $definition = $this->container->getDefinition('zenstruck_schedule.extension.'.$key);
 
         $this->assertSame([PingExtension::class, $method], $definition->getFactory());
         $this->assertSame(['example.com', 'GET', []], $definition->getArguments());
+
+        $extensionIterator = $this->container->getDefinition(ScheduleExtensionSubscriber::class)->getArgument(0);
+
+        $this->assertInstanceOf(TaggedIteratorArgument::class, $extensionIterator);
+        $this->assertSame('schedule.extension', $extensionIterator->getTag());
     }
 
     public static function pingScheduleExtensionProvider()

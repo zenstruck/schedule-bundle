@@ -33,8 +33,8 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="Zenstruck\ScheduleBundle\EventListener\ConfigureScheduleSubscriber">
-            <argument type="tagged_iterator" tag="schedule.configured_extension" />
+        <service id="Zenstruck\ScheduleBundle\EventListener\ScheduleExtensionSubscriber">
+            <argument type="tagged_iterator" tag="schedule.extension" />
             <tag name="kernel.event_subscriber" />
         </service>
 

@@ -9,7 +9,7 @@ use Zenstruck\ScheduleBundle\Schedule\Extension;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class ConfigureScheduleSubscriber implements EventSubscriberInterface
+final class ScheduleExtensionSubscriber implements EventSubscriberInterface
 {
     private $extensions;
 

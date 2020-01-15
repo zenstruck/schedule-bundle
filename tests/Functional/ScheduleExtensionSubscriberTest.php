@@ -3,19 +3,19 @@
 namespace Zenstruck\ScheduleBundle\Tests\Functional;
 
 use PHPUnit\Framework\TestCase;
-use Zenstruck\ScheduleBundle\EventListener\ConfigureScheduleSubscriber;
+use Zenstruck\ScheduleBundle\EventListener\ScheduleExtensionSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class ConfigureScheduleTest extends TestCase
+final class ScheduleExtensionSubscriberTest extends TestCase
 {
     /**
      * @test
      */
-    public function can_configure_schedule_with_event()
+    public function can_configure_schedule_with_subscriber()
     {
         $extension = new class() implements Extension {
             public function __toString(): string
@@ -25,7 +25,7 @@ final class ConfigureScheduleTest extends TestCase
         };
 
         $schedule = (new MockScheduleBuilder())
-            ->addSubscriber(new ConfigureScheduleSubscriber([$extension]))
+            ->addSubscriber(new ScheduleExtensionSubscriber([$extension]))
             ->getRunner()
             ->buildSchedule()
         ;
