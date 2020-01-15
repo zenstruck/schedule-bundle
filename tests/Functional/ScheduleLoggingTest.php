@@ -4,7 +4,7 @@ namespace Zenstruck\ScheduleBundle\Tests\Functional;
 
 use PHPUnit\Framework\TestCase;
 use Psr\Log\Test\TestLogger;
-use Zenstruck\ScheduleBundle\EventListener\LogScheduleSubscriber;
+use Zenstruck\ScheduleBundle\EventListener\ScheduleLoggerSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension\CallbackExtension;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
@@ -13,7 +13,7 @@ use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class LoggingTest extends TestCase
+final class ScheduleLoggingTest extends TestCase
 {
     private $logger;
 
@@ -128,7 +128,7 @@ final class LoggingTest extends TestCase
     private function createRunnerBuilder(): MockScheduleBuilder
     {
         return (new MockScheduleBuilder())
-            ->addSubscriber(new LogScheduleSubscriber($this->logger))
+            ->addSubscriber(new ScheduleLoggerSubscriber($this->logger))
         ;
     }
 }

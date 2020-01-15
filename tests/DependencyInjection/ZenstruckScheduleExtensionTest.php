@@ -8,8 +8,8 @@ use Zenstruck\ScheduleBundle\Command\ScheduleListCommand;
 use Zenstruck\ScheduleBundle\Command\ScheduleRunCommand;
 use Zenstruck\ScheduleBundle\DependencyInjection\ZenstruckScheduleExtension;
 use Zenstruck\ScheduleBundle\EventListener\ConfigureScheduleSubscriber;
-use Zenstruck\ScheduleBundle\EventListener\LogScheduleSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleBuilderSubscriber;
+use Zenstruck\ScheduleBundle\EventListener\ScheduleLoggerSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleTimezoneSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\SelfSchedulingCommandSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\TaskConfigurationSubscriber;
@@ -64,9 +64,9 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService(SelfRunningTaskRunner::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(SelfRunningTaskRunner::class, 'schedule.task_runner');
 
-        $this->assertContainerBuilderHasService(LogScheduleSubscriber::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithTag(LogScheduleSubscriber::class, 'kernel.event_subscriber');
-        $this->assertContainerBuilderHasServiceDefinitionWithTag(LogScheduleSubscriber::class, 'monolog.logger', ['channel' => 'schedule']);
+        $this->assertContainerBuilderHasService(ScheduleLoggerSubscriber::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(ScheduleLoggerSubscriber::class, 'kernel.event_subscriber');
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(ScheduleLoggerSubscriber::class, 'monolog.logger', ['channel' => 'schedule']);
 
         $this->assertContainerBuilderHasService(ExtensionHandlerRegistry::class);
 

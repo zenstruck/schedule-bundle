@@ -13,7 +13,7 @@ use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class LogScheduleSubscriber implements EventSubscriberInterface
+final class ScheduleLoggerSubscriber implements EventSubscriberInterface
 {
     private $logger;
 

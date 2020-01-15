@@ -56,7 +56,7 @@
             <tag name="schedule.task_runner" />
         </service>
 
-        <service id="Zenstruck\ScheduleBundle\EventListener\LogScheduleSubscriber">
+        <service id="Zenstruck\ScheduleBundle\EventListener\ScheduleLoggerSubscriber">
             <argument type="service" id="logger" />
             <tag name="monolog.logger" channel="schedule" />
             <tag name="kernel.event_subscriber" />
