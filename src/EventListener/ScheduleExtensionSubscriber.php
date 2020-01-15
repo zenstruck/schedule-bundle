@@ -3,7 +3,7 @@
 namespace Zenstruck\ScheduleBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Zenstruck\ScheduleBundle\Event\ScheduleBuildEvent;
+use Zenstruck\ScheduleBundle\Event\BuildScheduleEvent;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 
 /**
@@ -23,10 +23,10 @@ final class ScheduleExtensionSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
-        return [ScheduleBuildEvent::class => 'configureSchedule'];
+        return [BuildScheduleEvent::class => 'addExtensions'];
     }
 
-    public function configureSchedule(ScheduleBuildEvent $event): void
+    public function addExtensions(BuildScheduleEvent $event): void
     {
         foreach ($this->extensions as $extension) {
             $event->getSchedule()->addExtension($extension);

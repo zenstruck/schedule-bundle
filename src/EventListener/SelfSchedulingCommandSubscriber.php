@@ -4,7 +4,7 @@ namespace Zenstruck\ScheduleBundle\EventListener;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Zenstruck\ScheduleBundle\Event\ScheduleBuildEvent;
+use Zenstruck\ScheduleBundle\Event\BuildScheduleEvent;
 use Zenstruck\ScheduleBundle\Schedule\SelfSchedulingCommand;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
 
@@ -25,10 +25,10 @@ final class SelfSchedulingCommandSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
-        return [ScheduleBuildEvent::class => 'build'];
+        return [BuildScheduleEvent::class => 'build'];
     }
 
-    public function build(ScheduleBuildEvent $event): void
+    public function build(BuildScheduleEvent $event): void
     {
         foreach ($this->commands as $command) {
             if (!$command instanceof Command) {

@@ -3,7 +3,7 @@
 namespace Zenstruck\ScheduleBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Zenstruck\ScheduleBundle\Event\ScheduleBuildEvent;
+use Zenstruck\ScheduleBundle\Event\BuildScheduleEvent;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -19,10 +19,10 @@ final class ScheduleTimezoneSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
-        return [ScheduleBuildEvent::class => 'setTimezone'];
+        return [BuildScheduleEvent::class => 'setTimezone'];
     }
 
-    public function setTimezone(ScheduleBuildEvent $event): void
+    public function setTimezone(BuildScheduleEvent $event): void
     {
         $event->getSchedule()->timezone($this->timezone);
     }

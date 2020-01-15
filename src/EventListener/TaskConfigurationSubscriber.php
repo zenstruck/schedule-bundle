@@ -3,7 +3,7 @@
 namespace Zenstruck\ScheduleBundle\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Zenstruck\ScheduleBundle\Event\ScheduleBuildEvent;
+use Zenstruck\ScheduleBundle\Event\BuildScheduleEvent;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
@@ -26,10 +26,10 @@ final class TaskConfigurationSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents(): array
     {
-        return [ScheduleBuildEvent::class => 'configureTasks'];
+        return [BuildScheduleEvent::class => 'configureTasks'];
     }
 
-    public function configureTasks(ScheduleBuildEvent $event): void
+    public function configureTasks(BuildScheduleEvent $event): void
     {
         foreach ($this->config as $taskConfig) {
             $this->addTask($event->getSchedule(), $taskConfig);

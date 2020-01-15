@@ -266,7 +266,7 @@ The following Symfony events are available:
 | [`AfterScheduleEvent`](../src/Event/AfterScheduleEvent.php)   | Runs after the schedule runs  |
 | [`BeforeTaskEvent`](../src/Event/BeforeTaskEvent.php)         | Runs before task runs         |
 | [`AfterTaskEvent`](../src/Event/AfterTaskEvent.php)           | Runs after task runs          |
-| [`ScheduleBuildEvent`](../src/Event/ScheduleBuildEvent.php)   | Defining your schedule        |
+| [`BuildScheduleEvent`](../src/Event/BuildScheduleEvent.php)   | Defining your schedule        |
 
 ### Example: Add "withoutOverlapping" to all defined tasks
 
@@ -281,15 +281,15 @@ The *subscriber* service:
 namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Zenstruck\ScheduleBundle\Event\ScheduleBuildEvent;
+use Zenstruck\ScheduleBundle\Event\BuildScheduleEvent;
 
 class ScheduleWithoutOverlappingSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents(): array
     {
         return [
-            ScheduleBuildEvent::class => [
-                'onScheduleBuildEvent',
+            BuildScheduleEvent::class => [
+                'onBuildSchedule',
                 /*
                  * The actual building of the schedule happens at priority "0".
                  * We set to a lower priority to ensure all tasks are defined.
@@ -299,7 +299,7 @@ class ScheduleWithoutOverlappingSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onScheduleBuildEvent(ScheduleBuildEvent $event): void
+    public function onBuildSchedule(BuildScheduleEvent $event): void
     {
         foreach ($event->getSchedule()->all() as $task) {
             $task->withoutOverlapping();

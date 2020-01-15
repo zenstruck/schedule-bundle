@@ -7,7 +7,7 @@ use Zenstruck\ScheduleBundle\Event\AfterScheduleEvent;
 use Zenstruck\ScheduleBundle\Event\AfterTaskEvent;
 use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
 use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
-use Zenstruck\ScheduleBundle\Event\ScheduleBuildEvent;
+use Zenstruck\ScheduleBundle\Event\BuildScheduleEvent;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
@@ -72,7 +72,7 @@ final class ScheduleRunner
 
     public function buildSchedule(): Schedule
     {
-        $this->dispatcher->dispatch(new ScheduleBuildEvent($schedule = new Schedule()));
+        $this->dispatcher->dispatch(new BuildScheduleEvent($schedule = new Schedule()));
 
         return $schedule;
     }
