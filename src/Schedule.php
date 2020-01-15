@@ -312,8 +312,6 @@ final class Schedule
         $this->allTasks = [];
 
         foreach ($this->taskIterator() as $task) {
-            $task = clone $task;
-
             if ($this->getTimezone() && !$task->getTimezone()) {
                 $task->timezone($this->getTimezone());
             }

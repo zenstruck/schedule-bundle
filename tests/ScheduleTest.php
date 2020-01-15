@@ -399,8 +399,8 @@ class ScheduleTest extends TestCase
         $schedule->timezone(new \DateTimeZone('America/Los_Angeles'));
 
         $this->assertSame('America/Los_Angeles', $schedule->getTimezone()->getName());
-        $this->assertSame('America/Los_Angeles', $schedule->all()[0]->getTimezone()->getName());
-        $this->assertSame('America/Los_Angeles', $schedule->due()[0]->getTimezone()->getName());
+        $this->assertSame('UTC', $schedule->all()[0]->getTimezone()->getName());
+        $this->assertSame('UTC', $schedule->due()[0]->getTimezone()->getName());
         $this->assertSame('America/Toronto', $schedule->all()[1]->getTimezone()->getName());
         $this->assertSame('America/Toronto', $schedule->due()[1]->getTimezone()->getName());
     }
