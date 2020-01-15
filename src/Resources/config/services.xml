@@ -28,7 +28,7 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
-        <service id="Zenstruck\ScheduleBundle\EventListener\ConfigureTasksSubscriber">
+        <service id="Zenstruck\ScheduleBundle\EventListener\TaskConfigurationSubscriber">
             <argument /> <!-- task config -->
             <tag name="kernel.event_subscriber" />
         </service>

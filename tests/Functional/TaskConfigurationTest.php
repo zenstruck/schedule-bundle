@@ -5,7 +5,7 @@ namespace Zenstruck\ScheduleBundle\Tests\Functional;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Processor;
 use Zenstruck\ScheduleBundle\DependencyInjection\Configuration;
-use Zenstruck\ScheduleBundle\EventListener\ConfigureTasksSubscriber;
+use Zenstruck\ScheduleBundle\EventListener\TaskConfigurationSubscriber;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\ProcessTask;
@@ -14,7 +14,7 @@ use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class ConfigureTasksTest extends TestCase
+final class TaskConfigurationTest extends TestCase
 {
     /**
      * @test
@@ -198,7 +198,7 @@ final class ConfigureTasksTest extends TestCase
         $config = $processor->processConfiguration(new Configuration(), [['tasks' => $taskConfig]]);
 
         return (new MockScheduleBuilder())
-            ->addSubscriber(new ConfigureTasksSubscriber($config['tasks']))
+            ->addSubscriber(new TaskConfigurationSubscriber($config['tasks']))
             ->getRunner()
             ->buildSchedule()
         ;

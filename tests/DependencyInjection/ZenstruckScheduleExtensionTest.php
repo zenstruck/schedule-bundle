@@ -8,11 +8,11 @@ use Zenstruck\ScheduleBundle\Command\ScheduleListCommand;
 use Zenstruck\ScheduleBundle\Command\ScheduleRunCommand;
 use Zenstruck\ScheduleBundle\DependencyInjection\ZenstruckScheduleExtension;
 use Zenstruck\ScheduleBundle\EventListener\ConfigureScheduleSubscriber;
-use Zenstruck\ScheduleBundle\EventListener\ConfigureTasksSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\LogScheduleSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleBuilderSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleTimezoneSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\SelfSchedulingCommandSubscriber;
+use Zenstruck\ScheduleBundle\EventListener\TaskConfigurationSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EnvironmentExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry;
@@ -76,9 +76,9 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService(EnvironmentHandler::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(EnvironmentHandler::class, 'schedule.extension_handler');
 
-        $this->assertContainerBuilderHasService(ConfigureTasksSubscriber::class);
+        $this->assertContainerBuilderHasService(TaskConfigurationSubscriber::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(ScheduleBuilderSubscriber::class, 'kernel.event_subscriber');
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(ConfigureTasksSubscriber::class, 0, []);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(TaskConfigurationSubscriber::class, 0, []);
     }
 
     /**
@@ -277,7 +277,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
             ],
         ]);
 
-        $config = $this->container->getDefinition(ConfigureTasksSubscriber::class)->getArgument(0)[0];
+        $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
 
         $this->assertSame(['my:command'], $config['command']);
         $this->assertSame('0 * * * *', $config['frequency']);
@@ -358,7 +358,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
             ],
         ]);
 
-        $config = $this->container->getDefinition(ConfigureTasksSubscriber::class)->getArgument(0)[0];
+        $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
 
         $this->assertSame(['my:command --option', 'another:command'], $config['command']);
         $this->assertSame('0 0 * * *', $config['frequency']);
@@ -408,7 +408,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
             ],
         ]);
 
-        $config = $this->container->getDefinition(ConfigureTasksSubscriber::class)->getArgument(0)[0];
+        $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
 
         $this->assertTrue($config['ping_after']['enabled']);
         $this->assertSame('https://example.com/after', $config['ping_after']['url']);
@@ -436,7 +436,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
             ],
         ]);
 
-        $config = $this->container->getDefinition(ConfigureTasksSubscriber::class)->getArgument(0)[0];
+        $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
 
         $this->assertTrue($config['between']['enabled']);
         $this->assertSame('9', $config['between']['start']);

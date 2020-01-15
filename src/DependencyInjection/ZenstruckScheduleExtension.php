@@ -8,8 +8,8 @@ use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
-use Zenstruck\ScheduleBundle\EventListener\ConfigureTasksSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleTimezoneSubscriber;
+use Zenstruck\ScheduleBundle\EventListener\TaskConfigurationSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EnvironmentExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
@@ -50,7 +50,7 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
         $loader->load('services.xml');
 
         $container
-            ->getDefinition(ConfigureTasksSubscriber::class)
+            ->getDefinition(TaskConfigurationSubscriber::class)
             ->setArgument(0, $mergedConfig['tasks'])
         ;
 

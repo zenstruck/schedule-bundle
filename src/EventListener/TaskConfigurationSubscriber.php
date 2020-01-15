@@ -13,7 +13,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task\ProcessTask;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class ConfigureTasksSubscriber implements EventSubscriberInterface
+final class TaskConfigurationSubscriber implements EventSubscriberInterface
 {
     private const PROCESS_TASK_PREFIX = 'bash:';
 
