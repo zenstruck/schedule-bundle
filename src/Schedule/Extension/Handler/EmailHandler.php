@@ -73,7 +73,7 @@ final class EmailHandler extends ExtensionHandler
         $text = $summary;
 
         $email->priority(Email::PRIORITY_HIGHEST);
-        $this->prefixSubject($email, "[Scheduled Failed] {$summary}");
+        $this->prefixSubject($email, "[Schedule Failure] {$summary}");
 
         foreach ($event->getFailures() as $i => $failure) {
             $task = $failure->getTask();

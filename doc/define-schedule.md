@@ -260,6 +260,9 @@ $schedule->pingOnFailure('https://example.com/some-tasks-failed');
 
 ### Email On Failure
 
+This extension can be used to notify site administrators via email
+when tasks fail.
+
 **Using [Configuration](#bundle-configuration):**
 
 ```yaml
@@ -308,6 +311,40 @@ $schedule->emailOnFailure('admin@example.com', 'my email subject', function (\Sy
             default_to: admin@example.com # optional (exclude if defined in code/config)
             default_from: webmaster@example.com # exclude only if a "global from" is defined for your application
             subject_prefix: "[Acme Inc]" # optional
+    ```
+
+3. The email has the subject `[Schedule Failure] 2 tasks failed`
+   (assuming 2 tasks failed, the subject can be configured). The email body
+   has the following structure:
+
+    ```
+    2 tasks failed
+
+    # (Failure 1/2) CommandTask: failed task 1 description
+
+    failure description (ie exception message)
+
+    ## Task Output
+
+    Failed task's output (if any)
+
+    ## Exception
+
+    Failed task's exception stack trace (if any)
+
+    ---
+
+    # (Failure 2/2) CommandTask: failed task 2 description
+
+    failure description (ie exception message)
+
+    ## Task Output
+
+    Failed task's output (if any)
+
+    ## Exception
+
+    Failed task's exception stack trace (if any)
     ```
 
 ### Run on Single Server

@@ -407,6 +407,10 @@ $task->pingOnFailure('https://example.com/task-failed');
 
 ### Email Output
 
+This extension can be used to notify site administrators via email
+that the task ran. Either just if it failed (`email_on_failure`) or
+regardless of the result (`email_after`).
+
 **Using [Configuration](define-schedule.md#bundle-configuration):**
 
 ```yaml
@@ -471,6 +475,34 @@ $task->emailOnFailure('admin@example.com', 'my email subject', function (Symfony
             default_to: admin@example.com # optional (exclude if defined in code)
             default_from: webmaster@example.com # exclude only if a "global from" is defined for your application
             subject_prefix: "[Acme Inc]" # optional
+    ```
+   
+3. Failed task emails have the subject `[Scheduled Task Failed] CommandTask: failed
+   task description` (the subject can be configured). The email body has the following
+   structure:
+
+    ```
+    failure description (ie exception message)
+    
+    ## Task Output
+    
+    Failed task's output (if any)
+    
+    ## Exception
+    
+    Failed task's exception stack trace (if any)
+    ```
+
+4. Successful task emails (if using `email_after`) have the subject
+   `[Scheduled Task Succeeded] CommandTask: task description`. The email body
+   has the following structure:
+
+    ```
+    Successful
+    
+    ## Task Output:
+    
+    Task's output (if any) 
     ```
 
 ### Prevent Overlap

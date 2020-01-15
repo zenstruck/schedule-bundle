@@ -41,7 +41,7 @@ final class EmailExtensionTest extends TestCase
 
         $this->assertSame('webmaster@example.com', $mailer->lastMessage->getFrom()[0]->getAddress());
         $this->assertSame('kevin@example.com', $mailer->lastMessage->getTo()[0]->getAddress());
-        $this->assertSame('[Scheduled Failed] 2 tasks failed', $mailer->lastMessage->getSubject());
+        $this->assertSame('[Schedule Failure] 2 tasks failed', $mailer->lastMessage->getSubject());
         $this->assertStringContainsString('2 tasks failed', $mailer->lastMessage->getTextBody());
         $this->assertStringContainsString('# (Failure 1/2) MockTask: my task 1', $mailer->lastMessage->getTextBody());
         $this->assertStringContainsString('## Exception', $mailer->lastMessage->getTextBody());
@@ -100,7 +100,7 @@ final class EmailExtensionTest extends TestCase
             ->run()
         ;
 
-        $this->assertSame('[Acme Inc][Scheduled Failed] 2 tasks failed', $mailer->lastMessage->getSubject());
+        $this->assertSame('[Acme Inc][Schedule Failure] 2 tasks failed', $mailer->lastMessage->getSubject());
     }
 
     /**
