@@ -121,7 +121,7 @@ You may optionally define the *schedule* timezone for all tasks to use. If none 
 it will use PHP's default timezone. [Tasks can override](define-tasks.md#timezone)
 the *schedule* timezone.
 
-**Using [Configuration](#bundle-configuration):**
+**Define in [Configuration](#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -130,7 +130,7 @@ zenstruck_schedule:
     timezone: America/New_York
 ```
 
-**Using [PHP](#schedulebuilder-service):**
+**Define in [PHP](#schedulebuilder-service):**
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -144,7 +144,7 @@ The following extensions are available when defining your schedule:
 
 ### Filters
 
-*These extensions can only be configured in [PHP](#schedulebuilder-service).*
+*These extensions can only be defined in [PHP](#schedulebuilder-service).*
 
 ```php
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
@@ -170,7 +170,7 @@ $schedule->skip('skipped because...', function () { // skips if return value is 
 
 ### Callbacks
 
-*These extensions can only be configured in [PHP](#schedulebuilder-service).*
+*These extensions can only be defined in [PHP](#schedulebuilder-service).*
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -202,7 +202,7 @@ This extension is useful for Cron health monitoring tools like
 [Cronitor](https://cronitor.io/), [Laravel Envoyer](https://envoyer.io/) and
 [Healthchecks](https://healthchecks.io/).
 
-**Using [Configuration](#bundle-configuration):**
+**Define in [Configuration](#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -220,7 +220,7 @@ zenstruck_schedule:
             url: https://example.com/some-tasks-failed
 ```
 
-**Using [PHP](#schedulebuilder-service):**
+**Define in [PHP](#schedulebuilder-service):**
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -261,7 +261,7 @@ $schedule->pingOnFailure('https://example.com/some-tasks-failed');
 This extension can be used to notify site administrators via email
 when tasks fail.
 
-**Using [Configuration](#bundle-configuration):**
+**Define in [Configuration](#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -273,7 +273,7 @@ zenstruck_schedule:
            subject: my subject # optional, leave empty to use default
 ```
 
-**Using [PHP](#schedulebuilder-service):**
+**Define in [PHP](#schedulebuilder-service):**
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -353,7 +353,7 @@ schedule will have their schedule skip. Be sure to configure this extension (see
 below) with a **[remote store](https://symfony.com/doc/current/components/lock.html#remote-stores)**.
 If you use a *local store* it will not be able to lock other servers.
 
-**Using [Configuration](#bundle-configuration):**
+**Define in [Configuration](#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -363,7 +363,7 @@ zenstruck_schedule:
         on_single_server: ~
 ```
 
-**Using [PHP](#schedulebuilder-service):**
+**Define in [PHP](#schedulebuilder-service):**
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -390,7 +390,7 @@ $schedule->onSingleServer();
 
 ### Limit to specific environment(s)
 
-**Using [Configuration](#bundle-configuration):**
+**Define in [Configuration](#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -400,7 +400,7 @@ zenstruck_schedule:
         environments: prod
 ```
 
-**Using [PHP](#schedulebuilder-service):**
+**Define in [PHP](#schedulebuilder-service):**
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
