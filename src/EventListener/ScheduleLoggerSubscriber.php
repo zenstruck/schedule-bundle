@@ -84,22 +84,22 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
     {
         $result = $event->getResult();
         $task = $result->getTask();
-        $context = [
-            'duration' => $event->getFormattedDuration(),
-            'memory' => $event->getFormattedMemory(),
-        ];
 
-        if ($result->isSuccessful()) {
-            $this->logger->info("Successfully ran \"{$task->getType()}\": {$task}", $context);
+        if ($result->isSkipped()) {
+            $this->logger->info("Skipped \"{$task->getType()}\": {$task}");
 
             return;
         }
 
-        $context['task'] = $task;
-        $context['result'] = $result;
+        $context = [
+            'duration' => $event->getFormattedDuration(),
+            'memory' => $event->getFormattedMemory(),
+            'task' => $task,
+            'result' => $result,
+        ];
 
-        if ($result->isSkipped()) {
-            $this->logger->info("Skipped \"{$task->getType()}\": {$task}", $context);
+        if ($result->isSuccessful()) {
+            $this->logger->info("Successfully ran \"{$task->getType()}\": {$task}", $context);
 
             return;
         }
