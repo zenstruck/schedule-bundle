@@ -8,6 +8,7 @@ use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\CompoundTask;
+use Zenstruck\ScheduleBundle\Schedule\Task\NullTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\ProcessTask;
 
 /**
@@ -110,8 +111,12 @@ final class TaskConfigurationSubscriber implements EventSubscriberInterface
         return $task;
     }
 
-    private function createSingleTask(string $command): Task
+    private function createSingleTask(?string $command): Task
     {
+        if (null === $command) {
+            return new NullTask('to be overridden');
+        }
+
         if (0 !== \mb_strpos($command, self::PROCESS_TASK_PREFIX)) {
             return new CommandTask($command);
         }

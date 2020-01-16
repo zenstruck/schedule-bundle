@@ -8,6 +8,7 @@ use Zenstruck\ScheduleBundle\DependencyInjection\Configuration;
 use Zenstruck\ScheduleBundle\EventListener\TaskConfigurationSubscriber;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
+use Zenstruck\ScheduleBundle\Schedule\Task\NullTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\ProcessTask;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
 
@@ -132,6 +133,25 @@ final class TaskConfigurationSubscriberTest extends TestCase
         $this->assertSame('0 * * * *', $task2->getExpression());
         $this->assertCount(1, $task2->getExtensions());
         $this->assertSame('Without overlapping', (string) $task2->getExtensions()[0]);
+    }
+
+    /**
+     * @test
+     */
+    public function can_configure_null_task()
+    {
+        $schedule = $this->createSchedule([
+            [
+                'command' => null,
+                'frequency' => '0 * * * *',
+                'description' => 'my task',
+            ],
+        ]);
+
+        $this->assertCount(1, $schedule->all());
+        $this->assertInstanceOf(NullTask::class, $schedule->all()[0]);
+        $this->assertSame('my task', $schedule->all()[0]->getDescription());
+        $this->assertSame('0 * * * *', $schedule->all()[0]->getExpression());
     }
 
     /**

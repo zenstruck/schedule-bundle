@@ -2,10 +2,8 @@
 
 ## Bundle Configuration
 
-[Symfony Console Command](define-tasks.md#commandtask) and
-[Bash Scripts](define-tasks.md#processtask) tasks, most
-[task extensions](define-tasks.md#task-extensions) and
-[schedule extensions](#schedule-extensions) can be configured:
+Most [tasks](define-tasks.md#task-types), [task extensions](define-tasks.md#task-extensions)
+and [schedule extensions](#schedule-extensions) can be configured:
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml

@@ -318,6 +318,121 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     /**
      * @test
      */
+    public function can_configure_a_compound_task()
+    {
+        $this->load([
+            'tasks' => [
+                [
+                    'command' => ['my:command', 'bash:/my-script'],
+                    'frequency' => '0 * * * *',
+                ],
+            ],
+        ]);
+
+        $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
+
+        $this->assertSame(['my:command', 'bash:/my-script'], $config['command']);
+    }
+
+    /**
+     * @test
+     */
+    public function can_configure_a_compound_task_with_descriptions()
+    {
+        $this->load([
+            'tasks' => [
+                [
+                    'command' => [
+                        'task1' => 'my:command',
+                        'task2' => 'bash:/my-script',
+                    ],
+                    'frequency' => '0 * * * *',
+                ],
+            ],
+        ]);
+
+        $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
+
+        $this->assertSame(['task1' => 'my:command', 'task2' => 'bash:/my-script'], $config['command']);
+    }
+
+    /**
+     * @test
+     */
+    public function compound_tasks_cannot_be_an_empty_array()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The path "zenstruck_schedule.tasks.0.command" should have at least 1 element(s) defined.');
+
+        $this->load([
+            'tasks' => [
+                [
+                    'command' => [],
+                    'frequency' => 'invalid',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function can_configure_a_null_task()
+    {
+        $this->load([
+            'tasks' => [
+                [
+                    'command' => null,
+                    'frequency' => '0 * * * *',
+                    'description' => 'my task',
+                ],
+            ],
+        ]);
+
+        $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
+
+        $this->assertSame([null], $config['command']);
+    }
+
+    /**
+     * @test
+     */
+    public function null_task_must_have_a_description()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "zenstruck_schedule.tasks.0": "null" tasks must have a description.');
+
+        $this->load([
+            'tasks' => [
+                [
+                    'command' => null,
+                    'frequency' => '0 * * * *',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function compound_tasks_must_not_contain_null_tasks()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "zenstruck_schedule.tasks.0.command": "null" tasks cannot be added to compound tasks.');
+
+        $this->load([
+            'tasks' => [
+                [
+                    'command' => ['my:command', null],
+                    'frequency' => 'invalid',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @test
+     */
     public function task_frequency_must_be_valid()
     {
         $this->expectException(InvalidConfigurationException::class);

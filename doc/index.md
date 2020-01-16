@@ -244,7 +244,7 @@ zenstruck_schedule:
         # Prototype
         -
 
-            # Defaults to CommandTask, prefix with "bash:" to create ProcessTask, pass array of commands to create CompoundTask (optionally keyed by description)
+            # Defaults to CommandTask, prefix with "bash:" to create ProcessTask, pass (null) to create NullTask, pass array of commands to create CompoundTask (optionally keyed by description)
             command:              ~ # Required, Example: "my:command arg1 --option1=value" or "bash:/bin/my-script"
 
             # Cron expression

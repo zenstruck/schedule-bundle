@@ -135,7 +135,21 @@ and [Healthchecks](https://healthchecks.io/). You may want to ping their health
 check endpoint every hour. Alternatively, you may want to receive an email once a
 day to let you know your schedule is running as expected.
 
-*This task can only be configured in [PHP](define-schedule.md#schedulebuilder-service).*
+This task type *requires* a description.
+
+**Using [Configuration](define-schedule.md#bundle-configuration):**
+
+```yaml
+# config/packages/zenstruck_schedule.yaml
+
+zenstruck_schedule:
+    tasks:
+        -   command: null
+            frequency: 0 * * * *
+            description: my task # required for "null" tasks
+```
+
+**Using [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
 use Zenstruck\ScheduleBundle\Schedule\Task\NullTask;
@@ -157,7 +171,8 @@ $schedule->add(new NullTask('daily email'))
 ## Task Description
 
 Optionally add a unique description to your task. If none is provided, tasks define a
-default description based on their input.
+default description based on their input. [NullTask](#nulltask) is the exception, a
+description is required for this task type.
 
 **Using [Configuration](define-schedule.md#bundle-configuration):**
 
