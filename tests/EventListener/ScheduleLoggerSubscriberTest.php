@@ -65,7 +65,7 @@ final class ScheduleLoggerSubscriberTest extends TestCase
         $this->assertCount(4, $this->logger->records);
         $this->assertTrue($this->logger->hasInfoThatContains('Running 1 due task.'));
         $this->assertTrue($this->logger->hasInfoThatContains('Running "MockTask": my task'));
-        $this->assertTrue($this->logger->hasErrorThatContains('Exception thrown when running "MockTask": my task'));
+        $this->assertTrue($this->logger->hasCriticalThatContains('Exception thrown when running "MockTask": my task'));
         $this->assertTrue($this->logger->hasErrorThatContains('1/1 tasks ran'));
         $this->assertSame('failed...', $this->logger->records[2]['context']['exception']->getMessage());
     }

@@ -106,14 +106,14 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
 
         $context['output'] = $result->getOutput();
 
-        if ($result->isException()) {
-            $context['exception'] = $result->getException();
-
-            $this->logger->error("Exception thrown when running \"{$task->getType()}\": {$task}", $context);
+        if (!$result->isException()) {
+            $this->logger->error("Failure when running \"{$task->getType()}\": {$task}", $context);
 
             return;
         }
 
-        $this->logger->error("Failure when running \"{$task->getType()}\": {$task}", $context);
+        $context['exception'] = $result->getException();
+
+        $this->logger->critical("Exception thrown when running \"{$task->getType()}\": {$task}", $context);
     }
 }
