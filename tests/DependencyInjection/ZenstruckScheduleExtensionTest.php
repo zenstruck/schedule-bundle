@@ -451,6 +451,44 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     /**
      * @test
      */
+    public function can_use_hashed_frequency_expression()
+    {
+        $this->load([
+            'tasks' => [
+                [
+                    'command' => 'my:command',
+                    'frequency' => 'H H * * *',
+                ],
+            ],
+        ]);
+
+        $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
+
+        $this->assertSame('H H * * *', $config['frequency']);
+    }
+
+    /**
+     * @test
+     */
+    public function can_use_frequency_alias()
+    {
+        $this->load([
+            'tasks' => [
+                [
+                    'command' => 'my:command',
+                    'frequency' => '@midnight',
+                ],
+            ],
+        ]);
+
+        $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
+
+        $this->assertSame('@midnight', $config['frequency']);
+    }
+
+    /**
+     * @test
+     */
     public function full_task_configuration()
     {
         $this->load([

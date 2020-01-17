@@ -64,11 +64,19 @@ final class TaskTest extends TestCase
 
     /**
      * @test
+     */
+    public function can_determine_if_due()
+    {
+        $this->assertTrue(self::createTask()->everyMinute()->isDue());
+    }
+
+    /**
+     * @test
      * @dataProvider frequencyProvider
      */
     public function can_fluently_create_frequency(callable $createTask, string $expectedExpression)
     {
-        $this->assertSame($expectedExpression, $createTask()->getExpression());
+        $this->assertSame($expectedExpression, (string) $createTask()->getExpression());
     }
 
     public static function frequencyProvider(): array
@@ -108,18 +116,11 @@ final class TaskTest extends TestCase
             [function () { return self::createTask()->twiceMonthly()->at('3:15'); }, '15 3 1,16 * *'],
             [function () { return self::createTask()->quarterly(); }, '0 0 1 1-12/3 *'],
             [function () { return self::createTask()->yearly(); }, '0 0 1 1 *'],
+            [function () { return self::createTask('my task')->cron('H 0 * * *'); }, '56 0 * * *'],
+            [function () { return self::createTask('my task')->cron('@daily'); }, '56 20 * * *'],
+            [function () { return self::createTask('my task')->cron('@midnight'); }, '56 2 * * *'],
+            [function () { return self::createTask('my task')->cron('@midnight')->daily(); }, '0 0 * * *'],
         ];
-    }
-
-    /**
-     * @test
-     */
-    public function cannot_set_invalid_cron_expression()
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('"* *" is an invalid cron expression.');
-
-        self::createTask()->cron('* *');
     }
 
     /**

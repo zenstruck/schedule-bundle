@@ -76,27 +76,27 @@ class ScheduleTest extends TestCase
 
         $this->assertCount(6, $schedule->all());
         $this->assertSame('task1', $schedule->all()[0]->getDescription());
-        $this->assertSame('* * * * 2', $schedule->all()[0]->getExpression());
+        $this->assertSame('* * * * 2', (string) $schedule->all()[0]->getExpression());
         $this->assertNull($schedule->all()[0]->getTimezone());
         $this->assertCount(0, $schedule->all()[0]->getExtensions());
         $this->assertSame('task2', $schedule->all()[1]->getDescription());
-        $this->assertSame('* * * * 1', $schedule->all()[1]->getExpression());
+        $this->assertSame('* * * * 1', (string) $schedule->all()[1]->getExpression());
         $this->assertSame('UTC', $schedule->all()[1]->getTimezone()->getName());
         $this->assertCount(1, $schedule->all()[1]->getExtensions());
         $this->assertSame('task3', $schedule->all()[2]->getDescription());
-        $this->assertSame('* * * * 1', $schedule->all()[2]->getExpression());
+        $this->assertSame('* * * * 1', (string) $schedule->all()[2]->getExpression());
         $this->assertSame('UTC', $schedule->all()[2]->getTimezone()->getName());
         $this->assertCount(1, $schedule->all()[2]->getExtensions());
         $this->assertSame('task4', $schedule->all()[3]->getDescription());
-        $this->assertSame('* * * * 1', $schedule->all()[3]->getExpression());
+        $this->assertSame('* * * * 1', (string) $schedule->all()[3]->getExpression());
         $this->assertSame('UTC', $schedule->all()[3]->getTimezone()->getName());
         $this->assertCount(1, $schedule->all()[3]->getExtensions());
         $this->assertSame('task5', $schedule->all()[4]->getDescription());
-        $this->assertSame('* * * * 1', $schedule->all()[4]->getExpression());
+        $this->assertSame('* * * * 1', (string) $schedule->all()[4]->getExpression());
         $this->assertSame('UTC', $schedule->all()[4]->getTimezone()->getName());
         $this->assertCount(1, $schedule->all()[4]->getExtensions());
         $this->assertSame('task6', $schedule->all()[5]->getDescription());
-        $this->assertSame('* * * * 1', $schedule->all()[5]->getExpression());
+        $this->assertSame('* * * * 1', (string) $schedule->all()[5]->getExpression());
         $this->assertSame('UTC', $schedule->all()[5]->getTimezone()->getName());
         $this->assertCount(1, $schedule->all()[5]->getExtensions());
     }
