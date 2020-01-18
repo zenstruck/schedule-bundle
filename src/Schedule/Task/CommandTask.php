@@ -28,19 +28,21 @@ final class CommandTask extends Task
 
         $this->name = $name;
 
-        $this->arguments(...$arguments);
+        if (!empty($arguments)) {
+            $this->arguments(...$arguments);
+        }
 
         parent::__construct($this->name);
     }
 
-    public function arguments(string ...$arguments): self
+    public function arguments(string $argument, string ...$arguments): self
     {
-        $this->arguments = \implode(' ', $arguments);
+        $this->arguments = \implode(' ', \array_merge([$argument], $arguments));
 
         return $this;
     }
 
-    public function getArguments(): string
+    public function getArguments(): ?string
     {
         return $this->arguments;
     }

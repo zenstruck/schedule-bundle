@@ -30,7 +30,7 @@ final class CommandTaskTest extends TestCase
     {
         $task1 = new CommandTask('my:command');
         $this->assertSame('my:command', (string) $task1);
-        $this->assertSame('', $task1->getArguments());
+        $this->assertNull($task1->getArguments());
 
         $task2 = new CommandTask('my:command arg');
         $this->assertSame('my:command', (string) $task2);

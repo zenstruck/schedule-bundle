@@ -264,9 +264,9 @@ final class Schedule
      * Define the application environment(s) you wish to run the schedule in. Trying to
      * run in another environment will skip the schedule.
      */
-    public function environments(string ...$environments): self
+    public function environments(string $environment, string ...$environments): self
     {
-        return $this->addExtension(new EnvironmentExtension($environments));
+        return $this->addExtension(new EnvironmentExtension(\array_merge([$environment], $environments)));
     }
 
     /**

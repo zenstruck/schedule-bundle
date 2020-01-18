@@ -439,11 +439,11 @@ abstract class Task
     }
 
     /**
-     * @param int ...$days 0 = Sunday, 6 = Saturday
+     * 0 = Sunday, 6 = Saturday.
      */
-    final public function weeklyOn(int ...$days): self
+    final public function weeklyOn(int $day, int ...$days): self
     {
-        return $this->spliceIntoPosition(5, \implode(',', $days));
+        return $this->spliceIntoPosition(5, \implode(',', \array_merge([$day], $days)));
     }
 
     final public function mondays(): self
