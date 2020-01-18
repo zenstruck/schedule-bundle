@@ -13,6 +13,10 @@ final class EnvironmentExtension implements Extension
 
     public function __construct(array $runEnvironments)
     {
+        if (empty($runEnvironments)) {
+            throw new \InvalidArgumentException('At least one environment must be configured.');
+        }
+
         $this->runEnvironments = $runEnvironments;
     }
 

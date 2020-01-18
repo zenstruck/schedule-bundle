@@ -376,6 +376,18 @@ class ScheduleTest extends TestCase
     /**
      * @test
      */
+    public function requires_at_least_one_environment()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('At least one environment must be configured.');
+
+        $schedule = new Schedule();
+        $schedule->environments();
+    }
+
+    /**
+     * @test
+     */
     public function can_set_timezone()
     {
         $schedule = new Schedule();

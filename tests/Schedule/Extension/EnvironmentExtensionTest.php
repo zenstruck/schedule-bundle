@@ -41,4 +41,15 @@ final class EnvironmentExtensionTest extends TestCase
 
         $this->assertFalse($event->isSkipped());
     }
+
+    /**
+     * @test
+     */
+    public function requires_at_least_one_environment()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('At least one environment must be configured.');
+
+        new EnvironmentExtension([]);
+    }
 }
