@@ -86,21 +86,16 @@ EOF
                 $io->comment("Arguments: <comment>{$task->getArguments()}</comment>");
             }
 
-            // BC - Symfony 4.4 added SymfonyStyle::definitionList()
-            if (\method_exists($io, 'definitionList')) {
-                $io->definitionList(
-                    ['Class' => \get_class($task)],
-                    ['Frequency' => $this->renderFrequency($task)],
-                    ['Next Run' => $task->getNextRun()->format('D, M d, Y @ g:i (e O)')]
-                );
-            } else {
-                $io->listing([
-                    'Class: '.\get_class($task),
-                    'Frequency: '.$this->renderFrequency($task),
-                    'Next Run: '.$task->getNextRun()->format('D, M d, Y @ g:i (e O)'),
-                ]);
+            $details = [['Class' => \get_class($task)]];
+            $details[] = [$task->getExpression()->isHashed() ? 'Calculated Frequency' : 'Frequency' => $this->renderFrequency($task)];
+
+            if ($task->getExpression()->isHashed()) {
+                $details[] = ['Raw Frequency' => $task->getExpression()->getRawValue()];
             }
 
+            $details[] = ['Next Run' => $task->getNextRun()->format('D, M d, Y @ g:i (e O)')];
+
+            $this->renderDefinitionList($io, $details);
             $this->renderExtenstions($io, 'Task', $task->getExtensions());
 
             $issues = \iterator_to_array($this->getTaskIssues($task));
@@ -117,6 +112,25 @@ EOF
         }
 
         return $exit;
+    }
+
+    /**
+     * BC - Symfony 4.4 added SymfonyStyle::definitionList().
+     */
+    private function renderDefinitionList(SymfonyStyle $io, array $list): void
+    {
+        if (\method_exists($io, 'definitionList')) {
+            $io->definitionList(...$list);
+
+            return;
+        }
+
+        $io->listing(\array_map(
+            function (array $line) {
+                return \sprintf('<info>%s:</info> %s', \array_keys($line)[0], \array_values($line)[0]);
+            },
+            $list
+        ));
     }
 
     private function renderTable(Schedule $schedule, SymfonyStyle $io): int
@@ -254,6 +268,6 @@ EOF
             return $task->getExpression();
         }
 
-        return CronTranslator::translate($task->getExpression())." ({$task->getExpression()})";
+        return \sprintf('%s (%s)', $task->getExpression(), CronTranslator::translate($task->getExpression()));
     }
 }

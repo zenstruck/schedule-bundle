@@ -2,7 +2,6 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule;
 
-use Cron\CronExpression;
 use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 use Zenstruck\ScheduleBundle\Schedule\Extension\BetweenTimeExtension;
@@ -18,8 +17,10 @@ use Zenstruck\ScheduleBundle\Schedule\Extension\WithoutOverlappingExtension;
  */
 abstract class Task
 {
+    private const DEFAULT_EXPRESSION = '* * * * *';
+
     private $description;
-    private $expression = '* * * * *';
+    private $expression = self::DEFAULT_EXPRESSION;
     private $timezone;
 
     /** @var Extension[] */
@@ -50,9 +51,9 @@ abstract class Task
         return $this->description;
     }
 
-    final public function getExpression(): string
+    final public function getExpression(): CronExpression
     {
-        return $this->expression;
+        return new CronExpression($this->expression, $this->getDescription());
     }
 
     final public function getTimezone(): ?\DateTimeZone
@@ -62,12 +63,12 @@ abstract class Task
 
     final public function getNextRun(): \DateTimeInterface
     {
-        return CronExpression::factory($this->expression)->getNextRunDate('now', 0, false, $this->getTimezoneValue());
+        return $this->getExpression()->getNextRun($this->getTimezoneValue());
     }
 
     final public function isDue(): bool
     {
-        return CronExpression::factory($this->expression)->isDue('now', $this->getTimezoneValue());
+        return $this->getExpression()->isDue($this->getTimezoneValue());
     }
 
     /**
@@ -343,10 +344,6 @@ abstract class Task
      */
     final public function cron(string $expression): self
     {
-        if (5 !== \count(\explode(' ', $expression))) {
-            throw new \InvalidArgumentException("\"{$expression}\" is an invalid cron expression.");
-        }
-
         $this->expression = $expression;
 
         return $this;
@@ -550,6 +547,13 @@ abstract class Task
     private function spliceIntoPosition(int $position, string $value): self
     {
         $segments = \explode(' ', $this->expression);
+
+        if (5 !== \count($segments)) { // reset if set to alias or invalid
+            $this->expression = self::DEFAULT_EXPRESSION;
+
+            return $this->spliceIntoPosition($position, $value);
+        }
+
         $segments[$position - 1] = $value;
 
         return $this->cron(\implode(' ', $segments));

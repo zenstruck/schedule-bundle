@@ -5,6 +5,7 @@ namespace Zenstruck\ScheduleBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Zenstruck\ScheduleBundle\Schedule\CronExpression;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\WithoutOverlappingExtension;
 
@@ -156,7 +157,13 @@ final class Configuration implements ConfigurationInterface
                         ->isRequired()
                         ->validate()
                             ->ifTrue(function ($v) {
-                                return 5 !== \count(\explode(' ', $v));
+                                try {
+                                    new CronExpression($v, 'context');
+                                } catch (\InvalidArgumentException $e) {
+                                    return true;
+                                }
+
+                                return false;
                             })
                             ->thenInvalid('%s is an invalid cron expression.')
                         ->end()

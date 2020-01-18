@@ -40,13 +40,13 @@ final class TaskConfigurationSubscriberTest extends TestCase
         $this->assertInstanceOf(CommandTask::class, $task1);
         $this->assertSame('my:command', $task1->getDescription());
         $this->assertNull($task1->getTimezone());
-        $this->assertSame('0 * * * *', $task1->getExpression());
+        $this->assertSame('0 * * * *', (string) $task1->getExpression());
         $this->assertCount(0, $task1->getExtensions());
 
         $this->assertInstanceOf(CommandTask::class, $task2);
         $this->assertSame('another:command', $task2->getDescription());
         $this->assertNull($task1->getTimezone());
-        $this->assertSame('0 0 * * *', $task2->getExpression());
+        $this->assertSame('0 0 * * *', (string) $task2->getExpression());
         $this->assertCount(0, $task2->getExtensions());
     }
 
@@ -65,7 +65,7 @@ final class TaskConfigurationSubscriberTest extends TestCase
         $this->assertCount(1, $schedule->all());
         $this->assertInstanceOf(ProcessTask::class, $schedule->all()[0]);
         $this->assertSame('/bin/script', $schedule->all()[0]->getDescription());
-        $this->assertSame('0 * * * *', $schedule->all()[0]->getExpression());
+        $this->assertSame('0 * * * *', (string) $schedule->all()[0]->getExpression());
         $this->assertCount(0, $schedule->all()[0]->getExtensions());
     }
 
@@ -91,13 +91,13 @@ final class TaskConfigurationSubscriberTest extends TestCase
 
         $this->assertInstanceOf(CommandTask::class, $task1);
         $this->assertSame('my:command', $task1->getDescription());
-        $this->assertSame('0 * * * *', $task1->getExpression());
+        $this->assertSame('0 * * * *', (string) $task1->getExpression());
         $this->assertCount(1, $task1->getExtensions());
         $this->assertSame('Without overlapping', (string) $task1->getExtensions()[0]);
 
         $this->assertInstanceOf(ProcessTask::class, $task2);
         $this->assertSame('/my-script', $task2->getDescription());
-        $this->assertSame('0 * * * *', $task2->getExpression());
+        $this->assertSame('0 * * * *', (string) $task2->getExpression());
         $this->assertCount(1, $task2->getExtensions());
         $this->assertSame('Without overlapping', (string) $task2->getExtensions()[0]);
     }
@@ -124,13 +124,13 @@ final class TaskConfigurationSubscriberTest extends TestCase
 
         $this->assertInstanceOf(CommandTask::class, $task1);
         $this->assertSame('my command', $task1->getDescription());
-        $this->assertSame('0 * * * *', $task1->getExpression());
+        $this->assertSame('0 * * * *', (string) $task1->getExpression());
         $this->assertCount(1, $task1->getExtensions());
         $this->assertSame('Without overlapping', (string) $task1->getExtensions()[0]);
 
         $this->assertInstanceOf(ProcessTask::class, $task2);
         $this->assertSame('another command', $task2->getDescription());
-        $this->assertSame('0 * * * *', $task2->getExpression());
+        $this->assertSame('0 * * * *', (string) $task2->getExpression());
         $this->assertCount(1, $task2->getExtensions());
         $this->assertSame('Without overlapping', (string) $task2->getExtensions()[0]);
     }
@@ -151,7 +151,56 @@ final class TaskConfigurationSubscriberTest extends TestCase
         $this->assertCount(1, $schedule->all());
         $this->assertInstanceOf(NullTask::class, $schedule->all()[0]);
         $this->assertSame('my task', $schedule->all()[0]->getDescription());
-        $this->assertSame('0 * * * *', $schedule->all()[0]->getExpression());
+        $this->assertSame('0 * * * *', (string) $schedule->all()[0]->getExpression());
+    }
+
+    /**
+     * @test
+     */
+    public function can_configure_hashed_frequency_expression()
+    {
+        $schedule = $this->createSchedule([
+            [
+                'command' => 'my:command1',
+                'frequency' => 'H * * * *',
+            ],
+            [
+                'command' => 'my:command1',
+                'frequency' => 'H * * * *',
+                'description' => 'my description',
+            ],
+            [
+                'command' => 'my:command2',
+                'frequency' => 'H H(9-17) * * *',
+            ],
+            [
+                'command' => 'my:command3',
+                'frequency' => '@daily',
+            ],
+            [
+                'command' => 'my:command4',
+                'frequency' => '@midnight',
+            ],
+        ]);
+
+        $this->assertCount(5, $schedule->all());
+
+        [$task1, $task2, $task3, $task4, $task5] = $schedule->all();
+
+        $this->assertSame('16 * * * *', (string) $task1->getExpression());
+        $this->assertSame('H * * * *', $task1->getExpression()->getRawValue());
+
+        $this->assertSame('10 * * * *', (string) $task2->getExpression(), 'Different description changes minute');
+        $this->assertSame('H * * * *', $task2->getExpression()->getRawValue());
+
+        $this->assertSame('9 12 * * *', (string) $task3->getExpression());
+        $this->assertSame('H H(9-17) * * *', $task3->getExpression()->getRawValue());
+
+        $this->assertSame('29 17 * * *', (string) $task4->getExpression());
+        $this->assertSame('@daily', $task4->getExpression()->getRawValue());
+
+        $this->assertSame('11 2 * * *', (string) $task5->getExpression());
+        $this->assertSame('@midnight', $task5->getExpression()->getRawValue());
     }
 
     /**

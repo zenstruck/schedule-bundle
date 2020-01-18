@@ -65,7 +65,7 @@ final class ScheduleListCommandTest extends TestCase
         $output = $this->normalizeOutput($commandTester);
 
         $this->assertSame(1, $commandTester->getStatusCode());
-        $this->assertStringContainsString('[!] CommandTask my:command 2 Every Monday at 1:30am (30 1 * * 1)', $output);
+        $this->assertStringContainsString('[!] CommandTask my:command 2 30 1 * * 1 (Every Monday at 1:30am)', $output);
         $this->assertStringContainsString('[WARNING] 4 task issues:', $output);
         $this->assertStringContainsString('[ERROR] No task runner registered to handle "Zenstruck\ScheduleBundle\Schedule\Task\CommandTask".', $output);
         $this->assertStringContainsString('[ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").', $output);
@@ -145,7 +145,7 @@ final class ScheduleListCommandTest extends TestCase
         $this->assertSame(1, $commandTester->getStatusCode());
         $this->assertStringContainsString('1 Scheduled Task Configured', $output);
         $this->assertStringContainsString('(1/1) CommandTask: my:command', $output);
-        $this->assertStringContainsString('Every Monday at 1:30am (30 1 * * 1)', $output);
+        $this->assertStringContainsString('30 1 * * 1 (Every Monday at 1:30am)', $output);
         $this->assertStringContainsString('Mon,', $output);
         $this->assertStringContainsString('Arguments: arg1 --option1', $output);
         $this->assertStringContainsString('2 Task Extensions:', $output);
