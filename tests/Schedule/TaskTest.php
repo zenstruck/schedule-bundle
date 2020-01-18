@@ -76,7 +76,10 @@ final class TaskTest extends TestCase
      */
     public function can_fluently_create_frequency(callable $createTask, string $expectedExpression)
     {
-        $this->assertSame($expectedExpression, (string) $createTask()->getExpression());
+        $task = $createTask();
+
+        $this->assertSame($expectedExpression, (string) $task->getExpression());
+        $this->assertInstanceOf(\DateTimeInterface::class, $task->getNextRun());
     }
 
     public static function frequencyProvider(): array
@@ -105,7 +108,7 @@ final class TaskTest extends TestCase
             [function () { return self::createTask()->fridays(); }, '* * * * 5'],
             [function () { return self::createTask()->saturdays(); }, '* * * * 6'],
             [function () { return self::createTask()->sundays(); }, '* * * * 0'],
-            [function () { return self::createTask()->days(1, 2, 3); }, '* * * * 1,2,3'],
+            [function () { return self::createTask()->weeklyOn(1, 2, 3); }, '* * * * 1,2,3'],
             [function () { return self::createTask()->weekly(); }, '0 0 * * 0'],
             [function () { return self::createTask()->weekly()->at('3:15'); }, '15 3 * * 0'],
             [function () { return self::createTask()->monthly(); }, '0 0 1 * *'],

@@ -260,7 +260,7 @@ $task
 
     ->weekends()
 
-    ->days(2, 4) // 0 = Sunday, 6 = Saturday
+    ->weeklyOn(2, 4) // 0 = Sunday, 6 = Saturday
 
     ->mondays()
 

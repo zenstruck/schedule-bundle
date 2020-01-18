@@ -441,44 +441,44 @@ abstract class Task
     /**
      * @param int ...$days 0 = Sunday, 6 = Saturday
      */
-    final public function days(int ...$days): self
+    final public function weeklyOn(int ...$days): self
     {
         return $this->spliceIntoPosition(5, \implode(',', $days));
     }
 
     final public function mondays(): self
     {
-        return $this->days(1);
+        return $this->weeklyOn(1);
     }
 
     final public function tuesdays(): self
     {
-        return $this->days(2);
+        return $this->weeklyOn(2);
     }
 
     final public function wednesdays(): self
     {
-        return $this->days(3);
+        return $this->weeklyOn(3);
     }
 
     final public function thursdays(): self
     {
-        return $this->days(4);
+        return $this->weeklyOn(4);
     }
 
     final public function fridays(): self
     {
-        return $this->days(5);
+        return $this->weeklyOn(5);
     }
 
     final public function saturdays(): self
     {
-        return $this->days(6);
+        return $this->weeklyOn(6);
     }
 
     final public function sundays(): self
     {
-        return $this->days(0);
+        return $this->weeklyOn(0);
     }
 
     final public function weekly(): self
