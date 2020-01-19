@@ -9,11 +9,11 @@ use Cron\CronExpression as CronSchedule;
  */
 final class CronExpression
 {
-    private const MINUTE = 0;
-    private const HOUR = 1;
-    private const DOM = 2;
-    private const MONTH = 3;
-    private const DOW = 4;
+    public const MINUTE = 0;
+    public const HOUR = 1;
+    public const DOM = 2;
+    public const MONTH = 3;
+    public const DOW = 4;
 
     private const ALIAS_MAP = [
         '@hourly' => 'H * * * *',

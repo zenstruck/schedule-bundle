@@ -27,7 +27,7 @@ final class TaskTest extends TestCase
      */
     public function can_set_description()
     {
-        $task = self::createTask()->description('my description');
+        $task = self::task()->description('my description');
 
         $this->assertSame('my description', $task->getDescription());
         $this->assertSame('my description', (string) $task);
@@ -38,7 +38,7 @@ final class TaskTest extends TestCase
      */
     public function can_set_timezone()
     {
-        $task = self::createTask();
+        $task = self::task();
 
         $this->assertNull($task->getTimezone());
 
@@ -58,7 +58,7 @@ final class TaskTest extends TestCase
     {
         $this->assertSame(
             (new \DateTime('1st Jan next year'))->getTimestamp(),
-            self::createTask()->yearly()->getNextRun()->getTimestamp()
+            self::task()->yearly()->getNextRun()->getTimestamp()
         );
     }
 
@@ -67,7 +67,7 @@ final class TaskTest extends TestCase
      */
     public function can_determine_if_due()
     {
-        $this->assertTrue(self::createTask()->everyMinute()->isDue());
+        $this->assertTrue(self::task()->everyMinute()->isDue());
     }
 
     /**
@@ -85,44 +85,54 @@ final class TaskTest extends TestCase
     public static function frequencyProvider(): array
     {
         return [
-            [function () { return self::createTask()->daily(); }, '0 0 * * *'],
-            [function () { return self::createTask()->cron('0 0 * * *')->everyMinute(); }, '* 0 * * *'],
-            [function () { return self::createTask()->everyFiveMinutes(); }, '*/5 * * * *'],
-            [function () { return self::createTask()->everyTenMinutes(); }, '*/10 * * * *'],
-            [function () { return self::createTask()->everyFifteenMinutes(); }, '*/15 * * * *'],
-            [function () { return self::createTask()->everyThirtyMinutes(); }, '0,30 * * * *'],
-            [function () { return self::createTask()->hourly(); }, '0 * * * *'],
-            [function () { return self::createTask()->hourlyAt(6); }, '6 * * * *'],
-            [function () { return self::createTask()->at('3'); }, '0 3 * * *'],
-            [function () { return self::createTask()->at('3:16'); }, '16 3 * * *'],
-            [function () { return self::createTask()->dailyAt('3'); }, '0 3 * * *'],
-            [function () { return self::createTask()->twiceDaily(); }, '0 1,13 * * *'],
-            [function () { return self::createTask()->twiceDaily(2, 14); }, '0 2,14 * * *'],
-            [function () { return self::createTask()->weekdays(); }, '* * * * 1-5'],
-            [function () { return self::createTask()->weekdays()->at(2); }, '0 2 * * 1-5'],
-            [function () { return self::createTask()->weekends(); }, '* * * * 0,6'],
-            [function () { return self::createTask()->mondays(); }, '* * * * 1'],
-            [function () { return self::createTask()->tuesdays(); }, '* * * * 2'],
-            [function () { return self::createTask()->wednesdays(); }, '* * * * 3'],
-            [function () { return self::createTask()->thursdays(); }, '* * * * 4'],
-            [function () { return self::createTask()->fridays(); }, '* * * * 5'],
-            [function () { return self::createTask()->saturdays(); }, '* * * * 6'],
-            [function () { return self::createTask()->sundays(); }, '* * * * 0'],
-            [function () { return self::createTask()->weeklyOn(1, 2, 3); }, '* * * * 1,2,3'],
-            [function () { return self::createTask()->weekly(); }, '0 0 * * 0'],
-            [function () { return self::createTask()->weekly()->at('3:15'); }, '15 3 * * 0'],
-            [function () { return self::createTask()->monthly(); }, '0 0 1 * *'],
-            [function () { return self::createTask()->monthlyOn(3); }, '0 0 3 * *'],
-            [function () { return self::createTask()->monthlyOn(3, '4:15'); }, '15 4 3 * *'],
-            [function () { return self::createTask()->twiceMonthly(); }, '0 0 1,16 * *'],
-            [function () { return self::createTask()->twiceMonthly(3, 17); }, '0 0 3,17 * *'],
-            [function () { return self::createTask()->twiceMonthly()->at('3:15'); }, '15 3 1,16 * *'],
-            [function () { return self::createTask()->quarterly(); }, '0 0 1 1-12/3 *'],
-            [function () { return self::createTask()->yearly(); }, '0 0 1 1 *'],
-            [function () { return self::createTask('my task')->cron('H 0 * * *'); }, '56 0 * * *'],
-            [function () { return self::createTask('my task')->cron('@daily'); }, '56 20 * * *'],
-            [function () { return self::createTask('my task')->cron('@midnight'); }, '56 2 * * *'],
-            [function () { return self::createTask('my task')->cron('@midnight')->daily(); }, '0 0 * * *'],
+            [function () { return self::task(); }, '* * * * *'],
+            [function () { return self::task()->minutes(37)->cron('0 0,12 1 */2 *'); }, '0 0,12 1 */2 *'],
+            [function () { return self::task()->weekly()->everyMinute(); }, '* * * * *'],
+            [function () { return self::task()->weekly()->everyFiveMinutes(); }, '*/5 * * * *'],
+            [function () { return self::task()->weekly()->everyTenMinutes(); }, '*/10 * * * *'],
+            [function () { return self::task()->weekly()->everyFifteenMinutes(); }, '*/15 * * * *'],
+            [function () { return self::task()->weekly()->everyTwentyMinutes(); }, '*/20 * * * *'],
+            [function () { return self::task()->weekly()->everyThirtyMinutes(); }, '0,30 * * * *'],
+            [function () { return self::task()->minutes(37)->hourly(); }, '0 * * * *'],
+            [function () { return self::task()->minutes(37)->hourlyAt(2); }, '2 * * * *'],
+            [function () { return self::task()->minutes(37)->hourlyAt(2, 3, '4-5'); }, '2,3,4-5 * * * *'],
+            [function () { return self::task()->minutes(37)->daily(); }, '0 0 * * *'],
+            [function () { return self::task()->minutes(37)->dailyOn(2, 3, '4-5'); }, '0 2,3,4-5 * * *'],
+            [function () { return self::task()->minutes(37)->twiceDaily(); }, '0 1,13 * * *'],
+            [function () { return self::task()->minutes(37)->twiceDaily(2, 14); }, '0 2,14 * * *'],
+            [function () { return self::task()->minutes(37)->dailyAt(2); }, '0 2 * * *'],
+            [function () { return self::task()->minutes(37)->dailyAt('1:34'); }, '34 1 * * *'],
+            [function () { return self::task()->minutes(37)->weekly(); }, '0 0 * * 0'],
+            [function () { return self::task()->minutes(37)->weeklyOn(2, 3, '4-5'); }, '0 0 * * 2,3,4-5'],
+            [function () { return self::task()->minutes(37)->monthly(); }, '0 0 1 * *'],
+            [function () { return self::task()->minutes(37)->monthlyOn(2, 3, '4-5'); }, '0 0 2,3,4-5 * *'],
+            [function () { return self::task()->minutes(37)->twiceMonthly(); }, '0 0 1,16 * *'],
+            [function () { return self::task()->minutes(37)->twiceMonthly(3, 17); }, '0 0 3,17 * *'],
+            [function () { return self::task()->minutes(37)->quarterly(); }, '0 0 1 */3 *'],
+            [function () { return self::task()->minutes(37)->yearly(); }, '0 0 1 1 *'],
+            [function () { return self::task()->weekly()->minutes(2, 3, '4-5'); }, '2,3,4-5 0 * * 0'],
+            [function () { return self::task()->weekly()->hours(2, 3, '4-5'); }, '0 2,3,4-5 * * 0'],
+            [function () { return self::task()->weekly()->daysOfMonth(2, 3, '4-5'); }, '0 0 2,3,4-5 * 0'],
+            [function () { return self::task()->weekly()->months(2, 3, '4-5'); }, '0 0 * 2,3,4-5 0'],
+            [function () { return self::task()->monthly()->daysOfWeek(2, 3, '4-5'); }, '0 0 1 * 2,3,4-5'],
+            [function () { return self::task()->minutes(37)->weekdays(); }, '37 * * * 1-5'],
+            [function () { return self::task()->minutes(37)->weekends(); }, '37 * * * 0,6'],
+            [function () { return self::task()->minutes(37)->mondays(); }, '37 * * * 1'],
+            [function () { return self::task()->minutes(37)->tuesdays(); }, '37 * * * 2'],
+            [function () { return self::task()->minutes(37)->wednesdays(); }, '37 * * * 3'],
+            [function () { return self::task()->minutes(37)->thursdays(); }, '37 * * * 4'],
+            [function () { return self::task()->minutes(37)->fridays(); }, '37 * * * 5'],
+            [function () { return self::task()->minutes(37)->saturdays(); }, '37 * * * 6'],
+            [function () { return self::task()->minutes(37)->sundays(); }, '37 * * * 0'],
+            [function () { return self::task()->weekly()->at(1); }, '0 1 * * 0'],
+            [function () { return self::task()->weekly()->at('2:45'); }, '45 2 * * 0'],
+
+            [function () { return self::task()->cron('invalid...')->mondays(); }, '* * * * 1'],
+
+            [function () { return self::task('my task')->cron('H 0 * * *'); }, '56 0 * * *'],
+            [function () { return self::task('my task')->cron('@daily'); }, '56 20 * * *'],
+            [function () { return self::task('my task')->cron('@midnight'); }, '56 2 * * *'],
+            [function () { return self::task('my task')->cron('@midnight')->daily(); }, '0 0 * * *'],
         ];
     }
 
@@ -131,11 +141,11 @@ final class TaskTest extends TestCase
      */
     public function has_unique_id_based_on_description_and_frequency()
     {
-        $this->assertSame(self::createTask()->getId(), self::createTask()->getId());
-        $this->assertNotSame(self::createTask()->daily()->getId(), self::createTask()->getId());
-        $this->assertNotSame(self::createTask('task1')->getId(), self::createTask('task2')->getId());
+        $this->assertSame(self::task()->getId(), self::task()->getId());
+        $this->assertNotSame(self::task()->daily()->getId(), self::task()->getId());
+        $this->assertNotSame(self::task('task1')->getId(), self::task('task2')->getId());
         $this->assertNotSame((new class('task') extends Task {
-        })->getId(), self::createTask('task')->getId());
+        })->getId(), self::task('task')->getId());
     }
 
     /**
@@ -143,7 +153,7 @@ final class TaskTest extends TestCase
      */
     public function false_when_filter_skips_task()
     {
-        $task = self::createTask();
+        $task = self::task();
 
         $task->when('boolean value', false);
 
@@ -158,7 +168,7 @@ final class TaskTest extends TestCase
      */
     public function callback_returning_false_when_filter_skips_task()
     {
-        $task = self::createTask();
+        $task = self::task();
 
         $task->when('callback value', function () { return false; });
 
@@ -173,7 +183,7 @@ final class TaskTest extends TestCase
      */
     public function true_when_filter_allows_task_to_run()
     {
-        $task = self::createTask();
+        $task = self::task();
 
         $task->when('boolean value', true);
 
@@ -187,7 +197,7 @@ final class TaskTest extends TestCase
      */
     public function callback_returning_true_when_filter_allows_task_to_run()
     {
-        $task = self::createTask();
+        $task = self::task();
 
         $task->when('callback value', function () { return true; });
 
@@ -201,7 +211,7 @@ final class TaskTest extends TestCase
      */
     public function true_skip_filter_skips_task()
     {
-        $task = self::createTask();
+        $task = self::task();
 
         $task->skip('boolean value', true);
 
@@ -216,7 +226,7 @@ final class TaskTest extends TestCase
      */
     public function callback_returning_true_skip_filter_skips_task()
     {
-        $task = self::createTask();
+        $task = self::task();
 
         $task->skip('callback value', function () { return true; });
 
@@ -231,7 +241,7 @@ final class TaskTest extends TestCase
      */
     public function false_skip_filter_allows_task_to_run()
     {
-        $task = self::createTask();
+        $task = self::task();
 
         $task->skip('boolean value', false);
 
@@ -245,7 +255,7 @@ final class TaskTest extends TestCase
      */
     public function callback_returning_false_skip_filter_allows_task_to_run()
     {
-        $task = self::createTask();
+        $task = self::task();
 
         $task->skip('callback value', function () { return false; });
 
@@ -259,7 +269,7 @@ final class TaskTest extends TestCase
      */
     public function can_add_callback_extensions()
     {
-        $task = self::createTask();
+        $task = self::task();
         $calls = [];
 
         $task->filter(function () use (&$calls) { $calls[] = 'filter'; });
@@ -291,7 +301,7 @@ final class TaskTest extends TestCase
      */
     public function can_add_ping_extensions()
     {
-        $task = self::createTask();
+        $task = self::task();
 
         $task->pingBefore('http://before.com');
         $task->pingAfter('http://after.com', 'POST');
@@ -321,7 +331,7 @@ final class TaskTest extends TestCase
      */
     public function can_add_email_after_extension($method)
     {
-        $task = self::createTask();
+        $task = self::task();
         $task->{$method}('kevin@example.com', 'my subject', function (Email $email) {
             $email->cc('emily@example.com');
         });
@@ -345,7 +355,7 @@ final class TaskTest extends TestCase
      */
     public function can_add_email_on_failure_extension()
     {
-        $task = self::createTask();
+        $task = self::task();
         $task->emailOnFailure('kevin@example.com', 'my subject', function (Email $email) {
             $email->cc('emily@example.com');
         });
@@ -361,8 +371,8 @@ final class TaskTest extends TestCase
      */
     public function can_add_single_server_extension()
     {
-        $task1 = self::createTask('task')->onSingleServer();
-        $task2 = self::createTask('task')->onSingleServer();
+        $task1 = self::task('task')->onSingleServer();
+        $task2 = self::task('task')->onSingleServer();
 
         $lockFactory = new LockFactory(new FlockStore());
 
@@ -379,8 +389,8 @@ final class TaskTest extends TestCase
      */
     public function can_add_without_overlapping_extension()
     {
-        $task1 = self::createTask('task')->withoutOverlapping();
-        $task2 = self::createTask('task')->withoutOverlapping();
+        $task1 = self::task('task')->withoutOverlapping();
+        $task2 = self::task('task')->withoutOverlapping();
 
         $task1->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task1));
 
@@ -399,7 +409,7 @@ final class TaskTest extends TestCase
         $start = (new \DateTime($start))->format('H:i');
         $end = (new \DateTime($end))->format('H:i');
 
-        $task = self::createTask()->between($start, $end, $inclusive);
+        $task = self::task()->between($start, $end, $inclusive);
 
         $this->expectException(SkipTask::class);
         $this->expectExceptionMessage("Only runs between {$start} and {$end}");
@@ -425,7 +435,7 @@ final class TaskTest extends TestCase
         $start = (new \DateTime($start))->format('H:i');
         $end = (new \DateTime($end))->format('H:i');
 
-        $task = self::createTask()->between($start, $end, $inclusive);
+        $task = self::task()->between($start, $end, $inclusive);
 
         $task->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
 
@@ -450,7 +460,7 @@ final class TaskTest extends TestCase
         $start = (new \DateTime($start))->format('H:i');
         $end = (new \DateTime($end))->format('H:i');
 
-        $task = self::createTask()->unlessBetween($start, $end, $inclusive);
+        $task = self::task()->unlessBetween($start, $end, $inclusive);
 
         $this->expectException(SkipTask::class);
         $this->expectExceptionMessage("Only runs if not between {$start} and {$end}");
@@ -476,7 +486,7 @@ final class TaskTest extends TestCase
         $start = (new \DateTime($start))->format('H:i');
         $end = (new \DateTime($end))->format('H:i');
 
-        $task = self::createTask()->unlessBetween($start, $end, $inclusive);
+        $task = self::task()->unlessBetween($start, $end, $inclusive);
 
         $task->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
 
@@ -492,7 +502,7 @@ final class TaskTest extends TestCase
         ];
     }
 
-    private static function createTask(string $description = 'task description'): Task
+    private static function task(string $description = 'task description'): Task
     {
         return new MockTask($description);
     }

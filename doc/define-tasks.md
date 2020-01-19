@@ -227,67 +227,81 @@ $task->cron('0,30 9-17 * * 1-5'); // every 30 minutes between 9am and 5pm on wee
 ### Fluent Expression Builder
 
 If defining your schedule in [PHP](define-schedule.md#schedulebuilder-service), you
-can build your cron expression using the fluent expression builder functions:
+can build your cron expression using the fluent expression builder functions. The
+default frequency for a task is every minute (expression: `* * * * *`).
+
+The following methods reset the expression. Only one should be used and before any
+*field adjustments*:
 
 ```php
 /* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
 
-$task
-    ->everyMinute()
+$task->everyMinute();
+$task->everyFiveMinutes();
+$task->everyTenMinutes();
+$task->everyFifteenMinutes();
+$task->everyTwentyMinutes();
+$task->everyThirtyMinutes();
 
-    ->everyFiveMinutes()
+$task->hourly(); // every hour on the hour
+$task->hourlyAt(3); // every hour, 2 minutes past the hour
+$task->hourlyAt(3, 33, '48-50'); // every hour, 3, 33, 48, 49 and 50 minutes past the hour
 
-    ->everyTenMinutes()
+$task->daily(); // every day @ midnight
+$task->dailyOn(3); // every day @ 3am
+$task->dailyOn(3, 6, '17-18'); // every day @ 3am, 6am, 5pm and 6pm
+$task->twiceDaily(); // every day @ 1am and 1pm
+$task->twiceDaily(9, 17); // every day @ 9am and 5pm
+$task->dailyAt(3); // daily @ 3am
+$task->dailyAt('17:45'); // daily @ 5:45pm
 
-    ->everyFifteenMinutes()
+$task->weekly(); // every Sunday @ midnight
+$task->weeklyOn(1); // every Monday @ midnight
+$task->weeklyOn(1, 3, '5-6'); // every Monday, Wednesday, Friday and Saturday @ midnight
 
-    ->everyThirtyMinutes()
+$task->monthly(); // every 1st of the month @ midnight
+$task->monthlyOn(3); // every 3rd of the month @ midnight
+$task->monthlyOn(3, 6, '8-10'); // every 3rd, 6th, 8th, 9th and 10th of the month @ midnight
+$task->twiceMonthly(); // every 1st and 16th of the month @ midnight
+$task->twiceMonthly(3, 21); // every 3rd and 21st of the month @ midnight
 
-    ->hourly()
+$task->yearly(); // every January 1st @ midnight
 
-    ->hourlyAt(15) // 0-59
+$task->quarterly(); // every January 1st, April 1st, July 1st and October 1st @ midnight
+```
 
-    ->daily()
+The following methods adjust individual fields (with the exception if `->at()` which
+optionally adjusts the hour and minute):
 
-    ->at('14:00')
-    ->at(14) // can pass an integer as the hour and exclude the minutes
+```php
+/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
 
-    ->dailyAt('14:30') // alias for ->at()
+$task->minutes(3); // sets the "minutes" field to "3"
+$task->minutes(3, 6, '45-50'); // sets the "minutes" field to "3,6,45-50"
 
-    ->twiceDaily()
+$task->hours(3); // sets the "hours" field to "3"
+$task->hours(3, 6, '12-14'); // sets the "hours" field to "3,6,12-14"
 
-    ->weekdays()
+$task->at(4); // sets the "hours" field to "4"
+$task->at('4:45'); // sets the "hours" field to "4" and the "minutes" field to "45"
 
-    ->weekends()
+$task->daysOfMonth(3); // sets the "days of month" field to "3"
+$task->daysOfMonth(3, 6, '18-20'); // sets the "days of month" field to "3,6,18-20"
 
-    ->weeklyOn(2, 4) // 0 = Sunday, 6 = Saturday
+$task->months(2); // sets the "months" field to "2" (February)
+$task->months(2, 3, '10-12'); // sets the "months" field to "2,3,10-12" (February, March, October, November and December)
 
-    ->mondays()
-
-    ->tuesdays()
-
-    ->wednesdays()
-
-    ->thursdays()
-
-    ->fridays()
-
-    ->saturdays()
-
-    ->sundays()
-
-    ->weekly()
-
-    ->monthly()
-
-    ->monthlyOn(5)
-
-    ->twiceMonthly()
-
-    ->quarterly()
-
-    ->yearly()
-;
+$task->daysOfWeek(1); // sets the "days of week" field to "1" (Monday)
+$task->daysOfWeek(1, '3-5'); // sets the "days of week" field to "1,3-5" (Monday, Wednesday, Thursday, Friday)
+$task->weekdays(); // sets the "days of week" field to "1-5" (Monday-Friday)
+$task->weekends(); // sets the "days of week" field to "6,0" (Saturday,Sunday)
+$task->mondays(); // sets the "days of week" field to "1" (Monday)
+$task->tuesdays(); // sets the "days of week" field to "2" (Tuesday)
+$task->wednesdays(); // sets the "days of week" field to "3" (Wednesday)
+$task->thursdays(); // sets the "days of week" field to "4" (Thursday)
+$task->fridays(); // sets the "days of week" field to "5" (Friday)
+$task->saturdays(); // sets the "days of week" field to "6" (Saturday)
+$task->sundays(); // sets the "days of week" field to "0" (Sunday)
 ```
 
 ### Hashed Cron Expression
