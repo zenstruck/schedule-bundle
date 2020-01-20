@@ -727,11 +727,11 @@ zenstruck_schedule:
     tasks:
         -   command: my:command1
             frequency: '0 * * * *'
-            between: 9-17 # only runs between 9am and 5pm (skips otherwise)
+            only_between: 9-17 # only runs between 9am and 5pm (skips otherwise)
 
         -   command: my:command2
             frequency: '0 * * * *'
-            between: # only runs between 9:30pm and 6:15am (skips otherwise)
+            only_between: # only runs between 9:30pm and 6:15am (skips otherwise)
                 start: 21:30
                 end: 6:15
 
@@ -751,8 +751,8 @@ zenstruck_schedule:
 ```php
 /* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
 
-$task->between(9, 17); // only runs between 9am and 5pm (skips otherwise)
-$task->between('21:30', '6:15'); // only runs between 9:30pm and 6:15am (skips otherwise)
+$task->onlyBetween(9, 17); // only runs between 9am and 5pm (skips otherwise)
+$task->onlyBetween('21:30', '6:15'); // only runs between 9:30pm and 6:15am (skips otherwise)
 
 $task->unlessBetween(9, 17); // skips if between 9am and 5pm
 $task->unlessBetween('21:30', '6:15'); // skips if between 9:30pm and 6:15am

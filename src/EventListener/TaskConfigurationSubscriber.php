@@ -55,8 +55,8 @@ final class TaskConfigurationSubscriber implements EventSubscriberInterface
             $task->withoutOverlapping($config['without_overlapping']['ttl']);
         }
 
-        if ($config['between']['enabled']) {
-            $task->between($config['between']['start'], $config['between']['end']);
+        if ($config['only_between']['enabled']) {
+            $task->onlyBetween($config['only_between']['start'], $config['only_between']['end']);
         }
 
         if ($config['unless_between']['enabled']) {

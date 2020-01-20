@@ -305,7 +305,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertNull($config['description']);
         $this->assertNull($config['timezone']);
         $this->assertFalse($config['without_overlapping']['enabled']);
-        $this->assertFalse($config['between']['enabled']);
+        $this->assertFalse($config['only_between']['enabled']);
         $this->assertFalse($config['unless_between']['enabled']);
         $this->assertFalse($config['ping_before']['enabled']);
         $this->assertFalse($config['ping_after']['enabled']);
@@ -521,7 +521,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
                     'description' => 'my description',
                     'timezone' => 'UTC',
                     'without_overlapping' => null,
-                    'between' => [
+                    'only_between' => [
                         'start' => 9,
                         'end' => 17,
                     ],
@@ -559,9 +559,9 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertSame('UTC', $config['timezone']);
         $this->assertTrue($config['without_overlapping']['enabled']);
         $this->assertSame(WithoutOverlappingExtension::DEFAULT_TTL, $config['without_overlapping']['ttl']);
-        $this->assertTrue($config['between']['enabled']);
-        $this->assertSame(9, $config['between']['start']);
-        $this->assertSame(17, $config['between']['end']);
+        $this->assertTrue($config['only_between']['enabled']);
+        $this->assertSame(9, $config['only_between']['start']);
+        $this->assertSame(17, $config['only_between']['end']);
         $this->assertTrue($config['unless_between']['enabled']);
         $this->assertSame(12, $config['unless_between']['start']);
         $this->assertSame('13:30', $config['unless_between']['end']);
@@ -623,7 +623,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
                 [
                     'command' => 'my:command --option',
                     'frequency' => '0 0 * * *',
-                    'between' => '9-17',
+                    'only_between' => '9-17',
                     'unless_between' => '11:30-13:15',
                 ],
             ],
@@ -631,9 +631,9 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
 
         $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
 
-        $this->assertTrue($config['between']['enabled']);
-        $this->assertSame('9', $config['between']['start']);
-        $this->assertSame('17', $config['between']['end']);
+        $this->assertTrue($config['only_between']['enabled']);
+        $this->assertSame('9', $config['only_between']['start']);
+        $this->assertSame('17', $config['only_between']['end']);
 
         $this->assertTrue($config['unless_between']['enabled']);
         $this->assertSame('11:30', $config['unless_between']['start']);

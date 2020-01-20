@@ -18,7 +18,7 @@ zenstruck_schedule:
 
         -   command: app:send-hourly-report
             frequency: '0 0 * * 1-5' # hourly on weekdays
-            between: 9-17 # only between 9am and 5pm
+            only_between: 9-17 # only run between 9am and 5pm
             unless_between: 11-13 # except at lunch
 ```
 
@@ -77,7 +77,7 @@ class Kernel extends BaseKernel implements ScheduleBuilder
 
         $schedule->addCommand('app:send-hourly-report')
             ->hourly()
-            ->between(9, 17) // between 9am and 5pm
+            ->onlyBetween(9, 17) // between 9am and 5pm
         ;
     }
 

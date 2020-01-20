@@ -409,14 +409,14 @@ final class TaskTest extends TestCase
 
     /**
      * @test
-     * @dataProvider betweenExtensionSkipProvider
+     * @dataProvider onlyBetweenExtensionSkipProvider
      */
-    public function between_extension_skip($start, $end, $inclusive)
+    public function only_between_extension_skip($start, $end, $inclusive)
     {
         $start = (new \DateTime($start))->format('H:i');
         $end = (new \DateTime($end))->format('H:i');
 
-        $task = self::task()->between($start, $end, $inclusive);
+        $task = self::task()->onlyBetween($start, $end, $inclusive);
 
         $this->expectException(SkipTask::class);
         $this->expectExceptionMessage("Only runs between {$start} and {$end}");
@@ -424,7 +424,7 @@ final class TaskTest extends TestCase
         $task->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
     }
 
-    public static function betweenExtensionSkipProvider()
+    public static function onlyBetweenExtensionSkipProvider()
     {
         return [
             ['+2 minutes', '+3 minutes', true],
@@ -435,21 +435,21 @@ final class TaskTest extends TestCase
 
     /**
      * @test
-     * @dataProvider betweenExtensionRunProvider
+     * @dataProvider onlyBetweenExtensionRunProvider
      */
-    public function between_extension_run($start, $end, $inclusive)
+    public function only_between_extension_run($start, $end, $inclusive)
     {
         $start = (new \DateTime($start))->format('H:i');
         $end = (new \DateTime($end))->format('H:i');
 
-        $task = self::task()->between($start, $end, $inclusive);
+        $task = self::task()->onlyBetween($start, $end, $inclusive);
 
         $task->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
 
         $this->assertTrue(true);
     }
 
-    public static function betweenExtensionRunProvider()
+    public static function onlyBetweenExtensionRunProvider()
     {
         return [
             ['now', '+3 minutes', true],

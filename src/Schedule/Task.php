@@ -322,7 +322,7 @@ abstract class Task
      * @param string $endTime   "HH:MM" (ie "14:30")
      * @param bool   $inclusive Whether to include the start and end time
      */
-    final public function between(string $startTime, string $endTime, bool $inclusive = true): self
+    final public function onlyBetween(string $startTime, string $endTime, bool $inclusive = true): self
     {
         return $this->addExtension(BetweenTimeExtension::whenWithin($startTime, $endTime, $inclusive));
     }

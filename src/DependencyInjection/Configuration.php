@@ -112,7 +112,7 @@ final class Configuration implements ConfigurationInterface
                     'frequency' => '0 * * * *',
                     'description' => 'Send sales report hourly',
                     'without_overlapping' => '~',
-                    'between' => '9-17',
+                    'only_between' => '9-17',
                     'ping_on_success' => 'https://example.com/hourly-report-health-check',
                     'email_on_failure' => 'sales@example.com',
                 ],
@@ -191,7 +191,7 @@ final class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                     ->end()
-                    ->arrayNode('between')
+                    ->arrayNode('only_between')
                         ->info('Only run between given times (alternatively enable by passing a range, ie "9:00-17:00"')
                         ->canBeEnabled()
                         ->beforeNormalization()

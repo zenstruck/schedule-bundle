@@ -215,7 +215,7 @@ final class TaskConfigurationSubscriberTest extends TestCase
                 'description' => 'my description',
                 'timezone' => 'UTC',
                 'without_overlapping' => null,
-                'between' => [
+                'only_between' => [
                     'start' => 9,
                     'end' => 17,
                 ],

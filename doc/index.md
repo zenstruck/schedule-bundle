@@ -109,8 +109,7 @@ $ composer require zenstruck/schedule-bundle
                 ping_on_success: https://www.example.com/weekly-report-healthcheck
     
             -   command: app:send-hourly-report --to=accounting@example.com --to=sales@example.com
-                frequency: '0 * * * 1-5' # Hourly on weekdays
-                between: 9-17 # only between 9am and 5pm
+                frequency: '0 9-17 * * 1-5' # Hourly on weekdays between 9am and 5pm
                 without_overlapping: ~ # prevent running over itself
                 ping_on_success: https://www.example.com/hourly-report-healthcheck
     ```
@@ -240,7 +239,7 @@ zenstruck_schedule:
             frequency:           '0 * * * *'
             description:         Send sales report hourly
             without_overlapping: ~
-            between:             9-17
+            only_between:        9-17
             ping_on_success:     https://example.com/hourly-report-health-check
             email_on_failure:    sales@example.com
 
@@ -267,7 +266,7 @@ zenstruck_schedule:
                 ttl:                  86400
 
             # Only run between given times (alternatively enable by passing a range, ie "9:00-17:00"
-            between:
+            only_between:
                 enabled:              false
                 start:                ~ # Required, Example: 9:00
                 end:                  ~ # Required, Example: 17:00
