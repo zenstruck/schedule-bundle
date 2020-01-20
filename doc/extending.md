@@ -10,7 +10,7 @@ If your task is capable of running itself, have it implement
 [`SelfRunningTask`](../src/Schedule/Task/SelfRunningTask.php) (a *runner* is not required).
 
 If your task requires a *runner*, the runner must be a service with the `schedule.task_runner` tag
-(this is autoconfigurable). Runners must implement the `supports()` method which should return
+(this is *autoconfigurable*). Runners must implement the `supports()` method which should return
 true when passed the task it handles.
 
 See [`CallbackTask`](../src/Schedule/Task/CallbackTask.php) for an example of a *self-running*
@@ -107,7 +107,7 @@ extension is capable of handling itself, the extension can extend
 handler is not required). Override the methods that are applicable to your extension.
 
 If your extension requires a *handler*, the handler must be a service with the
-`schedule.extension_handler` tag (this is autoconfigurable). Extension handlers must
+`schedule.extension_handler` tag (this is *autoconfigurable*). Extension handlers must
 implement the `supports()` method which should return true when passed the extension
 it handles.
 
@@ -118,7 +118,7 @@ for an example of an extension with a
 *[handler](../src/Schedule/Extension/Handler/EnvironmentHandler.php)*.
 
 If your extension is applicable to the schedule, you can auto-add it by registering
-it as a service and adding the `schedule.extension` tag (autoconfiguration is not
+it as a service and adding the `schedule.extension` tag (*autoconfiguration* is **not**
 available).
 
 Below are some examples of custom extensions:
@@ -174,7 +174,7 @@ class NotInMaintenanceModeHandler extends ExtensionHandler
     /**
      * @param NotInMaintenanceMode $extension
      */
-    public function filterSchedule(BeforeScheduleEvent $event,Extension $extension): void
+    public function filterSchedule(BeforeScheduleEvent $event, Extension $extension): void
     {
         if ($this->kernel->isInMaintenanceMode()) {
             throw new SkipSchedule('Does not run in maintenance mode.');
@@ -226,7 +226,7 @@ class Kernel extends BaseKernel implements ScheduleBuilder
 
 ### Example 2: Send Failing Task Output to Webhook
 
-This example assumes you have an webhook (*https://example.com/failing-task*) that can receive
+This example assumes you have an webhook (`https://example.com/failing-task`) that can receive
 failing task details.
 
 The *extension*:
@@ -287,13 +287,13 @@ $task->addExtension(new SendFailingTaskToWebhook('https://example.com/failing-ta
 
 The following Symfony events are available:
 
-| Event                                                         | Description                   |
-| ------------------------------------------------------------- | ----------------------------- |
-| [`BeforeScheduleEvent`](../src/Event/BeforeScheduleEvent.php) | Runs before the schedule runs |
-| [`AfterScheduleEvent`](../src/Event/AfterScheduleEvent.php)   | Runs after the schedule runs  |
-| [`BeforeTaskEvent`](../src/Event/BeforeTaskEvent.php)         | Runs before task runs         |
-| [`AfterTaskEvent`](../src/Event/AfterTaskEvent.php)           | Runs after task runs          |
-| [`BuildScheduleEvent`](../src/Event/BuildScheduleEvent.php)   | Defining your schedule        |
+| Event                                                         | Description                      |
+| ------------------------------------------------------------- | -------------------------------- |
+| [`BeforeScheduleEvent`](../src/Event/BeforeScheduleEvent.php) | Runs before the schedule runs    |
+| [`AfterScheduleEvent`](../src/Event/AfterScheduleEvent.php)   | Runs after the schedule runs     |
+| [`BeforeTaskEvent`](../src/Event/BeforeTaskEvent.php)         | Runs before a due task runs      |
+| [`AfterTaskEvent`](../src/Event/AfterTaskEvent.php)           | Runs after a due task runs       |
+| [`BuildScheduleEvent`](../src/Event/BuildScheduleEvent.php)   | Define/manipulate tasks/schedule |
 
 ### Example: Add "withoutOverlapping" to all defined tasks
 
@@ -319,7 +319,7 @@ class ScheduleWithoutOverlappingSubscriber implements EventSubscriberInterface
                 'onBuildSchedule',
                 /*
                  * The actual building of the schedule happens at priority "0".
-                 * We set to a lower priority to ensure all tasks are defined.
+                 * We set to a lower priority to ensure all tasks have been defined.
                  */
                 -100,
             ],

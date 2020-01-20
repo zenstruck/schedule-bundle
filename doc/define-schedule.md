@@ -209,8 +209,7 @@ This extension is useful for Cron health monitoring tools like
 
 zenstruck_schedule:
     schedule_extensions:
-        ping_before:
-            url: https://example.com/before-tasks-run
+        ping_before: https://example.com/before-tasks-run
         ping_after:
             url: https://example.com/after-tasks-run
             method: POST

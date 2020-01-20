@@ -257,6 +257,7 @@ $task->hourlyAt(3, 33, '48-50'); // every hour, 3, 33, 48, 49 and 50 minutes pas
 $task->daily(); // every day @ midnight
 $task->dailyOn(3); // every day @ 3am
 $task->dailyOn(3, 6, '17-18'); // every day @ 3am, 6am, 5pm and 6pm
+$task->dailyBetween(9, 17); // every day, hourly between 9am and 5pm
 $task->twiceDaily(); // every day @ 1am and 1pm
 $task->twiceDaily(9, 17); // every day @ 9am and 5pm
 $task->dailyAt(3); // daily @ 3am
@@ -318,15 +319,15 @@ create a very long running schedule right at this time. Tasks scheduled at
 the same time are run synchronously. This may cause an issue if a task has
 a memory leak.
 
-This bundle extends the standard Cron expression syntax by adding an `#` (for *hash*)
-symbol. `#` is replaced with a random value for the field. The selection is
+This bundle extends the standard Cron expression syntax by adding a `#` (for *hash*)
+symbol. `#` is replaced with a random value for the field. The value is
 deterministic based on the task's *description*. This means that while the value
-is random, it is predictable. A task with the description `my task` and a defined
-frequency of `# # * * *` will have a *calculated frequency* of `56 20 * * *` (every
-day at 8:56pm). Changing the task's description will change it's *calculated
-frequency*. If the task from the previous example's description is changed to
-`another task`, it's *calculated frequency* would change to `24 12 * * *` (every
-day at 12:24pm).
+is random, it is predictable and consistent. A task with the description `my task`
+and a defined frequency of `# # * * *` will have a *calculated frequency* of
+`56 20 * * *` (every day at 8:56pm). Changing the task's description will change
+it's *calculated frequency*. If the task from the previous example's description
+is changed to `another task`, it's *calculated frequency* would change to
+`24 12 * * *` (every day at 12:24pm).
 
 A hash range `#(x-y)` can also be used. For example, `# #(0-7) * * *` means daily,
 some time between midnight and 7am. Using the `#` without a range creates a range
@@ -423,7 +424,7 @@ zenstruck_schedule:
 
 $task->timezone('UTC');
 
-// alternatively, pass \DateTimeZone instance
+// alternatively, pass a \DateTimeZone instance
 $task->timezone(new \DateTimeZone('UTC'));
 ```
 
@@ -718,6 +719,9 @@ $task->onSingleServer();
     ```
 
 ### Between
+
+*only_between* skips the task if run outside of the given range. *unless_between*
+skips the task if run inside the the given range.
 
 **Define in [Configuration](define-schedule.md#bundle-configuration):**
 

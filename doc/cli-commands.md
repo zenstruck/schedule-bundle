@@ -20,8 +20,8 @@ Help:
 This command lists your currently defined schedule. It displays useful information
 and potential issues. The `--detail` option gives even more detail.
 
-Run this command as a CI build step to ensure your schedule does not make it
-to production with issues.
+It is advisable to run this command as a CI build step to ensure your schedule does
+not make it to production with issues (has exit code `1` if there are issues).
 
 Consider the following schedule definition:
 
@@ -44,7 +44,7 @@ zenstruck_schedule:
 ```
 
 Assuming the bundle has no other configuration, running `schedule:list` shows the
-following output:
+following output (exit code `1`):
 
 ```console
 $ bin/console schedule:list
@@ -52,7 +52,7 @@ $ bin/console schedule:list
 
 ![schedule:list with issues](images/schedule-list_issues.png)
 
-Running with the `--detail` flag shows the following:
+Running with the `--detail` flag shows the following (exit code `1`):
 
 ```console
 $ bin/console schedule:list --detail
@@ -72,7 +72,7 @@ zenstruck_schedule:
         default_from: webmaster@example.com
 ```
 
-Running now shows the following:
+Running now shows the following (exit code `0`):
 
 ```console
 $ bin/console schedule:list
@@ -80,7 +80,7 @@ $ bin/console schedule:list
 
 ![schedule:list](images/schedule-list.png)
 
-Running with the `--detail` flag shows the following:
+Running with the `--detail` flag shows the following (exit code `0`):
 
 ```console
 $ bin/console schedule:list --detail
@@ -116,7 +116,7 @@ job to your production server(s) running every minute:
 The above Cron job sends the command output to `/dev/null` but the command does
 produce output if you wish to store that somewhere. Using the example from
 `schedule:list` above and assuming one of the tasks are due at time of run, the
-command will output the following:
+command will output the following  (exit code `0`):
 
 ```console
 $ bin/console schedule:run

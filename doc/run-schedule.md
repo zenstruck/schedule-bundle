@@ -6,7 +6,7 @@ on your production server(s) indefinitely.
 *The schedule doesn't have to be run every minute but if it isn't, jobs
 scheduled in between the frequency you choose will never run. If you are
 careful when choosing task frequencies, this might not be an issue. If not
-running every minute, it must be run at predictable times like every hour
+running every minute, it must be run at predictable times like every hour,
 exactly on the hour (ie 08:00, not 08:01).*
 
 If multiple tasks are due at the same time, they are run synchronously in the
@@ -25,7 +25,7 @@ the current time and runs them.
 
 The most common way to run the schedule is a Cron job that runs the
 [`schedule:run`](cli-commands.md#schedulerun) every minute. The following
-should be added to production server's
+should be added to your production server's
 [crontab](http://man7.org/linux/man-pages/man5/crontab.5.html):
 
 ```
@@ -92,25 +92,30 @@ class RunScheduleController
 
 ## Dealing with Failures
 
-It is probable that at some point, a scheduled tasks will fail. Because the
+It is probable that at some point, a scheduled task will fail. Because the
 schedule runs in the background, administrators need to be made aware failures.
 
 *If multiple tasks are due at the same time, one failure will not prevent the
 other due tasks from running.*
+
+A failing task may or may not be the result of an exception. For instance, a
+[CommandTask](define-tasks.md#commandtask) that ran with an exit code of `1`
+is considered failed but may not be from the result of an exception (the
+command could have returned `1`).
 
 The following are different methods of being alerted to failures:
 
 ### Logs
 
 All schedule/task events are logged (if using monolog, on the `schedule` channel).
-Errors and Exceptions are logged with the `error` and `critical` levels respectively.
+Errors and Exceptions are logged with the `ERROR` and `CRITICAL` levels respectively.
 The log's context contains useful information like duration, memory usage, task output
 and the exception (if failed).
 
 The following is an example log file (some context excluded):
 
 ```
-[2020-01-20 13:17:13] schedule.INFO: Running 4 due tasks. {"total":22,"due":4} []
+[2020-01-20 13:17:13] schedule.INFO: Running 4 due tasks. {"total":22,"due":4}
 [2020-01-20 13:17:13] schedule.INFO: Running "CommandTask": my:command
 [2020-01-20 13:17:13] schedule.INFO: Successfully ran "CommandTask": my:command
 [2020-01-20 13:17:13] schedule.INFO: Running "ProcessTask": fdere -dsdfsd
@@ -122,8 +127,9 @@ The following is an example log file (some context excluded):
 [2020-01-20 13:24:11] schedule.ERROR: 3/4 tasks ran {"total":4,"successful":1,"skipped":1,"failures":2,"duration":"< 1 sec","memory":"10.0 MiB"}
 ```
 
-Services like [Papertrail](https://papertrailapp.com) can be configured to alert
-administrators when a filter (ie `schedule.ERROR OR schedule.CRITICAL`) is matched.
+Services like [Papertrail](https://papertrailapp.com) can be [configured to alert
+administrators](https://help.papertrailapp.com/kb/how-it-works/alerts/) when a filter
+(ie `schedule.ERROR OR schedule.CRITICAL`) is matched.
 
 ### Email on Schedule Failure
 
@@ -155,7 +161,7 @@ cron:
 # ...
 ```
 
-## Ensuring Schedule is Running
+## Ensuring the Schedule is Running
 
 It is important to be assured your schedule is always running. The best method
 is to use a Cron health monitoring tool like [Cronitor](https://cronitor.io/),

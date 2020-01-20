@@ -53,7 +53,7 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
     2. [Symfony Cloud](run-schedule.md#symfony-cloud)
     3. [Alternatives](run-schedule.md#alternatives)
     4. [Dealing with Failures](run-schedule.md#dealing-with-failures)
-    5. [Ensuring Schedule is Running](run-schedule.md#ensuring-schedule-is-running)
+    5. [Ensuring Schedule is Running](run-schedule.md#ensuring-the-schedule-is-running)
 6. [CLI Commands](cli-commands.md)
     1. [schedule:list](cli-commands.md#schedulelist)
     2. [schedule:run](cli-commands.md#schedulerun)
