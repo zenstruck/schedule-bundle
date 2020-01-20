@@ -197,6 +197,33 @@ use App\Schedule\Extension\NotInMaintenanceMode;
 $schedule->addExtension(new NotInMaintenanceMode());
 ```
 
+**NOTE:** This is an example to show creating/registering a custom extension. In
+a real world application, all that would be needed to accomplish the above
+example would be the following in your `Kernel`:
+
+```php
+// src/Kernel.php
+
+use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Zenstruck\ScheduleBundle\Schedule;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
+
+class Kernel extends BaseKernel implements ScheduleBuilder
+{
+    public function isInMaintenanceMode(): bool
+    {
+        // return true if in maintenance mode...
+    }
+
+    public function buildSchedule(Schedule $schedule): void
+    {
+        $schedule->skip('Does not run in maintenance mode.', $this->isInMaintenanceMode());
+    }
+
+    // ...
+}
+```
+
 ### Example 2: Send Failing Task Output to Webhook
 
 This example assumes you have an webhook (*https://example.com/failing-task*) that can receive

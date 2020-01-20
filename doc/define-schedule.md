@@ -59,9 +59,9 @@ Have your application's `Kernel` implement
 ```php
 // src/Kernel.php
 
+use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
-// ...
 
 class Kernel extends BaseKernel implements ScheduleBuilder
 {
