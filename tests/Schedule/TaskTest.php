@@ -98,6 +98,7 @@ final class TaskTest extends TestCase
             [function () { return self::task()->minutes(37)->hourlyAt(2, 3, '4-5'); }, '2,3,4-5 * * * *'],
             [function () { return self::task()->minutes(37)->daily(); }, '0 0 * * *'],
             [function () { return self::task()->minutes(37)->dailyOn(2, 3, '4-5'); }, '0 2,3,4-5 * * *'],
+            [function () { return self::task()->minutes(37)->dailyBetween(9, 17); }, '0 9-17 * * *'],
             [function () { return self::task()->minutes(37)->twiceDaily(); }, '0 1,13 * * *'],
             [function () { return self::task()->minutes(37)->twiceDaily(2, 14); }, '0 2,14 * * *'],
             [function () { return self::task()->minutes(37)->dailyAt(2); }, '0 2 * * *'],

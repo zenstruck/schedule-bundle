@@ -436,6 +436,17 @@ abstract class Task
     }
 
     /**
+     * Resets the expression to "0 X-Y * * *" with X and Y being the passed start and end hours.
+     *
+     * @param int $firstHour  0-23
+     * @param int $secondHour 0-23
+     */
+    final public function dailyBetween(int $firstHour, int $secondHour): self
+    {
+        return $this->daily()->hours("{$firstHour}-{$secondHour}");
+    }
+
+    /**
      * Resets the expression to "0 X,Y * * *" with X and Y being the passed hours.
      *
      * @param int $firstHour  0-23
