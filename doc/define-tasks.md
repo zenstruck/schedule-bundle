@@ -89,7 +89,8 @@ $ composer require symfony/process
 ### CompoundTask
 
 This is a special task that allows you to group other tasks together that share a
-frequency, timezone and extensions.
+frequency, timezone and extensions. When due, grouped tasks are run in the order
+they are defined.
 
 **Define in [Configuration](define-schedule.md#bundle-configuration):**
 

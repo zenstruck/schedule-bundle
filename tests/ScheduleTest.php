@@ -128,6 +128,39 @@ class ScheduleTest extends TestCase
     /**
      * @test
      */
+    public function due_tasks_are_ordered_by_when_they_are_defined()
+    {
+        $schedule = new Schedule();
+
+        $schedule->addCommand('my:command')->description('task1');
+        $schedule->addCompound()
+            ->addCommand('another:command', [], 'task2')
+            ->addCallback(function () {}, 'task3')
+            ->addProcess('php -v', 'task4')
+            ->addProcess(new Process(['php -v']), 'task5')
+            ->timezone('UTC')
+            ->mondays()
+            ->onSingleServer()
+        ;
+        $schedule->addCommand('my:command')->description('task6');
+
+        $this->assertSame(
+            [
+                'task1',
+                'task2',
+                'task3',
+                'task4',
+                'task5',
+                'task6',
+            ], \array_map(function (Task $task) {
+                return $task->getDescription();
+            }, $schedule->due())
+        );
+    }
+
+    /**
+     * @test
+     */
     public function has_unique_id_based_on_tasks()
     {
         $schedule1 = new Schedule();
