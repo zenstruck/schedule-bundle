@@ -129,10 +129,10 @@ final class TaskTest extends TestCase
 
             [function () { return self::task()->cron('invalid...')->mondays(); }, '* * * * 1'],
 
-            [function () { return self::task('my task')->cron('H 0 * * *'); }, '56 0 * * *'],
-            [function () { return self::task('my task')->cron('@daily'); }, '56 20 * * *'],
-            [function () { return self::task('my task')->cron('@midnight'); }, '56 2 * * *'],
-            [function () { return self::task('my task')->cron('@midnight')->daily(); }, '0 0 * * *'],
+            [function () { return self::task('my task')->cron('# 0 * * *'); }, '56 0 * * *'],
+            [function () { return self::task('my task')->cron('#daily'); }, '56 20 * * *'],
+            [function () { return self::task('my task')->cron('#midnight'); }, '56 2 * * *'],
+            [function () { return self::task('my task')->cron('#midnight')->daily(); }, '0 0 * * *'],
         ];
     }
 

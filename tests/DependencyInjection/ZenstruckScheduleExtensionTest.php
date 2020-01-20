@@ -476,14 +476,14 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
             'tasks' => [
                 [
                     'command' => 'my:command',
-                    'frequency' => '@midnight',
+                    'frequency' => '#midnight',
                 ],
             ],
         ]);
 
         $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
 
-        $this->assertSame('@midnight', $config['frequency']);
+        $this->assertSame('#midnight', $config['frequency']);
     }
 
     /**

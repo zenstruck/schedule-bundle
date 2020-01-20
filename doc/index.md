@@ -104,12 +104,12 @@ $ composer require zenstruck/schedule-bundle
 
         tasks:
             -   command: app:send-weekly-report
-                frequency: 0 * * * 0 # Sundays @ 1am
+                frequency: '0 * * * 0' # Sundays @ 1am
                 email_on_failure: ~ # send email if this task fails
                 ping_on_success: https://www.example.com/weekly-report-healthcheck
     
             -   command: app:send-hourly-report --to=accounting@example.com --to=sales@example.com
-                frequency: 0 * * * 1-5 # Hourly on weekdays
+                frequency: '0 * * * 1-5' # Hourly on weekdays
                 between: 9-17 # only between 9am and 5pm
                 without_overlapping: ~ # prevent running over itself
                 ping_on_success: https://www.example.com/hourly-report-healthcheck
@@ -237,7 +237,7 @@ zenstruck_schedule:
         # Example:
         - 
             command:             send:sales-report --detailed
-            frequency:           0 * * * *
+            frequency:           '0 * * * *'
             description:         Send sales report hourly
             without_overlapping: ~
             between:             9-17
@@ -251,7 +251,7 @@ zenstruck_schedule:
             command:              ~ # Required, Example: "my:command arg1 --option1=value" or "bash:/bin/my-script"
 
             # Cron expression
-            frequency:            ~ # Required, Example: 0 * * * *
+            frequency:            ~ # Required, Example: '0 * * * *'
 
             # Task description
             description:          null

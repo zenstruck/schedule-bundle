@@ -17,7 +17,7 @@ This task runs a Symfony console command.
 zenstruck_schedule:
     tasks:
         -   command: my:command arg1 --option1 --option1=value
-            frequency: 0 * * * *
+            frequency: '0 * * * *'
 ```
 
 **Define in [PHP](define-schedule.md#schedulebuilder-service):**
@@ -62,7 +62,7 @@ This task executes shell commands.
 zenstruck_schedule:
     tasks:
         -   command: bash:/bin/my-script # note the "bash:" prefix
-            frequency: 0 * * * *
+            frequency: '0 * * * *'
 ```
 
 **Define in [PHP](define-schedule.md#schedulebuilder-service):**
@@ -101,7 +101,7 @@ zenstruck_schedule:
         -   command:
                 - my:command arg --option
                 - bash:/bin/my-script
-            frequency: 0 * * * *
+            frequency: '0 * * * *'
             timezone: UTC
             email_on_failure: ~
 
@@ -145,7 +145,7 @@ This task type *requires* a description.
 zenstruck_schedule:
     tasks:
         -   command: null
-            frequency: 0 * * * *
+            frequency: '0 * * * *'
             description: my task # required for "null" tasks
 ```
 
@@ -182,7 +182,7 @@ description is required for this task type.
 zenstruck_schedule:
     tasks:
         -   command: my:command
-            frequency: 0 * * * *
+            frequency: '0 * * * *'
             description: this describes my task
 ```
 
@@ -311,33 +311,33 @@ create a very long running schedule right at this time. Tasks scheduled at
 the same time are run synchronously. This may cause an issue if a task has
 a memory leak.
 
-This bundle extends the standard Cron expression syntax by adding an `H` (for *hash*)
-symbol. `H` is replaced with a random value for the field. The selection is
+This bundle extends the standard Cron expression syntax by adding an `#` (for *hash*)
+symbol. `#` is replaced with a random value for the field. The selection is
 deterministic based on the task's *description*. This means that while the value
 is random, it is predictable. A task with the description `my task` and a defined
-frequency of `H H * * *` will have a *calculated frequency* of `56 20 * * *` (every
+frequency of `# # * * *` will have a *calculated frequency* of `56 20 * * *` (every
 day at 8:56pm). Changing the task's description will change it's *calculated
 frequency*. If the task from the previous example's description is changed to
 `another task`, it's *calculated frequency* would change to `24 12 * * *` (every
 day at 12:24pm).
 
-A hash range `H(x-y)` can also be used. For example, `H H(0-7) * * *` means daily,
-some time between midnight and 7am. Using the `H` without a range creates a range
-of any valid value for the field. `H H H H H` is short for
-`H(0-59) H(0-23) H(1-28) H(1-12) H(0-6)`. *Note the day of month range is 1-28, this
+A hash range `#(x-y)` can also be used. For example, `# #(0-7) * * *` means daily,
+some time between midnight and 7am. Using the `#` without a range creates a range
+of any valid value for the field. `# # # # #` is short for
+`#(0-59) #(0-23) #(1-28) #(1-12) #(0-6)`. *Note the day of month range is 1-28, this
 is to account for February which has a minimum of 28 days.*
 
 The following *hash* aliases are provided:
 
 | Alias       | Converts to                                                            |
 | ----------- | ---------------------------------------------------------------------- |
-| `@hourly`   | `H * * * *` (at some minute every hour)                                |
-| `@daily`    | `H H * * *` (at some time every day)                                   |
-| `@midnight` | `H H(0-2) * * *` (at some time between midnight and 2:59am, every day) |
-| `@weekly`   | `H H * * H` (at some time every week)                                  |
-| `@monthly`  | `H H H * *` (at some time on some day, once per month)                 |
-| `@annually` | `H H H H *` (at some time on some day, once per year)                  |
-| `@yearly`   | `H H H H *` (at some time on some day, once per year)                  |
+| `#hourly`   | `# * * * *` (at some minute every hour)                                |
+| `#daily`    | `# # * * *` (at some time every day)                                   |
+| `#midnight` | `# #(0-2) * * *` (at some time between midnight and 2:59am, every day) |
+| `#weekly`   | `# # * * #` (at some time every week)                                  |
+| `#monthly`  | `# # # * *` (at some time on some day, once per month)                 |
+| `#annually` | `# # # # *` (at some time on some day, once per year)                  |
+| `#yearly`   | `# # # # *` (at some time on some day, once per year)                  |
 
 **Define in [Configuration](define-schedule.md#bundle-configuration):**
 
@@ -348,19 +348,19 @@ zenstruck_schedule:
     tasks:
         -   command: my:command
             description: my task
-            frequency: 'H H * * H' # converts to "56 20 * * 0" (every Sunday @ 8:56pm)
+            frequency: '# # * * #' # converts to "56 20 * * 0" (every Sunday @ 8:56pm)
 
         -   command: my:command
             description: another task
-            frequency: 'H H(1-4) 1,15 * *' # converts to "24 1 1,15 * *" (1:24am on the first and fifteenth days of each month)
+            frequency: '# #(1-4) 1,15 * *' # converts to "24 1 1,15 * *" (1:24am on the first and fifteenth days of each month)
 
         -   command: my:command
             description: yet another task
-            frequency: '@midnight' # converts to "52 1 * * *" (daily @ 1:52am)
+            frequency: '#midnight' # converts to "52 1 * * *" (daily @ 1:52am)
 
         -   command: my:command
             description: yet another task 2 # note the different description calculates a different frequency
-            frequency: '@midnight' # converts to "32 2 * * *" (daily @ 2:32am)
+            frequency: '#midnight' # converts to "32 2 * * *" (daily @ 2:32am)
 ```
 
 **Define in [PHP](define-schedule.md#schedulebuilder-service):**
@@ -370,22 +370,22 @@ zenstruck_schedule:
 
 $task
     ->description('my task')
-    ->cron('H H * * H') // converts to "56 20 * * 0" (every Sunday @ 8:56pm)
+    ->cron('# # * * #') // converts to "56 20 * * 0" (every Sunday @ 8:56pm)
 ;
 
 $task
     ->description('another task')
-    ->cron('H H(1-4) 1,15 * *') // converts to "24 1 1,15 * *" (1:24am on the 1st and 15th of each month)
+    ->cron('# #(1-4) 1,15 * *') // converts to "24 1 1,15 * *" (1:24am on the 1st and 15th of each month)
 ;
 
 $task
     ->description('yet another task')
-    ->cron('@midnight') // converts to "52 1 * * *" (daily @ 1:52am)
+    ->cron('#midnight') // converts to "52 1 * * *" (daily @ 1:52am)
 ;
 
 $task
     ->description('yet another task 2') // note the different description calculates a different frequency
-    ->cron('@midnight') // converts to "32 2 * * *" (daily @ 2:32am)
+    ->cron('#midnight') // converts to "32 2 * * *" (daily @ 2:32am)
 ;
 ```
 
@@ -405,7 +405,7 @@ Alternatively, you can define the [timezone for all tasks](define-schedule.md#ti
 zenstruck_schedule:
     tasks:
         -   command: my:command
-            frequency: 0 * * * *
+            frequency: '0 * * * *'
             timezone: UTC
 ```
 
@@ -492,7 +492,7 @@ This extension is useful for Cron health monitoring tools like
 zenstruck_schedule:
     tasks:
         -   command: my:command
-            frequency: 0 * * * *
+            frequency: '0 * * * *'
             ping_before: https://example.com/before-task-run
             ping_after:
                 url: https://example.com/after-task-runs
@@ -549,12 +549,12 @@ regardless of the result (`email_after`).
 zenstruck_schedule:
     tasks:
         -   command: my:command
-            frequency: 0 * * * *
+            frequency: '0 * * * *'
             email_after: admin@example.com
             email_on_failure: ~ # default "to" address can be configured (see below)
 
         -   command: my:command
-            frequency: 0 * * * *
+            frequency: '0 * * * *'
             email_after:
                 to: admin@example.com
                 subject: my custom subject
@@ -648,7 +648,7 @@ a previous instance. If it is still running, the task is skipped.
 zenstruck_schedule:
     tasks:
         -   command: my:command
-            frequency: 0 * * * *
+            frequency: '0 * * * *'
             without_overlapping: ~
 ```
 
@@ -720,21 +720,21 @@ $task->onSingleServer();
 zenstruck_schedule:
     tasks:
         -   command: my:command1
-            frequency: 0 * * * *
+            frequency: '0 * * * *'
             between: 9-17 # only runs between 9am and 5pm (skips otherwise)
 
         -   command: my:command2
-            frequency: 0 * * * *
+            frequency: '0 * * * *'
             between: # only runs between 9:30pm and 6:15am (skips otherwise)
                 start: 21:30
                 end: 6:15
 
         -   command: my:command3
-            frequency: 0 * * * *
+            frequency: '0 * * * *'
             unless_between: 9-17 # skips if between 9am and 5pm
 
         -   command: my:command4
-            frequency: 0 * * * *
+            frequency: '0 * * * *'
             unless_between: # skips if between 9:30pm and 6:15am
                 start: 21:30
                 end: 6:15

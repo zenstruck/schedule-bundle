@@ -162,24 +162,24 @@ final class TaskConfigurationSubscriberTest extends TestCase
         $schedule = $this->createSchedule([
             [
                 'command' => 'my:command1',
-                'frequency' => 'H * * * *',
+                'frequency' => '# * * * *',
             ],
             [
                 'command' => 'my:command1',
-                'frequency' => 'H * * * *',
+                'frequency' => '# * * * *',
                 'description' => 'my description',
             ],
             [
                 'command' => 'my:command2',
-                'frequency' => 'H H(9-17) * * *',
+                'frequency' => '# #(9-17) * * *',
             ],
             [
                 'command' => 'my:command3',
-                'frequency' => '@daily',
+                'frequency' => '#daily',
             ],
             [
                 'command' => 'my:command4',
-                'frequency' => '@midnight',
+                'frequency' => '#midnight',
             ],
         ]);
 
@@ -188,19 +188,19 @@ final class TaskConfigurationSubscriberTest extends TestCase
         [$task1, $task2, $task3, $task4, $task5] = $schedule->all();
 
         $this->assertSame('16 * * * *', (string) $task1->getExpression());
-        $this->assertSame('H * * * *', $task1->getExpression()->getRawValue());
+        $this->assertSame('# * * * *', $task1->getExpression()->getRawValue());
 
         $this->assertSame('10 * * * *', (string) $task2->getExpression(), 'Different description changes minute');
-        $this->assertSame('H * * * *', $task2->getExpression()->getRawValue());
+        $this->assertSame('# * * * *', $task2->getExpression()->getRawValue());
 
         $this->assertSame('9 12 * * *', (string) $task3->getExpression());
-        $this->assertSame('H H(9-17) * * *', $task3->getExpression()->getRawValue());
+        $this->assertSame('# #(9-17) * * *', $task3->getExpression()->getRawValue());
 
         $this->assertSame('29 17 * * *', (string) $task4->getExpression());
-        $this->assertSame('@daily', $task4->getExpression()->getRawValue());
+        $this->assertSame('#daily', $task4->getExpression()->getRawValue());
 
         $this->assertSame('11 2 * * *', (string) $task5->getExpression());
-        $this->assertSame('@midnight', $task5->getExpression()->getRawValue());
+        $this->assertSame('#midnight', $task5->getExpression()->getRawValue());
     }
 
     /**

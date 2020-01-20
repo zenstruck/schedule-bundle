@@ -16,13 +16,13 @@ final class CronExpression
     public const DOW = 4;
 
     private const ALIAS_MAP = [
-        '@hourly' => 'H * * * *',
-        '@daily' => 'H H * * *',
-        '@weekly' => 'H H * * H',
-        '@monthly' => 'H H H * *',
-        '@annually' => 'H H H H *',
-        '@yearly' => 'H H H H *',
-        '@midnight' => 'H H(0-2) * * *',
+        '#hourly' => '# * * * *',
+        '#daily' => '# # * * *',
+        '#weekly' => '# # * * #',
+        '#monthly' => '# # # * *',
+        '#annually' => '# # # # *',
+        '#yearly' => '# # # # *',
+        '#midnight' => '# #(0-2) * * *',
     ];
 
     private const RANGES = [
@@ -93,7 +93,7 @@ final class CronExpression
     {
         $value = $this->parts[$position];
 
-        if (\preg_match('#^H(\((\d+)-(\d+)\))?$#', $value, $matches)) {
+        if (\preg_match('#^\#(\((\d+)-(\d+)\))?$#', $value, $matches)) {
             $value = $this->hashField(
                 $matches[2] ?? self::RANGES[$position][0],
                 $matches[3] ?? self::RANGES[$position][1]
