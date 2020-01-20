@@ -48,14 +48,20 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
         6. [Run on Single Server](define-tasks.md#run-on-single-server)
         7. [Between](define-tasks.md#between)
         8. [Example](define-tasks.md#example)
-5. [CLI Commands](cli-commands.md)
+5. [Running the Schedule](run-schedule.md)
+    1. [Cron Job on Server](run-schedule.md#cron-job-on-server)
+    2. [Symfony Cloud](run-schedule.md#symfony-cloud)
+    3. [Alternatives](run-schedule.md#alternatives)
+    4. [Dealing with Failures](run-schedule.md#dealing-with-failures)
+    5. [Ensuring Schedule is Running](run-schedule.md#ensuring-schedule-is-running)
+6. [CLI Commands](cli-commands.md)
     1. [schedule:list](cli-commands.md#schedulelist)
     2. [schedule:run](cli-commands.md#schedulerun)
-6. [Extending](extending.md)
+7. [Extending](extending.md)
     1. [Custom Tasks](extending.md#custom-tasks)
     2. [Custom Extensions](extending.md#custom-extensions)
     3. [Events](extending.md#events)
-7. [Full Configuration Reference](#full-configuration-reference)
+8. [Full Configuration Reference](#full-configuration-reference)
 
 ## Installation
 
