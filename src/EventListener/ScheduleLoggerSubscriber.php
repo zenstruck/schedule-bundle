@@ -86,7 +86,7 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
         $task = $result->getTask();
 
         if ($result->isSkipped()) {
-            $this->logger->info("Skipped \"{$task->getType()}\": {$task}");
+            $this->logger->info("Skipped \"{$task->getType()}\": {$task}", ['reason' => $result->getDescription()]);
 
             return;
         }
