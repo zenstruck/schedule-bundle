@@ -15,7 +15,16 @@ final class CronExpression
     public const MONTH = 3;
     public const DOW = 4;
 
-    private const ALIAS_MAP = [
+    public const ALIASES = [
+        '@hourly',
+        '@daily',
+        '@weekly',
+        '@monthly',
+        '@yearly',
+        '@annually',
+    ];
+
+    private const HASH_ALIAS_MAP = [
         '#hourly' => '# * * * *',
         '#daily' => '# # * * *',
         '#weekly' => '# # * * #',
@@ -41,8 +50,13 @@ final class CronExpression
     public function __construct(string $value, string $context)
     {
         $this->value = $value;
+        $this->context = $context;
 
-        $value = self::ALIAS_MAP[$value] ?? $value;
+        if (\in_array($value, self::ALIASES, true)) {
+            return;
+        }
+
+        $value = self::HASH_ALIAS_MAP[$value] ?? $value;
         $parts = \explode(' ', $value);
 
         if (5 !== \count($parts)) {
@@ -50,7 +64,6 @@ final class CronExpression
         }
 
         $this->parts = $parts;
-        $this->context = $context;
     }
 
     public function __toString(): string
@@ -65,6 +78,10 @@ final class CronExpression
 
     public function getParsedValue(): string
     {
+        if (!$this->parts) {
+            return $this->getRawValue();
+        }
+
         return $this->parsedValue ?: $this->parsedValue = \implode(' ', [
             $this->parsePart(self::MINUTE),
             $this->parsePart(self::HOUR),
@@ -79,12 +96,12 @@ final class CronExpression
         return $this->getRawValue() !== $this->getParsedValue();
     }
 
-    public function getNextRun(?string $timezone): \DateTimeInterface
+    public function getNextRun(string $timezone = null): \DateTimeInterface
     {
         return CronSchedule::factory($this->getParsedValue())->getNextRunDate('now', 0, false, $timezone);
     }
 
-    public function isDue(?string $timezone): bool
+    public function isDue(string $timezone = null): bool
     {
         return CronSchedule::factory($this->getParsedValue())->isDue('now', $timezone);
     }

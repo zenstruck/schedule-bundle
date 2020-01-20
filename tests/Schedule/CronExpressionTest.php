@@ -12,19 +12,35 @@ final class CronExpressionTest extends TestCase
 {
     /**
      * @test
+     * @dataProvider standardExpressionProvider
      */
-    public function can_handle_standard_expressions()
+    public function can_handle_standard_expressions($expression)
     {
-        $expressionA = new CronExpression('0 * * * *', 'my task');
-        $expressionB = new CronExpression('0 * * * *', 'my task');
-        $expressionC = new CronExpression('0 * * * *', 'another task');
+        $expressionA = new CronExpression($expression, 'my task');
+        $expressionB = new CronExpression($expression, 'my task');
+        $expressionC = new CronExpression($expression, 'another task');
 
         $this->assertFalse($expressionA->isHashed());
-        $this->assertSame('0 * * * *', $expressionA->getRawValue());
-        $this->assertSame('0 * * * *', $expressionA->getParsedValue());
+        $this->assertSame($expression, $expressionA->getRawValue());
+        $this->assertSame($expression, $expressionA->getParsedValue());
         $this->assertSame((string) $expressionA, $expressionA->getParsedValue());
         $this->assertSame((string) $expressionA, (string) $expressionB);
         $this->assertSame((string) $expressionA, (string) $expressionC);
+        $this->assertInstanceOf(\DateTimeInterface::class, $expressionA->getNextRun());
+    }
+
+    public static function standardExpressionProvider(): array
+    {
+        return [
+            ['0 * * * *'],
+            ['0 0 * * 1'],
+            ['@hourly'],
+            ['@daily'],
+            ['@weekly'],
+            ['@monthly'],
+            ['@yearly'],
+            ['@annually'],
+        ];
     }
 
     /**
@@ -43,6 +59,7 @@ final class CronExpressionTest extends TestCase
         $this->assertSame((string) $expressionA, (string) $expressionB);
         $this->assertNotSame((string) $expressionA, (string) $expressionC);
         $this->assertSame($expected, (string) $expressionA);
+        $this->assertInstanceOf(\DateTimeInterface::class, $expressionA->getNextRun());
     }
 
     public static function hashedExpressionProvider(): array
@@ -89,6 +106,7 @@ final class CronExpressionTest extends TestCase
             ['daily'],
             ['# daily'],
             ['#everyday'],
+            ['@ daily'],
         ];
     }
 }

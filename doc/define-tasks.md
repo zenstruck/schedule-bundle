@@ -203,7 +203,8 @@ These are the options for defining how often your task runs:
 ### Cron Expression
 
 A standard Cron expression. Check [crontab.guru](https://crontab.guru/) for
-help.
+help. The extended expression syntax may be used (`@hourly`, `@daily`, `@weekly`,
+`@monthly`, `@yearly`, `@annually`).
 
 **Define in [Configuration](define-schedule.md#bundle-configuration):**
 
@@ -214,6 +215,9 @@ zenstruck_schedule:
     tasks:
         -   command: my:command
             frequency: '0,30 9-17 * * 1-5' # every 30 minutes between 9am and 5pm on weekdays
+
+        -   command: my:command
+            frequency: '@daily' # daily @ midnight
 ```
 
 **Define in [PHP](define-schedule.md#schedulebuilder-service):**
@@ -222,6 +226,8 @@ zenstruck_schedule:
 /* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
 
 $task->cron('0,30 9-17 * * 1-5'); // every 30 minutes between 9am and 5pm on weekdays
+
+$task->cron('@daily');  //daily @ midnight
 ```
 
 ### Fluent Expression Builder

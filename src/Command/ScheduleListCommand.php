@@ -2,6 +2,7 @@
 
 namespace Zenstruck\ScheduleBundle\Command;
 
+use Lorisleiva\CronTranslator\CronParsingException;
 use Lorisleiva\CronTranslator\CronTranslator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -264,10 +265,16 @@ EOF
 
     private function renderFrequency(Task $task): string
     {
+        $expression = (string) $task->getExpression();
+
         if (!\class_exists(CronTranslator::class)) {
-            return $task->getExpression();
+            return $expression;
         }
 
-        return \sprintf('%s (%s)', $task->getExpression(), CronTranslator::translate($task->getExpression()));
+        try {
+            return \sprintf('%s (%s)', $expression, CronTranslator::translate($expression));
+        } catch (CronParsingException $e) {
+            return $expression;
+        }
     }
 }

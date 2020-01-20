@@ -220,6 +220,57 @@ final class ScheduleListCommandTest extends TestCase
         $this->assertStringContainsString('my task', $output);
     }
 
+    /**
+     * @test
+     */
+    public function can_show_hashed_expressions()
+    {
+        $runner = (new MockScheduleBuilder())
+            ->addTask((new MockTask('my task'))->cron('#daily'))
+            ->getRunner()
+        ;
+
+        $command = new ScheduleListCommand($runner, new ExtensionHandlerRegistry([]));
+        $command->setHelperSet(new HelperSet([new FormatterHelper()]));
+        $command->setApplication(new Application());
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute([]);
+        $output = $this->normalizeOutput($commandTester);
+
+        $this->assertStringContainsString('56 20 * * * (Every day at 8:56pm)', $output);
+        $this->assertStringNotContainsString('#daily', $output);
+
+        $commandTester->execute(['--detail' => null]);
+        $output = $this->normalizeOutput($commandTester);
+
+        $this->assertStringContainsString('Calculated Frequency', $output);
+        $this->assertStringContainsString('56 20 * * * (Every day at 8:56pm)', $output);
+        $this->assertStringContainsString('Raw Frequency', $output);
+        $this->assertStringContainsString('#daily', $output);
+    }
+
+    /**
+     * @test
+     */
+    public function can_show_extended_expressions()
+    {
+        $runner = (new MockScheduleBuilder())
+            ->addTask((new MockTask('my task'))->cron('@daily'))
+            ->getRunner()
+        ;
+
+        $command = new ScheduleListCommand($runner, new ExtensionHandlerRegistry([]));
+        $command->setHelperSet(new HelperSet([new FormatterHelper()]));
+        $command->setApplication(new Application());
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute([]);
+        $output = $this->normalizeOutput($commandTester);
+
+        $this->assertStringContainsString('@daily', $output);
+    }
+
     private function normalizeOutput(CommandTester $tester): string
     {
         return \preg_replace('/\s+/', ' ', \str_replace("\n", '', $tester->getDisplay(true)));

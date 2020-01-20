@@ -29,7 +29,7 @@ final class TaskConfigurationSubscriberTest extends TestCase
             ],
             [
                 'command' => 'another:command',
-                'frequency' => '0 0 * * *',
+                'frequency' => '@yearly',
             ],
         ]);
 
@@ -46,7 +46,7 @@ final class TaskConfigurationSubscriberTest extends TestCase
         $this->assertInstanceOf(CommandTask::class, $task2);
         $this->assertSame('another:command', $task2->getDescription());
         $this->assertNull($task1->getTimezone());
-        $this->assertSame('0 0 * * *', (string) $task2->getExpression());
+        $this->assertSame('@yearly', (string) $task2->getExpression());
         $this->assertCount(0, $task2->getExtensions());
     }
 
