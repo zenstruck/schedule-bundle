@@ -33,8 +33,8 @@ final class ScheduleRunner
 
     public function __invoke(): AfterScheduleEvent
     {
-        $schedule = $this->buildSchedule();
-        $beforeScheduleEvent = new BeforeScheduleEvent($schedule);
+        $scheduleRunContext = $this->buildSchedule()->createRunContext();
+        $beforeScheduleEvent = new BeforeScheduleEvent($scheduleRunContext);
 
         try {
             $this->dispatcher->dispatch($beforeScheduleEvent);
@@ -49,7 +49,7 @@ final class ScheduleRunner
 
         $results = [];
 
-        foreach ($schedule->due() as $task) {
+        foreach ($scheduleRunContext->dueTasks() as $task) {
             $beforeTaskEvent = new BeforeTaskEvent($beforeScheduleEvent, $task);
 
             $this->dispatcher->dispatch($beforeTaskEvent);

@@ -49,29 +49,29 @@ final class ExtensionHandlerRegistry
 
     public function beforeSchedule(BeforeScheduleEvent $event): void
     {
-        foreach ($event->getSchedule()->getExtensions() as $extension) {
+        foreach ($event->getScheduleRunContext()->scheduleExtensions() as $extension) {
             $this->handlerFor($extension)->filterSchedule($event, $extension);
         }
 
-        foreach ($event->getSchedule()->getExtensions() as $extension) {
+        foreach ($event->getScheduleRunContext()->scheduleExtensions() as $extension) {
             $this->handlerFor($extension)->beforeSchedule($event, $extension);
         }
     }
 
     public function afterSchedule(AfterScheduleEvent $event): void
     {
-        foreach ($event->getSchedule()->getExtensions() as $extension) {
+        foreach ($event->getScheduleRunContext()->scheduleExtensions() as $extension) {
             $this->handlerFor($extension)->afterSchedule($event, $extension);
         }
 
         if ($event->isSuccessful()) {
-            foreach ($event->getSchedule()->getExtensions() as $extension) {
+            foreach ($event->getScheduleRunContext()->scheduleExtensions() as $extension) {
                 $this->handlerFor($extension)->onScheduleSuccess($event, $extension);
             }
         }
 
         if ($event->isFailure()) {
-            foreach ($event->getSchedule()->getExtensions() as $extension) {
+            foreach ($event->getScheduleRunContext()->scheduleExtensions() as $extension) {
                 $this->handlerFor($extension)->onScheduleFailure($event, $extension);
             }
         }

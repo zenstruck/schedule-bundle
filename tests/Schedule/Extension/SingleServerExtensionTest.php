@@ -86,8 +86,8 @@ final class SingleServerExtensionTest extends TestCase
         $schedule2->onSingleServer();
 
         $handler = new SingleServerHandler(new LockFactory(new FlockStore()));
-        $event1 = new BeforeScheduleEvent($schedule1);
-        $event2 = new BeforeScheduleEvent($schedule2);
+        $event1 = new BeforeScheduleEvent($schedule1->createRunContext());
+        $event2 = new BeforeScheduleEvent($schedule2->createRunContext());
 
         $handler->filterSchedule($event1, $schedule1->getExtensions()[0]);
 
@@ -107,8 +107,8 @@ final class SingleServerExtensionTest extends TestCase
         $schedule2 = new Schedule();
         $task2 = $schedule2->addCommand('my:command')->onSingleServer();
 
-        $event1 = new BeforeTaskEvent(new BeforeScheduleEvent($schedule1), $task1);
-        $event2 = new BeforeTaskEvent(new BeforeScheduleEvent($schedule2), $task2);
+        $event1 = new BeforeTaskEvent(new BeforeScheduleEvent($schedule1->createRunContext()), $task1);
+        $event2 = new BeforeTaskEvent(new BeforeScheduleEvent($schedule2->createRunContext()), $task2);
 
         $handler = new SingleServerHandler(new LockFactory(new FlockStore()));
 

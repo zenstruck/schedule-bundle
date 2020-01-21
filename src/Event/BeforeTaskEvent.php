@@ -11,15 +11,15 @@ final class BeforeTaskEvent extends ScheduleEvent
 {
     private $task;
     private $startTime;
-    private $scheduleStartTime;
 
     public function __construct(BeforeScheduleEvent $beforeScheduleEvent, Task $task)
     {
-        parent::__construct($beforeScheduleEvent->getSchedule());
+        $scheduleRunContext = $beforeScheduleEvent->getScheduleRunContext();
+
+        parent::__construct($scheduleRunContext);
 
         $this->task = $task;
         $this->startTime = \time();
-        $this->scheduleStartTime = $beforeScheduleEvent->getStartTime();
     }
 
     public function getTask(): Task
@@ -30,10 +30,5 @@ final class BeforeTaskEvent extends ScheduleEvent
     public function getStartTime(): int
     {
         return $this->startTime;
-    }
-
-    public function getScheduleStartTime(): int
-    {
-        return $this->scheduleStartTime;
     }
 }

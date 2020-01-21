@@ -71,10 +71,11 @@ final class ScheduleConsoleOutputSubscriber implements EventSubscriberInterface
 
     public function beforeSchedule(BeforeScheduleEvent $event): void
     {
-        $dueTaskCount = \count($event->getSchedule()->due());
+        $allTaskCount = \count($event->getScheduleRunContext()->allTasks());
+        $dueTaskCount = \count($event->getScheduleRunContext()->dueTasks());
 
         if (0 === $dueTaskCount) {
-            $this->io->note(\sprintf('No tasks due to run. (%s total tasks)', \count($event->getSchedule()->all())));
+            $this->io->note(\sprintf('No tasks due to run. (%s total tasks)', $allTaskCount));
 
             return;
         }
@@ -83,7 +84,7 @@ final class ScheduleConsoleOutputSubscriber implements EventSubscriberInterface
             'Running <info>%s</info> due task%s. (%s total tasks)',
             $dueTaskCount,
             $dueTaskCount > 1 ? 's' : '',
-            \count($event->getSchedule()->all())
+            $allTaskCount
         ));
     }
 

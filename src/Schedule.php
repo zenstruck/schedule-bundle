@@ -11,6 +11,7 @@ use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EnvironmentExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\CallbackTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
@@ -40,6 +41,11 @@ final class Schedule
         );
 
         return \sha1(\implode('', $tasks));
+    }
+
+    public function createRunContext(): ScheduleRunContext
+    {
+        return new ScheduleRunContext($this, ...$this->due());
     }
 
     public function add(Task $task): Task

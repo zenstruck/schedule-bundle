@@ -15,7 +15,7 @@ final class AfterTaskEvent extends ResultEvent
     public function __construct(BeforeTaskEvent $beforeTaskEvent, Result $result)
     {
         parent::__construct(
-            $beforeTaskEvent->getSchedule(),
+            $beforeTaskEvent->getScheduleRunContext(),
             \time() - $beforeTaskEvent->getStartTime(),
             \memory_get_usage(true)
         );

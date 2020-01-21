@@ -34,16 +34,17 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
 
     public function beforeSchedule(BeforeScheduleEvent $event): void
     {
-        $dueTaskCount = \count($event->getSchedule()->due());
+        $allTaskCount = \count($event->getScheduleRunContext()->allTasks());
+        $dueTaskCount = \count($event->getScheduleRunContext()->dueTasks());
 
         if (0 === $dueTaskCount) {
-            $this->logger->debug('No tasks due to run.', ['total' => \count($event->getSchedule()->all())]);
+            $this->logger->debug('No tasks due to run.', ['total' => $allTaskCount]);
 
             return;
         }
 
         $this->logger->info(\sprintf('Running %s due task%s.', $dueTaskCount, $dueTaskCount > 1 ? 's' : ''), [
-            'total' => \count($event->getSchedule()->all()),
+            'total' => $allTaskCount,
             'due' => $dueTaskCount,
         ]);
     }

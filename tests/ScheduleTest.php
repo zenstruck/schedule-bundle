@@ -188,7 +188,7 @@ class ScheduleTest extends TestCase
         $this->expectException(SkipSchedule::class);
         $this->expectExceptionMessage('boolean value');
 
-        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule));
+        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
     }
 
     /**
@@ -203,7 +203,7 @@ class ScheduleTest extends TestCase
         $this->expectException(SkipSchedule::class);
         $this->expectExceptionMessage('callback value');
 
-        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule));
+        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
     }
 
     /**
@@ -215,7 +215,7 @@ class ScheduleTest extends TestCase
 
         $schedule->when('boolean value', true);
 
-        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule));
+        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
 
         $this->assertTrue(true);
     }
@@ -229,7 +229,7 @@ class ScheduleTest extends TestCase
 
         $schedule->when('callback value', function () { return true; });
 
-        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule));
+        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
 
         $this->assertTrue(true);
     }
@@ -246,7 +246,7 @@ class ScheduleTest extends TestCase
         $this->expectException(SkipSchedule::class);
         $this->expectExceptionMessage('boolean value');
 
-        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule));
+        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
     }
 
     /**
@@ -261,7 +261,7 @@ class ScheduleTest extends TestCase
         $this->expectException(SkipSchedule::class);
         $this->expectExceptionMessage('callback value');
 
-        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule));
+        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
     }
 
     /**
@@ -273,7 +273,7 @@ class ScheduleTest extends TestCase
 
         $schedule->skip('boolean value', false);
 
-        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule));
+        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
 
         $this->assertTrue(true);
     }
@@ -287,7 +287,7 @@ class ScheduleTest extends TestCase
 
         $schedule->skip('callback value', function () { return false; });
 
-        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule));
+        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
 
         $this->assertTrue(true);
     }
@@ -307,8 +307,8 @@ class ScheduleTest extends TestCase
         $schedule->onSuccess(function () use (&$calls) { $calls[] = 'onSuccess'; });
         $schedule->onFailure(function () use (&$calls) { $calls[] = 'onFailure'; });
 
-        $schedule->getExtensions()[0]->filterSchedule($event = new BeforeScheduleEvent($schedule));
-        $schedule->getExtensions()[1]->beforeSchedule(new BeforeScheduleEvent($schedule));
+        $schedule->getExtensions()[0]->filterSchedule($event = new BeforeScheduleEvent($schedule->createRunContext()));
+        $schedule->getExtensions()[1]->beforeSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
         $schedule->getExtensions()[2]->afterSchedule(new AfterScheduleEvent($event, []));
         $schedule->getExtensions()[3]->afterSchedule(new AfterScheduleEvent($event, []));
         $schedule->getExtensions()[4]->onScheduleSuccess(new AfterScheduleEvent($event, []));
@@ -358,7 +358,7 @@ class ScheduleTest extends TestCase
             [$this->equalTo('GET'), $this->equalTo('http://failure.com'), $this->isType('array')]
         );
 
-        $schedule->getExtensions()[0]->setHttpClient($client)->beforeSchedule($event = new BeforeScheduleEvent($schedule));
+        $schedule->getExtensions()[0]->setHttpClient($client)->beforeSchedule($event = new BeforeScheduleEvent($schedule->createRunContext()));
         $schedule->getExtensions()[1]->setHttpClient($client)->afterSchedule(new AfterScheduleEvent($event, []));
         $schedule->getExtensions()[2]->setHttpClient($client)->afterSchedule(new AfterScheduleEvent($event, []));
         $schedule->getExtensions()[3]->setHttpClient($client)->onScheduleSuccess(new AfterScheduleEvent($event, []));

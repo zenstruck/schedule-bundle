@@ -3,7 +3,7 @@
 namespace Zenstruck\ScheduleBundle\Event;
 
 use Symfony\Component\Console\Helper\Helper;
-use Zenstruck\ScheduleBundle\Schedule;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -13,9 +13,9 @@ abstract class ResultEvent extends ScheduleEvent
     private $duration;
     private $memory;
 
-    public function __construct(Schedule $schedule, int $duration, int $memory)
+    public function __construct(ScheduleRunContext $scheduleRunContext, int $duration, int $memory)
     {
-        parent::__construct($schedule);
+        parent::__construct($scheduleRunContext);
 
         $this->duration = $duration;
         $this->memory = $memory;
@@ -28,7 +28,7 @@ abstract class ResultEvent extends ScheduleEvent
 
     final public function getFormattedDuration(): string
     {
-        return Helper::formatTime($this->duration);
+        return Helper::formatTime($this->getDuration());
     }
 
     final public function getMemory(): int
@@ -38,6 +38,6 @@ abstract class ResultEvent extends ScheduleEvent
 
     final public function getFormattedMemory(): string
     {
-        return Helper::formatMemory($this->memory);
+        return Helper::formatMemory($this->getMemory());
     }
 }

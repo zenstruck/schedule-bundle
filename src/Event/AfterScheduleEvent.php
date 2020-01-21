@@ -23,9 +23,11 @@ final class AfterScheduleEvent extends ResultEvent
      */
     public function __construct(BeforeScheduleEvent $beforeScheduleEvent, array $results)
     {
+        $scheduleRunContext = $beforeScheduleEvent->getScheduleRunContext();
+
         parent::__construct(
-            $beforeScheduleEvent->getSchedule(),
-            \time() - $beforeScheduleEvent->getStartTime(),
+            $scheduleRunContext,
+            \time() - $scheduleRunContext->startTime(),
             \memory_get_peak_usage(true)
         );
 
