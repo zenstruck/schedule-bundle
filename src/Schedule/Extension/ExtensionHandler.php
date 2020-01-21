@@ -2,13 +2,11 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
-use Zenstruck\ScheduleBundle\Event\AfterScheduleEvent;
-use Zenstruck\ScheduleBundle\Event\AfterTaskEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -21,7 +19,7 @@ abstract class ExtensionHandler
      *
      * @throws SkipSchedule
      */
-    public function filterSchedule(BeforeScheduleEvent $event, Extension $extension): void
+    public function filterSchedule(ScheduleRunContext $context, Extension $extension): void
     {
         // noop
     }
@@ -29,7 +27,7 @@ abstract class ExtensionHandler
     /**
      * Executes before the schedule runs.
      */
-    public function beforeSchedule(BeforeScheduleEvent $event, Extension $extension): void
+    public function beforeSchedule(ScheduleRunContext $context, Extension $extension): void
     {
         // noop
     }
@@ -37,7 +35,7 @@ abstract class ExtensionHandler
     /**
      * Executes after the schedule runs.
      */
-    public function afterSchedule(AfterScheduleEvent $event, Extension $extension): void
+    public function afterSchedule(ScheduleRunContext $context, Extension $extension): void
     {
         // noop
     }
@@ -45,7 +43,7 @@ abstract class ExtensionHandler
     /**
      * Executes if the schedule ran with no failures.
      */
-    public function onScheduleSuccess(AfterScheduleEvent $event, Extension $extension): void
+    public function onScheduleSuccess(ScheduleRunContext $context, Extension $extension): void
     {
         // noop
     }
@@ -53,7 +51,7 @@ abstract class ExtensionHandler
     /**
      * Executes if the schedule ran with failures.
      */
-    public function onScheduleFailure(AfterScheduleEvent $event, Extension $extension): void
+    public function onScheduleFailure(ScheduleRunContext $context, Extension $extension): void
     {
         // noop
     }
@@ -64,7 +62,7 @@ abstract class ExtensionHandler
      *
      * @throws SkipTask
      */
-    public function filterTask(BeforeTaskEvent $event, Extension $extension): void
+    public function filterTask(TaskRunContext $context, Extension $extension): void
     {
         // noop
     }
@@ -72,7 +70,7 @@ abstract class ExtensionHandler
     /**
      * Executes before the task runs (not if skipped).
      */
-    public function beforeTask(BeforeTaskEvent $event, Extension $extension): void
+    public function beforeTask(TaskRunContext $context, Extension $extension): void
     {
         // noop
     }
@@ -80,7 +78,7 @@ abstract class ExtensionHandler
     /**
      * Executes after the task runs (not if skipped).
      */
-    public function afterTask(AfterTaskEvent $event, Extension $extension): void
+    public function afterTask(TaskRunContext $context, Extension $extension): void
     {
         // noop
     }
@@ -88,7 +86,7 @@ abstract class ExtensionHandler
     /**
      * Executes if the task ran successfully (not if skipped).
      */
-    public function onTaskSuccess(AfterTaskEvent $event, Extension $extension): void
+    public function onTaskSuccess(TaskRunContext $context, Extension $extension): void
     {
         // noop
     }
@@ -96,7 +94,7 @@ abstract class ExtensionHandler
     /**
      * Executes if the task failed (not if skipped).
      */
-    public function onTaskFailure(AfterTaskEvent $event, Extension $extension): void
+    public function onTaskFailure(TaskRunContext $context, Extension $extension): void
     {
         // noop
     }

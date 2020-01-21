@@ -3,13 +3,13 @@
 namespace Zenstruck\ScheduleBundle\Schedule\Extension\Handler;
 
 use Symfony\Component\Lock\LockFactory;
-use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -26,11 +26,9 @@ final class SingleServerHandler extends ExtensionHandler
     /**
      * @param SingleServerExtension $extension
      */
-    public function filterSchedule(BeforeScheduleEvent $event, Extension $extension): void
+    public function filterSchedule(ScheduleRunContext $context, Extension $extension): void
     {
-        $runContext = $event->getScheduleRunContext();
-
-        if (!$extension->aquireLock($this->lockFactory, $runContext->getScheduleId(), $runContext->startTime())) {
+        if (!$extension->aquireLock($this->lockFactory, $context->schedule()->getId(), $context->startTime())) {
             throw new SkipSchedule('Schedule running on another server.');
         }
     }
@@ -38,9 +36,9 @@ final class SingleServerHandler extends ExtensionHandler
     /**
      * @param SingleServerExtension $extension
      */
-    public function filterTask(BeforeTaskEvent $event, Extension $extension): void
+    public function filterTask(TaskRunContext $context, Extension $extension): void
     {
-        if (!$extension->aquireLock($this->lockFactory, $event->getTask()->getId(), $event->getScheduleRunContext()->startTime())) {
+        if (!$extension->aquireLock($this->lockFactory, $context->task()->getId(), $context->scheduleRunContext()->startTime())) {
             throw new SkipTask('Task running on another server.');
         }
     }

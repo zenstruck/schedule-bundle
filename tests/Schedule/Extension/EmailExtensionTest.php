@@ -249,14 +249,14 @@ final class EmailExtensionTest extends TestCase
      */
     public function to_address_must_be_configured_or_passed_to_extension()
     {
-        $event = (new MockScheduleBuilder())
+        $context = (new MockScheduleBuilder())
             ->addHandler(new EmailHandler($this->createMailer()))
             ->addTask(MockTask::failure()->emailOnFailure())
             ->run()
         ;
 
-        $this->assertInstanceOf(\LogicException::class, $event->getResults()[0]->getException());
-        $this->assertSame('There is no "To" configured for the email. Either set it when adding the extension or in your configuration (config path: "zenstruck_schedule.email_handler.default_to").', $event->getResults()[0]->getException()->getMessage());
+        $this->assertInstanceOf(\LogicException::class, $context->getResults()[0]->getException());
+        $this->assertSame('There is no "To" configured for the email. Either set it when adding the extension or in your configuration (config path: "zenstruck_schedule.email_handler.default_to").', $context->getResults()[0]->getException()->getMessage());
     }
 
     private function createMailer(): MailerInterface

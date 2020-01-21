@@ -17,15 +17,15 @@ final class EnvironmentExtensionTest extends TestCase
      */
     public function does_not_run_when_environment_does_not_match()
     {
-        $event = (new MockScheduleBuilder())
+        $context = (new MockScheduleBuilder())
             ->addHandler(new EnvironmentHandler('dev'))
             ->addExtension(new EnvironmentExtension(['prod', 'stage']))
             ->run()
         ;
 
-        $this->assertTrue($event->isSkipped());
-        $this->assertTrue($event->isSuccessful());
-        $this->assertSame('Schedule configured not to run in [dev] environment (only [prod, stage]).', $event->getSkipReason());
+        $this->assertTrue($context->isSkipped());
+        $this->assertTrue($context->isSuccessful());
+        $this->assertSame('Schedule configured not to run in [dev] environment (only [prod, stage]).', $context->skipReason());
     }
 
     /**
@@ -33,13 +33,13 @@ final class EnvironmentExtensionTest extends TestCase
      */
     public function allows_schedule_to_run_if_environment_matches()
     {
-        $event = (new MockScheduleBuilder())
+        $context = (new MockScheduleBuilder())
             ->addHandler(new EnvironmentHandler('prod'))
             ->addExtension(new EnvironmentExtension(['prod', 'stage']))
             ->run()
         ;
 
-        $this->assertFalse($event->isSkipped());
+        $this->assertFalse($context->isSkipped());
     }
 
     /**

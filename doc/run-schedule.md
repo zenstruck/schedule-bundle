@@ -57,8 +57,8 @@ other ways to run the schedule.
 
 The schedule can alternatively be run in your code. Behind the scenes, the
 `schedule:run` command invokes the [`ScheduleRunner`](../src/Schedule/ScheduleRunner.php)
-service which does all the work. The return value of `ScheduleRunner::__invoke()` is an
-[`AfterScheduleEvent`](../src/Event/AfterScheduleEvent.php) object.
+service which does all the work. The return value of `ScheduleRunner::__invoke()` is a
+[`ScheduleRunContext`](../src/Schedule/ScheduleRunContext.php) object.
 
 The following is a list of alternative scheduling options (*please add your own solutions
 via PR*):

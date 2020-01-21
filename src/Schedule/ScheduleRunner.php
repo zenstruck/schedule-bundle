@@ -13,6 +13,7 @@ use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry;
 use Zenstruck\ScheduleBundle\Schedule\Task\Result;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunner;
 
 /**
@@ -31,43 +32,44 @@ final class ScheduleRunner
         $this->dispatcher = $dispatcher;
     }
 
-    public function __invoke(): AfterScheduleEvent
+    public function __invoke(): ScheduleRunContext
     {
-        $scheduleRunContext = $this->buildSchedule()->createRunContext();
-        $beforeScheduleEvent = new BeforeScheduleEvent($scheduleRunContext);
+        $schedule = $this->buildSchedule();
+        $scheduleRunContext = new ScheduleRunContext($schedule, ...$schedule->due());
 
         try {
-            $this->dispatcher->dispatch($beforeScheduleEvent);
-            $this->extensions->beforeSchedule($beforeScheduleEvent);
+            $this->dispatcher->dispatch(new BeforeScheduleEvent($scheduleRunContext));
+            $this->extensions->beforeSchedule($scheduleRunContext);
         } catch (SkipSchedule $e) {
-            $afterScheduleEvent = AfterScheduleEvent::skip($e, $beforeScheduleEvent);
+            $scheduleRunContext->skip($e);
 
-            $this->dispatcher->dispatch($afterScheduleEvent);
+            $this->dispatcher->dispatch(new AfterScheduleEvent($scheduleRunContext));
 
-            return $afterScheduleEvent;
+            return $scheduleRunContext;
         }
 
         $results = [];
 
         foreach ($scheduleRunContext->dueTasks() as $task) {
-            $beforeTaskEvent = new BeforeTaskEvent($beforeScheduleEvent, $task);
+            $taskRunContext = new TaskRunContext($scheduleRunContext, $task);
 
-            $this->dispatcher->dispatch($beforeTaskEvent);
+            $this->dispatcher->dispatch(new BeforeTaskEvent($taskRunContext));
 
-            $result = $this->runTask($beforeTaskEvent);
-            $afterTaskEvent = $this->postRun($beforeTaskEvent, $result);
+            $taskRunContext->setResult($this->runTask($taskRunContext));
 
-            $this->dispatcher->dispatch($afterTaskEvent);
+            $this->postRun($taskRunContext);
 
-            $results[] = $afterTaskEvent->getResult();
+            $this->dispatcher->dispatch(new AfterTaskEvent($taskRunContext));
+
+            $results[] = $taskRunContext->result();
         }
 
-        $afterScheduleEvent = new AfterScheduleEvent($beforeScheduleEvent, $results);
+        $scheduleRunContext->setResults(...$results);
 
-        $this->extensions->afterSchedule($afterScheduleEvent);
-        $this->dispatcher->dispatch($afterScheduleEvent);
+        $this->extensions->afterSchedule($scheduleRunContext);
+        $this->dispatcher->dispatch(new AfterScheduleEvent($scheduleRunContext));
 
-        return $afterScheduleEvent;
+        return $scheduleRunContext;
     }
 
     public function buildSchedule(): Schedule
@@ -88,12 +90,12 @@ final class ScheduleRunner
         throw new \LogicException(\sprintf('No task runner registered to handle "%s".', \get_class($task)));
     }
 
-    private function runTask(BeforeTaskEvent $event): Result
+    private function runTask(TaskRunContext $context): Result
     {
-        $task = $event->getTask();
+        $task = $context->task();
 
         try {
-            $this->extensions->beforeTask($event);
+            $this->extensions->beforeTask($context);
 
             return $this->runnerFor($task)($task);
         } catch (SkipTask $e) {
@@ -103,16 +105,12 @@ final class ScheduleRunner
         }
     }
 
-    private function postRun(BeforeTaskEvent $event, Result $result): AfterTaskEvent
+    private function postRun(TaskRunContext $context): void
     {
-        $afterTaskEvent = new AfterTaskEvent($event, $result);
-
         try {
-            $this->extensions->afterTask($afterTaskEvent);
+            $this->extensions->afterTask($context);
         } catch (\Throwable $e) {
-            return new AfterTaskEvent($event, Result::exception($event->getTask(), $e));
+            $context->setResult(Result::exception($context->task(), $e));
         }
-
-        return $afterTaskEvent;
     }
 }

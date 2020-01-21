@@ -6,12 +6,11 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Process\Process;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Zenstruck\ScheduleBundle\Event\AfterScheduleEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\CallbackTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
@@ -188,7 +187,7 @@ class ScheduleTest extends TestCase
         $this->expectException(SkipSchedule::class);
         $this->expectExceptionMessage('boolean value');
 
-        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
+        $schedule->getExtensions()[0]->filterSchedule(self::runContext($schedule));
     }
 
     /**
@@ -203,7 +202,7 @@ class ScheduleTest extends TestCase
         $this->expectException(SkipSchedule::class);
         $this->expectExceptionMessage('callback value');
 
-        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
+        $schedule->getExtensions()[0]->filterSchedule(self::runContext($schedule));
     }
 
     /**
@@ -215,7 +214,7 @@ class ScheduleTest extends TestCase
 
         $schedule->when('boolean value', true);
 
-        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
+        $schedule->getExtensions()[0]->filterSchedule(self::runContext($schedule));
 
         $this->assertTrue(true);
     }
@@ -229,7 +228,7 @@ class ScheduleTest extends TestCase
 
         $schedule->when('callback value', function () { return true; });
 
-        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
+        $schedule->getExtensions()[0]->filterSchedule(self::runContext($schedule));
 
         $this->assertTrue(true);
     }
@@ -246,7 +245,7 @@ class ScheduleTest extends TestCase
         $this->expectException(SkipSchedule::class);
         $this->expectExceptionMessage('boolean value');
 
-        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
+        $schedule->getExtensions()[0]->filterSchedule(self::runContext($schedule));
     }
 
     /**
@@ -261,7 +260,7 @@ class ScheduleTest extends TestCase
         $this->expectException(SkipSchedule::class);
         $this->expectExceptionMessage('callback value');
 
-        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
+        $schedule->getExtensions()[0]->filterSchedule(self::runContext($schedule));
     }
 
     /**
@@ -273,7 +272,7 @@ class ScheduleTest extends TestCase
 
         $schedule->skip('boolean value', false);
 
-        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
+        $schedule->getExtensions()[0]->filterSchedule(self::runContext($schedule));
 
         $this->assertTrue(true);
     }
@@ -287,7 +286,7 @@ class ScheduleTest extends TestCase
 
         $schedule->skip('callback value', function () { return false; });
 
-        $schedule->getExtensions()[0]->filterSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
+        $schedule->getExtensions()[0]->filterSchedule(self::runContext($schedule));
 
         $this->assertTrue(true);
     }
@@ -307,12 +306,12 @@ class ScheduleTest extends TestCase
         $schedule->onSuccess(function () use (&$calls) { $calls[] = 'onSuccess'; });
         $schedule->onFailure(function () use (&$calls) { $calls[] = 'onFailure'; });
 
-        $schedule->getExtensions()[0]->filterSchedule($event = new BeforeScheduleEvent($schedule->createRunContext()));
-        $schedule->getExtensions()[1]->beforeSchedule(new BeforeScheduleEvent($schedule->createRunContext()));
-        $schedule->getExtensions()[2]->afterSchedule(new AfterScheduleEvent($event, []));
-        $schedule->getExtensions()[3]->afterSchedule(new AfterScheduleEvent($event, []));
-        $schedule->getExtensions()[4]->onScheduleSuccess(new AfterScheduleEvent($event, []));
-        $schedule->getExtensions()[5]->onScheduleFailure(new AfterScheduleEvent($event, []));
+        $schedule->getExtensions()[0]->filterSchedule(self::runContext($schedule));
+        $schedule->getExtensions()[1]->beforeSchedule(self::runContext($schedule));
+        $schedule->getExtensions()[2]->afterSchedule(self::runContext($schedule));
+        $schedule->getExtensions()[3]->afterSchedule(self::runContext($schedule));
+        $schedule->getExtensions()[4]->onScheduleSuccess(self::runContext($schedule));
+        $schedule->getExtensions()[5]->onScheduleFailure(self::runContext($schedule));
 
         $this->assertSame([
             'filter',
@@ -358,11 +357,11 @@ class ScheduleTest extends TestCase
             [$this->equalTo('GET'), $this->equalTo('http://failure.com'), $this->isType('array')]
         );
 
-        $schedule->getExtensions()[0]->setHttpClient($client)->beforeSchedule($event = new BeforeScheduleEvent($schedule->createRunContext()));
-        $schedule->getExtensions()[1]->setHttpClient($client)->afterSchedule(new AfterScheduleEvent($event, []));
-        $schedule->getExtensions()[2]->setHttpClient($client)->afterSchedule(new AfterScheduleEvent($event, []));
-        $schedule->getExtensions()[3]->setHttpClient($client)->onScheduleSuccess(new AfterScheduleEvent($event, []));
-        $schedule->getExtensions()[4]->setHttpClient($client)->onScheduleFailure(new AfterScheduleEvent($event, []));
+        $schedule->getExtensions()[0]->setHttpClient($client)->beforeSchedule(self::runContext($schedule));
+        $schedule->getExtensions()[1]->setHttpClient($client)->afterSchedule(self::runContext($schedule));
+        $schedule->getExtensions()[2]->setHttpClient($client)->afterSchedule(self::runContext($schedule));
+        $schedule->getExtensions()[3]->setHttpClient($client)->onScheduleSuccess(self::runContext($schedule));
+        $schedule->getExtensions()[4]->setHttpClient($client)->onScheduleFailure(self::runContext($schedule));
     }
 
     /**
@@ -422,5 +421,10 @@ class ScheduleTest extends TestCase
         $this->assertSame('UTC', $schedule->due()[0]->getTimezone()->getName());
         $this->assertSame('America/Toronto', $schedule->all()[1]->getTimezone()->getName());
         $this->assertSame('America/Toronto', $schedule->due()[1]->getTimezone()->getName());
+    }
+
+    private static function runContext(Schedule $schedule = null): ScheduleRunContext
+    {
+        return new ScheduleRunContext($schedule ?: new Schedule());
     }
 }

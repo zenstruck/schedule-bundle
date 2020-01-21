@@ -3,21 +3,21 @@
 namespace Zenstruck\ScheduleBundle\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
-use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-abstract class ScheduleEvent extends Event
+abstract class TaskEvent extends Event
 {
     private $runContext;
 
-    final public function __construct(ScheduleRunContext $runContext)
+    final public function __construct(TaskRunContext $runContext)
     {
         $this->runContext = $runContext;
     }
 
-    final public function runContext(): ScheduleRunContext
+    final public function runContext(): TaskRunContext
     {
         return $this->runContext;
     }

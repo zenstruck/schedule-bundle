@@ -5,7 +5,6 @@ namespace Zenstruck\ScheduleBundle\Tests\Fixture;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Zenstruck\ScheduleBundle\Event\AfterScheduleEvent;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleBuilderSubscriber;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
@@ -13,6 +12,7 @@ use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\SelfHandlingHandler;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\Runner\SelfRunningTaskRunner;
@@ -72,7 +72,7 @@ final class MockScheduleBuilder implements ScheduleBuilder
         return $this;
     }
 
-    public function run(): AfterScheduleEvent
+    public function run(): ScheduleRunContext
     {
         return $this->getRunner()();
     }

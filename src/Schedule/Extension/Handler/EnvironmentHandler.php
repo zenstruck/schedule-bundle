@@ -2,11 +2,11 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension\Handler;
 
-use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EnvironmentExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -23,7 +23,7 @@ final class EnvironmentHandler extends ExtensionHandler
     /**
      * @param EnvironmentExtension $extension
      */
-    public function filterSchedule(BeforeScheduleEvent $event, Extension $extension): void
+    public function filterSchedule(ScheduleRunContext $context, Extension $extension): void
     {
         if (\in_array($this->currentEnvironment, $extension->getRunEnvironments(), true)) {
             return; // currently in configured environment

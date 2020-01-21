@@ -4,11 +4,9 @@ namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Zenstruck\ScheduleBundle\Event\AfterScheduleEvent;
-use Zenstruck\ScheduleBundle\Event\AfterTaskEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -41,42 +39,42 @@ final class PingExtension extends SelfHandlingExtension
         return "{$this->hook}, ping \"{$this->url}\"";
     }
 
-    public function beforeSchedule(BeforeScheduleEvent $event): void
+    public function beforeSchedule(ScheduleRunContext $context): void
     {
         $this->pingIf(self::SCHEDULE_BEFORE);
     }
 
-    public function afterSchedule(AfterScheduleEvent $event): void
+    public function afterSchedule(ScheduleRunContext $context): void
     {
         $this->pingIf(self::SCHEDULE_AFTER);
     }
 
-    public function onScheduleSuccess(AfterScheduleEvent $event): void
+    public function onScheduleSuccess(ScheduleRunContext $context): void
     {
         $this->pingIf(self::SCHEDULE_SUCCESS);
     }
 
-    public function onScheduleFailure(AfterScheduleEvent $event): void
+    public function onScheduleFailure(ScheduleRunContext $context): void
     {
         $this->pingIf(self::SCHEDULE_FAILURE);
     }
 
-    public function beforeTask(BeforeTaskEvent $event): void
+    public function beforeTask(TaskRunContext $context): void
     {
         $this->pingIf(self::TASK_BEFORE);
     }
 
-    public function afterTask(AfterTaskEvent $event): void
+    public function afterTask(TaskRunContext $context): void
     {
         $this->pingIf(self::TASK_AFTER);
     }
 
-    public function onTaskSuccess(AfterTaskEvent $event): void
+    public function onTaskSuccess(TaskRunContext $context): void
     {
         $this->pingIf(self::TASK_SUCCESS);
     }
 
-    public function onTaskFailure(AfterTaskEvent $event): void
+    public function onTaskFailure(TaskRunContext $context): void
     {
         $this->pingIf(self::TASK_FAILURE);
     }

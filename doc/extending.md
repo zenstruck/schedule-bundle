@@ -152,7 +152,7 @@ The *handler* service:
 // src/Schedule/Extension/NotInMaintenanceModeHandler.php
 
 use App\Kernel;
-use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
@@ -174,7 +174,7 @@ class NotInMaintenanceModeHandler extends ExtensionHandler
     /**
      * @param NotInMaintenanceMode $extension
      */
-    public function filterSchedule(BeforeScheduleEvent $event, Extension $extension): void
+    public function filterSchedule(ScheduleRunContext $context, Extension $extension): void
     {
         if ($this->kernel->isInMaintenanceMode()) {
             throw new SkipSchedule('Does not run in maintenance mode.');
@@ -235,7 +235,7 @@ The *extension*:
 // src/Schedule/Extension/SendFailingTaskToWebhook.php
 
 use Symfony\Component\HttpClient\HttpClient;
-use Zenstruck\ScheduleBundle\Event\AfterTaskEvent;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SelfHandlingExtension;
 
 class SendFailingTaskToWebhook extends SelfHandlingExtension
@@ -252,10 +252,10 @@ class SendFailingTaskToWebhook extends SelfHandlingExtension
         return "Send failing task details to {$this->url}";
     }
 
-    public function onTaskFailure(AfterTaskEvent $event): void
+    public function onTaskFailure(TaskRunContext $context): void
     {
-        $task = $event->getTask();
-        $result = $event->getResult();
+        $task = $context->task();
+        $result = $context->result();
     
         HttpClient::create()->request('GET', $this->url, [
             'json' => [

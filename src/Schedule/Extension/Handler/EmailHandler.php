@@ -5,12 +5,12 @@ namespace Zenstruck\ScheduleBundle\Schedule\Extension\Handler;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
-use Zenstruck\ScheduleBundle\Event\AfterScheduleEvent;
-use Zenstruck\ScheduleBundle\Event\AfterTaskEvent;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\Task\Result;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -33,30 +33,30 @@ final class EmailHandler extends ExtensionHandler
     /**
      * @param EmailExtension $extension
      */
-    public function onScheduleFailure(AfterScheduleEvent $event, Extension $extension): void
+    public function onScheduleFailure(ScheduleRunContext $context, Extension $extension): void
     {
         if ($extension->isHook(Extension::SCHEDULE_FAILURE)) {
-            $this->sendScheduleEmail($event, $extension);
+            $this->sendScheduleEmail($context, $extension);
         }
     }
 
     /**
      * @param EmailExtension $extension
      */
-    public function afterTask(AfterTaskEvent $event, Extension $extension): void
+    public function afterTask(TaskRunContext $context, Extension $extension): void
     {
         if ($extension->isHook(Extension::TASK_AFTER)) {
-            $this->sendTaskEmail($extension, $event->getResult());
+            $this->sendTaskEmail($extension, $context->result());
         }
     }
 
     /**
      * @param EmailExtension $extension
      */
-    public function onTaskFailure(AfterTaskEvent $event, Extension $extension): void
+    public function onTaskFailure(TaskRunContext $context, Extension $extension): void
     {
         if ($extension->isHook(Extension::TASK_FAILURE)) {
-            $this->sendTaskEmail($extension, $event->getResult());
+            $this->sendTaskEmail($extension, $context->result());
         }
     }
 
@@ -65,17 +65,17 @@ final class EmailHandler extends ExtensionHandler
         return $extension instanceof EmailExtension;
     }
 
-    private function sendScheduleEmail(AfterScheduleEvent $event, EmailExtension $extension): void
+    private function sendScheduleEmail(ScheduleRunContext $context, EmailExtension $extension): void
     {
         $email = $this->emailHeaderFor($extension);
-        $failureCount = \count($event->getFailures());
+        $failureCount = \count($context->getFailures());
         $summary = \sprintf('%d task%s failed', $failureCount, $failureCount > 1 ? 's' : '');
         $text = $summary;
 
         $email->priority(Email::PRIORITY_HIGHEST);
         $this->prefixSubject($email, "[Schedule Failure] {$summary}");
 
-        foreach ($event->getFailures() as $i => $failure) {
+        foreach ($context->getFailures() as $i => $failure) {
             $task = $failure->getTask();
             $text .= \sprintf("\n\n# (Failure %d/%d) %s: %s\n\n%s", $i + 1, $failureCount, $task->getType(), $task, $failure);
             $text .= $this->getTaskOutput($failure);

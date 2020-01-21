@@ -6,13 +6,13 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\Test\TestLogger;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\FlockStore;
-use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\SingleServerHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 
@@ -86,15 +86,13 @@ final class SingleServerExtensionTest extends TestCase
         $schedule2->onSingleServer();
 
         $handler = new SingleServerHandler(new LockFactory(new FlockStore()));
-        $event1 = new BeforeScheduleEvent($schedule1->createRunContext());
-        $event2 = new BeforeScheduleEvent($schedule2->createRunContext());
 
-        $handler->filterSchedule($event1, $schedule1->getExtensions()[0]);
+        $handler->filterSchedule(new ScheduleRunContext($schedule1), $schedule1->getExtensions()[0]);
 
         $this->expectException(SkipSchedule::class);
         $this->expectExceptionMessage('Schedule running on another server.');
 
-        $handler->filterSchedule($event2, $schedule2->getExtensions()[0]);
+        $handler->filterSchedule(new ScheduleRunContext($schedule2), $schedule2->getExtensions()[0]);
     }
 
     /**
@@ -107,16 +105,13 @@ final class SingleServerExtensionTest extends TestCase
         $schedule2 = new Schedule();
         $task2 = $schedule2->addCommand('my:command')->onSingleServer();
 
-        $event1 = new BeforeTaskEvent(new BeforeScheduleEvent($schedule1->createRunContext()), $task1);
-        $event2 = new BeforeTaskEvent(new BeforeScheduleEvent($schedule2->createRunContext()), $task2);
-
         $handler = new SingleServerHandler(new LockFactory(new FlockStore()));
 
-        $handler->filterTask($event1, $task1->getExtensions()[0]);
+        $handler->filterTask(new TaskRunContext(new ScheduleRunContext($schedule1), $task1), $task1->getExtensions()[0]);
 
         $this->expectException(SkipTask::class);
         $this->expectExceptionMessage('Task running on another server.');
 
-        $handler->filterTask($event2, $task2->getExtensions()[0]);
+        $handler->filterTask(new TaskRunContext(new ScheduleRunContext($schedule2), $task2), $task2->getExtensions()[0]);
     }
 }
