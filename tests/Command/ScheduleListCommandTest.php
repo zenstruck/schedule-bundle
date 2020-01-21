@@ -75,6 +75,7 @@ final class ScheduleListCommandTest extends TestCase
         $this->assertStringContainsString('1 Schedule Extension:', $output);
         $this->assertStringContainsString('On Schedule Failure, email output to "admin@example.com"', $output);
         $this->assertStringContainsString('[WARNING] 1 issue with schedule:', $output);
+        $this->assertStringNotContainsString('[OK] No schedule or task issues.', $output);
     }
 
     /**
@@ -111,6 +112,7 @@ final class ScheduleListCommandTest extends TestCase
         $this->assertStringContainsString('[Symfony\Component\Console\Exception\CommandNotFoundException]', $output);
         $this->assertStringContainsString('Command "my:command" not registered.', $output);
         $this->assertStringContainsString('Exception trace:', $output);
+        $this->assertStringNotContainsString('[OK] No schedule or task issues.', $output);
     }
 
     /**
@@ -161,6 +163,7 @@ final class ScheduleListCommandTest extends TestCase
         $this->assertStringContainsString('1 Schedule Extension:', $output);
         $this->assertStringContainsString('On Schedule Failure, email output to "admin@example.com"', $output);
         $this->assertStringContainsString('[WARNING] 1 issue with schedule:', $output);
+        $this->assertStringNotContainsString('[OK] No schedule or task issues.', $output);
     }
 
     /**
@@ -195,6 +198,7 @@ final class ScheduleListCommandTest extends TestCase
         $this->assertStringContainsString('CommandTask my:command', $output);
         $this->assertStringContainsString('[WARNING] 2 task issues:', $output);
         $this->assertStringContainsString('[ERROR] The "--option1" option does not exist.', $output);
+        $this->assertStringNotContainsString('[OK] No schedule or task issues.', $output);
     }
 
     /**
@@ -219,6 +223,7 @@ final class ScheduleListCommandTest extends TestCase
         $this->assertStringContainsString('1 Scheduled Task Configured', $output);
         $this->assertStringContainsString('MockTask', $output);
         $this->assertStringContainsString('my task', $output);
+        $this->assertStringContainsString('[OK] No schedule or task issues.', $output);
     }
 
     /**

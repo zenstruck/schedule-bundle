@@ -73,6 +73,10 @@ EOF
 
         $this->renderIssues($io, ...$scheduleIssues);
 
+        if (0 === $exit) {
+            $io->success('No schedule or task issues.');
+        }
+
         return $exit;
     }
 
