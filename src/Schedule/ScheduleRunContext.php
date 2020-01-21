@@ -22,10 +22,10 @@ final class ScheduleRunContext extends RunContext
     private $skipped;
     private $run;
 
-    public function __construct(Schedule $schedule, Task ...$dueTasks)
+    public function __construct(Schedule $schedule, Task ...$forcedTasks)
     {
         $this->schedule = $schedule;
-        $this->dueTasks = $dueTasks;
+        $this->dueTasks = empty($forcedTasks) ? $schedule->due() : $forcedTasks;
 
         parent::__construct();
     }

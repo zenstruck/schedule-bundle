@@ -32,10 +32,12 @@ final class ScheduleRunner
         $this->dispatcher = $dispatcher;
     }
 
-    public function __invoke(): ScheduleRunContext
+    /**
+     * @param string ...$taskIds Task ID's to force run
+     */
+    public function __invoke(string ...$taskIds): ScheduleRunContext
     {
-        $schedule = $this->buildSchedule();
-        $scheduleRunContext = new ScheduleRunContext($schedule, ...$schedule->due());
+        $scheduleRunContext = $this->createRunContext($taskIds);
 
         try {
             $this->dispatcher->dispatch(new BeforeScheduleEvent($scheduleRunContext));
@@ -112,5 +114,16 @@ final class ScheduleRunner
         } catch (\Throwable $e) {
             $context->setResult(Result::exception($context->task(), $e));
         }
+    }
+
+    private function createRunContext(array $taskIds): ScheduleRunContext
+    {
+        $schedule = $this->buildSchedule();
+
+        $tasks = \array_map(function (string $id) use ($schedule) {
+            return $schedule->getTask($id);
+        }, $taskIds);
+
+        return new ScheduleRunContext($schedule, ...$tasks);
     }
 }

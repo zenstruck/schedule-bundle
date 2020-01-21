@@ -300,6 +300,26 @@ final class Schedule
         return $this->timezone;
     }
 
+    public function getTask(string $id): Task
+    {
+        // check for duplicated task ids
+        $tasks = [];
+
+        foreach ($this->all() as $task) {
+            $tasks[$task->getId()][] = $task;
+        }
+
+        if (!\array_key_exists($id, $tasks)) {
+            throw new \InvalidArgumentException("Task with ID \"{$id}\" not found.");
+        }
+
+        if (1 !== $count = \count($tasks[$id])) {
+            throw new \RuntimeException(\sprintf('Task ID "%s" is ambiguous, there are %d tasks this id.', $id, $count));
+        }
+
+        return $tasks[$id][0];
+    }
+
     /**
      * @return Task[]
      */
