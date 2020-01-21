@@ -138,8 +138,6 @@ class ScheduleTest extends TestCase
             ->addCallback(function () {}, 'task3')
             ->addProcess('php -v', 'task4')
             ->addProcess(new Process(['php -v']), 'task5')
-            ->timezone('UTC')
-            ->mondays()
             ->onSingleServer()
         ;
         $schedule->addCommand('my:command')->description('task6');
