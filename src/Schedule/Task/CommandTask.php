@@ -42,9 +42,9 @@ final class CommandTask extends Task
         return $this;
     }
 
-    public function getArguments(): ?string
+    public function getArguments(): string
     {
-        return $this->arguments;
+        return (string) $this->arguments;
     }
 
     public function createCommandInput(Application $application): InputInterface
