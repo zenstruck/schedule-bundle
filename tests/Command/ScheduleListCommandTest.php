@@ -279,6 +279,57 @@ final class ScheduleListCommandTest extends TestCase
         $this->assertStringContainsString('@daily', $output);
     }
 
+    /**
+     * @test
+     */
+    public function shows_full_task_id_in_detail()
+    {
+        $runner = (new MockScheduleBuilder())
+            ->addTask($task = (new MockTask('my task'))->cron('@daily'))
+            ->getRunner()
+        ;
+
+        $command = new ScheduleListCommand($runner, new ExtensionHandlerRegistry([]));
+        $command->setHelperSet(new HelperSet([new FormatterHelper()]));
+        $command->setApplication(new Application());
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute(['--detail' => null]);
+        $output = $this->normalizeOutput($commandTester);
+
+        $this->assertStringContainsString('ID', $output);
+        $this->assertStringContainsString($task->getId(), $output);
+    }
+
+    /**
+     * @test
+     */
+    public function shows_schedule_issue_for_duplicate_task_id()
+    {
+        $runner = (new MockScheduleBuilder())
+            ->addTask(new MockTask('task1'))
+            ->addTask(new MockTask('task2'))
+            ->addTask(new MockTask('task2'))
+            ->addTask(new MockTask('task3'))
+            ->addTask(new MockTask('task3'))
+            ->addTask(new MockTask('task3'))
+            ->getRunner()
+        ;
+
+        $command = new ScheduleListCommand($runner, new ExtensionHandlerRegistry([]));
+        $command->setHelperSet(new HelperSet([new FormatterHelper()]));
+        $command->setApplication(new Application());
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute([]);
+        $output = $this->normalizeOutput($commandTester);
+
+        $this->assertSame(1, $commandTester->getStatusCode());
+        $this->assertStringContainsString('[WARNING] 2 issues with schedule:', $output);
+        $this->assertStringContainsString('[ERROR] Task "MockTask: task2" (* * * * *) is duplicated 2 times. Make their descriptions unique to fix.', $output);
+        $this->assertStringContainsString('[ERROR] Task "MockTask: task3" (* * * * *) is duplicated 3 times. Make their descriptions unique to fix.', $output);
+    }
+
     private function normalizeOutput(CommandTester $tester): string
     {
         return \preg_replace('/\s+/', ' ', \str_replace("\n", '', $tester->getDisplay(true)));

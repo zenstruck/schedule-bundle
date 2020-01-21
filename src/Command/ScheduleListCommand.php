@@ -209,6 +209,25 @@ EOF
                 yield $e;
             }
         }
+
+        // check for duplicated task ids
+        $tasks = [];
+
+        foreach ($schedule->all() as $task) {
+            $tasks[$task->getId()][] = $task;
+        }
+
+        foreach ($tasks as $taskGroup) {
+            $count = \count($taskGroup);
+
+            if (1 === $count) {
+                continue;
+            }
+
+            $task = $taskGroup[0];
+
+            yield new \LogicException(\sprintf('Task "%s: %s" (%s) is duplicated %d times. Make their descriptions unique to fix.', $task->getType(), $task, $task->getExpression(), $count));
+        }
     }
 
     private static function extensionHighlightMap(): array
