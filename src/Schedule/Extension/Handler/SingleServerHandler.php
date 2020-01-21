@@ -5,6 +5,8 @@ namespace Zenstruck\ScheduleBundle\Schedule\Extension\Handler;
 use Symfony\Component\Lock\LockFactory;
 use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
 use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
+use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
+use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
@@ -26,7 +28,9 @@ final class SingleServerHandler extends ExtensionHandler
      */
     public function filterSchedule(BeforeScheduleEvent $event, Extension $extension): void
     {
-        $extension->aquireScheduleLock($this->lockFactory, $event->getSchedule(), $event->getStartTime());
+        if (!$extension->aquireLock($this->lockFactory, $event->getSchedule()->getId(), $event->getStartTime())) {
+            throw new SkipSchedule('Schedule running on another server.');
+        }
     }
 
     /**
@@ -34,7 +38,9 @@ final class SingleServerHandler extends ExtensionHandler
      */
     public function filterTask(BeforeTaskEvent $event, Extension $extension): void
     {
-        $extension->aquireTaskLock($this->lockFactory, $event->getTask(), $event->getScheduleStartTime());
+        if (!$extension->aquireLock($this->lockFactory, $event->getTask()->getId(), $event->getScheduleStartTime())) {
+            throw new SkipTask('Task running on another server.');
+        }
     }
 
     public function supports(Extension $extension): bool

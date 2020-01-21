@@ -3,8 +3,6 @@
 namespace Zenstruck\ScheduleBundle\Tests\Schedule;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Lock\LockFactory;
-use Symfony\Component\Lock\Store\FlockStore;
 use Symfony\Component\Mime\Email;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Zenstruck\ScheduleBundle\Event\AfterTaskEvent;
@@ -13,6 +11,7 @@ use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
+use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\Result;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
@@ -379,17 +378,9 @@ final class TaskTest extends TestCase
      */
     public function can_add_single_server_extension()
     {
-        $task1 = self::task('task')->onSingleServer();
-        $task2 = self::task('task')->onSingleServer();
+        $task = self::task()->onSingleServer();
 
-        $lockFactory = new LockFactory(new FlockStore());
-
-        $task1->getExtensions()[0]->aquireTaskLock($lockFactory, $task1, \time());
-
-        $this->expectException(SkipTask::class);
-        $this->expectExceptionMessage('Task running on another server.');
-
-        $task2->getExtensions()[0]->aquireTaskLock($lockFactory, $task2, \time());
+        $this->assertInstanceOf(SingleServerExtension::class, $task->getExtensions()[0]);
     }
 
     /**

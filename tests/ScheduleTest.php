@@ -3,8 +3,6 @@
 namespace Zenstruck\ScheduleBundle\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Lock\LockFactory;
-use Symfony\Component\Lock\Store\FlockStore;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Process\Process;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -13,6 +11,7 @@ use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
+use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\CallbackTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
@@ -330,22 +329,11 @@ class ScheduleTest extends TestCase
      */
     public function can_add_single_server_extension()
     {
-        $schedule1 = new Schedule();
-        $schedule1->addCommand('my:command');
-        $schedule1->onSingleServer();
+        $schedule = new Schedule();
+        $schedule->addCommand('my:command');
+        $schedule->onSingleServer();
 
-        $schedule2 = new Schedule();
-        $schedule2->addCommand('my:command');
-        $schedule2->onSingleServer();
-
-        $lockFactory = new LockFactory(new FlockStore());
-
-        $schedule1->getExtensions()[0]->aquireScheduleLock($lockFactory, $schedule1, \time());
-
-        $this->expectException(SkipSchedule::class);
-        $this->expectExceptionMessage('Schedule running on another server.');
-
-        $schedule2->getExtensions()[0]->aquireScheduleLock($lockFactory, $schedule2, \time());
+        $this->assertInstanceOf(SingleServerExtension::class, $schedule->getExtensions()[0]);
     }
 
     /**
