@@ -83,11 +83,12 @@ EOF
         foreach ($schedule->all() as $i => $task) {
             $io->section(\sprintf('(%d/%d) %s: %s', $i + 1, \count($schedule->all()), $task->getType(), $task));
 
+            $details = [['Class' => \get_class($task)]];
+
             if ($task instanceof CommandTask && $arguments = $task->getArguments()) {
-                $io->comment("Arguments: <comment>{$task->getArguments()}</comment>");
+                $details[] = ['Command Arguments' => $task->getArguments()];
             }
 
-            $details = [['Class' => \get_class($task)]];
             $details[] = [$task->getExpression()->isHashed() ? 'Calculated Frequency' : 'Frequency' => $this->renderFrequency($task)];
 
             if ($task->getExpression()->isHashed()) {

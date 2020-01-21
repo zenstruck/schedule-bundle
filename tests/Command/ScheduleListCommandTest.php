@@ -147,7 +147,8 @@ final class ScheduleListCommandTest extends TestCase
         $this->assertStringContainsString('(1/1) CommandTask: my:command', $output);
         $this->assertStringContainsString('30 1 * * 1 (Every Monday at 1:30am)', $output);
         $this->assertStringContainsString('Mon,', $output);
-        $this->assertStringContainsString('Arguments: arg1 --option1', $output);
+        $this->assertStringContainsString('Command Arguments', $output);
+        $this->assertStringContainsString('arg1 --option1', $output);
         $this->assertStringContainsString('2 Task Extensions:', $output);
         $this->assertStringContainsString('On Task Failure, email output to "admin@example.com"', $output);
         $this->assertStringContainsString('On Task Failure, ping "https://example.com/my-command-failed"', $output);
