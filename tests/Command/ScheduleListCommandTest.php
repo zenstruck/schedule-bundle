@@ -147,6 +147,8 @@ final class ScheduleListCommandTest extends TestCase
         $this->assertSame(1, $commandTester->getStatusCode());
         $this->assertStringContainsString('1 Scheduled Task Configured', $output);
         $this->assertStringContainsString('(1/1) CommandTask: my:command', $output);
+        $this->assertStringContainsString('2d8aa4774f95e50c7408156fca071b017bf11030', $output, 'Shows task id');
+        $this->assertStringContainsString(CommandTask::class, $output, 'Shows task id');
         $this->assertStringContainsString('30 1 * * 1 (Every Monday at 1:30am)', $output);
         $this->assertStringContainsString('Mon,', $output);
         $this->assertStringContainsString('Command Arguments', $output);

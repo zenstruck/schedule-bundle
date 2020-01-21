@@ -87,7 +87,10 @@ EOF
         foreach ($schedule->all() as $i => $task) {
             $io->section(\sprintf('(%d/%d) %s: %s', $i + 1, \count($schedule->all()), $task->getType(), $task));
 
-            $details = [['Class' => \get_class($task)]];
+            $details = [
+                ['ID' => $task->getId()],
+                ['Class' => \get_class($task)],
+            ];
 
             if ($task instanceof CommandTask && $arguments = $task->getArguments()) {
                 $details[] = ['Command Arguments' => $task->getArguments()];
