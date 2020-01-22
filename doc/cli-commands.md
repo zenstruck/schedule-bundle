@@ -34,11 +34,13 @@ zenstruck_schedule:
     
     tasks:
         -   command: send-sales-report --hourly
+            description: Send the hourly sales report
             frequency: '15 * * * 1-5' # hourly on weekdays
             without_overlapping: ~
             email_on_failure: admin@example.com
 
         -   command: send-sales-report --daily
+            description: Send the weekly sales report
             frequency: '0 1 * * 1-5' # 1am on weekdays
             ping_on_success: https://example.com/daily-sales-report
 ```
@@ -48,17 +50,87 @@ following output (exit code `1`):
 
 ```console
 $ bin/console schedule:list
+
+2 Scheduled Tasks Configured
+============================
+
+ ----------------- ------------------------------ ------------ ------------------------------------------------- --------------------------- 
+  Type              Description                    Extensions   Frequency                                         Next Run                   
+ ----------------- ------------------------------ ------------ ------------------------------------------------- --------------------------- 
+  [!] CommandTask   Send the hourly sales report   2            15 * * * 1-5 (Once an hour 5 days a week)         2020-01-22T14:15:00-05:00  
+  CommandTask       Send the weekly sales report   1            0 1 * * 1-5 (Every day 5 days a week at 1:00am)   2020-01-23T01:00:00-05:00  
+ ----------------- ------------------------------ ------------ ------------------------------------------------- --------------------------- 
+
+ [WARNING] 1 task issue:
+
+ [ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").      
+
+ ! [NOTE] For more details, run php bin/console schedule:list --detail
+
+ // 1 Schedule Extension:
+
+ * Run on single server (Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension)
+
+ [WARNING] 1 issue with schedule:
+
+ [ERROR] To use "onSingleServer" you must configure a lock factory (config path:
+         "zenstruck_schedule.single_server_handler").
 ```
 
-![schedule:list with issues](images/schedule-list_issues.png)
+![schedule:list with issues](images/schedule-list-with-issues.png)
 
-Running with the `--detail` flag shows the following (exit code `1`):
+Running with the `--detail` flag outputs the following (exit code `1`):
 
 ```console
 $ bin/console schedule:list --detail
-```
 
-![schedule:list --detail with issues](images/schedule-list-detail_issues.png)
+2 Scheduled Tasks Configured
+============================
+
+(1/2) CommandTask: Send the hourly sales report
+-----------------------------------------------
+
+ ------------------- ---------------------------------------------------- 
+  ID                  9d2023944f540105dd47f7f314138fe92e40300c            
+  Class               Zenstruck\ScheduleBundle\Schedule\Task\CommandTask  
+  Command Arguments   --hourly                                            
+  Frequency           15 * * * 1-5 (Once an hour 5 days a week)           
+  Next Run            Wed, Jan 22, 2020 @ 2:15 (America/New_York -0500)   
+ ------------------- ---------------------------------------------------- 
+
+ // 2 Task Extensions:
+
+ * Without overlapping (Zenstruck\ScheduleBundle\Schedule\Extension\WithoutOverlappingExtension)
+ * On Task Failure, email output to "admin@example.com" (Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension)
+
+ [WARNING] 1 issue with this task:
+
+ [ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").      
+
+(2/2) CommandTask: Send the weekly sales report
+-----------------------------------------------
+
+ ------------------- ---------------------------------------------------- 
+  ID                  92e08f41a257b69fe877e132559fb7396e308309            
+  Class               Zenstruck\ScheduleBundle\Schedule\Task\CommandTask  
+  Command Arguments   --daily                                             
+  Frequency           0 1 * * 1-5 (Every day 5 days a week at 1:00am)     
+  Next Run            Thu, Jan 23, 2020 @ 1:00 (America/New_York -0500)   
+ ------------------- ---------------------------------------------------- 
+
+ // 1 Task Extension:
+
+ * On Task Success, ping "https://example.com/daily-sales-report" (Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension)
+
+ // 1 Schedule Extension:
+
+ * Run on single server (Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension)
+
+ [WARNING] 1 issue with schedule:
+
+ [ERROR] To use "onSingleServer" you must configure a lock factory (config path:
+         "zenstruck_schedule.single_server_handler").
+```
 
 There are two issues that need to be resolved in the bundle config:
 
@@ -72,21 +144,77 @@ zenstruck_schedule:
         default_from: webmaster@example.com
 ```
 
-Running now shows the following (exit code `0`):
+Running now outputs the following (exit code `0`):
 
 ```console
 $ bin/console schedule:list
+
+2 Scheduled Tasks Configured
+============================
+
+ ------------- ------------------------------ ------------ ------------------------------------------------- --------------------------- 
+  Type          Description                    Extensions   Frequency                                         Next Run                   
+ ------------- ------------------------------ ------------ ------------------------------------------------- --------------------------- 
+  CommandTask   Send the hourly sales report   2            15 * * * 1-5 (Once an hour 5 days a week)         2020-01-22T14:15:00-05:00  
+  CommandTask   Send the weekly sales report   1            0 1 * * 1-5 (Every day 5 days a week at 1:00am)   2020-01-23T01:00:00-05:00  
+ ------------- ------------------------------ ------------ ------------------------------------------------- --------------------------- 
+
+ ! [NOTE] For more details, run php bin/console schedule:list --detail
+
+ // 1 Schedule Extension:
+
+ * Run on single server (Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension)
+
+ [OK] No schedule or task issues.
 ```
 
 ![schedule:list](images/schedule-list.png)
 
-Running with the `--detail` flag shows the following (exit code `0`):
+Running with the `--detail` flag outputs the following (exit code `0`):
 
 ```console
 $ bin/console schedule:list --detail
-```
 
-![schedule:list --detail](images/schedule-list-detail.png)
+2 Scheduled Tasks Configured
+============================
+
+(1/2) CommandTask: Send the hourly sales report
+-----------------------------------------------
+
+ ------------------- ---------------------------------------------------- 
+  ID                  9d2023944f540105dd47f7f314138fe92e40300c            
+  Class               Zenstruck\ScheduleBundle\Schedule\Task\CommandTask  
+  Command Arguments   --hourly                                            
+  Frequency           15 * * * 1-5 (Once an hour 5 days a week)           
+  Next Run            Wed, Jan 22, 2020 @ 2:15 (America/New_York -0500)   
+ ------------------- ---------------------------------------------------- 
+
+ // 2 Task Extensions:
+
+ * Without overlapping (Zenstruck\ScheduleBundle\Schedule\Extension\WithoutOverlappingExtension)
+ * On Task Failure, email output to "admin@example.com" (Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension)
+
+(2/2) CommandTask: Send the weekly sales report
+-----------------------------------------------
+
+ ------------------- ---------------------------------------------------- 
+  ID                  92e08f41a257b69fe877e132559fb7396e308309            
+  Class               Zenstruck\ScheduleBundle\Schedule\Task\CommandTask  
+  Command Arguments   --daily                                             
+  Frequency           0 1 * * 1-5 (Every day 5 days a week at 1:00am)     
+  Next Run            Thu, Jan 23, 2020 @ 1:00 (America/New_York -0500)   
+ ------------------- ---------------------------------------------------- 
+
+ // 1 Task Extension:
+
+ * On Task Success, ping "https://example.com/daily-sales-report" (Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension)
+
+ // 1 Schedule Extension:
+
+ * Run on single server (Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension)
+
+ [OK] No schedule or task issues.
+```
 
 ## schedule:run
 
@@ -121,20 +249,95 @@ job to your production server(s) running every minute:
 ```
 
 The above Cron job sends the command output to `/dev/null` but the command does
-produce output if you wish to store that somewhere. Using the example from
-`schedule:list` above and assuming one of the tasks are due at time of run, the
-command will output the following  (exit code `0`):
+produce output if you wish to store that somewhere.
+
+Using the example from [`schedule:list`](#schedulelist) above and assuming one of
+the tasks is due at time of run, and the it ran successfully, the command will
+output the following (exit code `0`):
 
 ```console
 $ bin/console schedule:run
+
+ // Running 1 due task. (2 total tasks)
+
+ Running CommandTask: Send the hourly sales report
+ Success. (Duration: < 1 sec, Memory: 10.0 MiB)
+
+ [OK] 1/1 tasks ran, 1 succeeded. (Duration: < 1 sec, Memory: 10.0 MiB)
 ```
 
 ![schedule:run](images/schedule-run.png)
 
-Running the command with the verbose flag (`-v`) displays task output:
+Running the command with the verbose flag (`-v`) displays task output
+(exit code `0`):
 
 ```console
 $ bin/console schedule:run -v
+
+ // Running 1 due task. (2 total tasks)
+
+ Running CommandTask: Send the hourly sales report
+ ---begin output---
+
+ ! [NOTE] Generating hourly report...
+
+    0/1000 [░░░░░░░░░░░░░░░░░░░░░░░░░░░░]   0% < 1 sec
+  100/1000 [▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░]  10% < 1 sec
+  200/1000 [▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░]  20% < 1 sec
+  300/1000 [▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░]  30% < 1 sec
+  400/1000 [▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░]  40% < 1 sec
+  500/1000 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░]  50%  1 sec
+  600/1000 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░]  60%  1 sec
+  700/1000 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░]  70%  1 sec
+  800/1000 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░]  80%  1 sec
+  900/1000 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░]  90%  1 sec
+ 1000/1000 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%  1 sec
+
+ [OK] Hourly report sent.
+
+ ---end output---
+ Success. (Duration: 1 sec, Memory: 10.0 MiB)
+
+ [OK] 1/1 tasks ran, 1 succeeded. (Duration: 1 sec, Memory: 10.0 MiB)
 ```
 
-![schedule:run -v](images/schedule-run-v.png)
+Assuming the due task failed, the command will output the following
+(exit code `1`):
+
+```console
+$ bin/console schedule:run
+
+ // Running 1 due task. (2 total tasks)
+
+ Running CommandTask: Send the hourly sales report
+ Exception: RuntimeException: some error happened... (Duration: < 1 sec, Memory: 10.0 MiB)
+
+ [ERROR] 1/1 tasks ran, 1 failed. (Duration: 1 sec, Memory: 10.0 MiB)
+```
+
+![schedule:run with failure](images/schedule-run-error.png)
+
+Again, assuming the due task failed, the command with the verbose flag
+(`-v`) displays task output (exit code `1`):
+
+```console
+$ bin/console schedule:run -v
+
+ // Running 1 due task. (2 total tasks)
+
+ Running CommandTask: Send the hourly sales report
+ ---begin output---
+
+ ! [NOTE] Generating hourly report...
+
+    0/1000 [░░░░░░░░░░░░░░░░░░░░░░░░░░░░]   0% < 1 sec
+  100/1000 [▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░]  10% < 1 sec
+  200/1000 [▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░]  20% < 1 sec
+  300/1000 [▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░]  30% < 1 sec
+  400/1000 [▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░]  40% < 1 sec
+  500/1000 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░]  50% < 1 sec
+ ---end output---
+ Exception: RuntimeException: some error happened... (Duration: < 1 sec, Memory: 10.0 MiB)
+
+ [ERROR] 1/1 tasks ran, 1 failed. (Duration: 1 sec, Memory: 10.0 MiB)
+```
