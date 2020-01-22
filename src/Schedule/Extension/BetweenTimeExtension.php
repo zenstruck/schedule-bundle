@@ -2,8 +2,8 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
-use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -32,9 +32,9 @@ final class BetweenTimeExtension extends SelfHandlingExtension
         return "Only run if not between {$this->startTime} and {$this->endTime}";
     }
 
-    public function filterTask(BeforeTaskEvent $event): void
+    public function filterTask(TaskRunContext $context): void
     {
-        $isBetween = $this->isBetween($event->getTask()->getTimezone());
+        $isBetween = $this->isBetween($context->task()->getTimezone());
 
         if ($this->within && !$isBetween) {
             throw new SkipTask("Only runs between {$this->startTime} and {$this->endTime}");

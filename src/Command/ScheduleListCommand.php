@@ -87,7 +87,10 @@ EOF
         foreach ($schedule->all() as $i => $task) {
             $io->section(\sprintf('(%d/%d) %s: %s', $i + 1, \count($schedule->all()), $task->getType(), $task));
 
-            $details = [['Class' => \get_class($task)]];
+            $details = [
+                ['ID' => $task->getId()],
+                ['Class' => \get_class($task)],
+            ];
 
             if ($task instanceof CommandTask && $arguments = $task->getArguments()) {
                 $details[] = ['Command Arguments' => $task->getArguments()];
@@ -205,6 +208,25 @@ EOF
             } catch (\Throwable $e) {
                 yield $e;
             }
+        }
+
+        // check for duplicated task ids
+        $tasks = [];
+
+        foreach ($schedule->all() as $task) {
+            $tasks[$task->getId()][] = $task;
+        }
+
+        foreach ($tasks as $taskGroup) {
+            $count = \count($taskGroup);
+
+            if (1 === $count) {
+                continue;
+            }
+
+            $task = $taskGroup[0];
+
+            yield new \LogicException(\sprintf('Task "%s: %s" (%s) is duplicated %d times. Make their descriptions unique to fix.', $task->getType(), $task, $task->getExpression(), $count));
         }
     }
 

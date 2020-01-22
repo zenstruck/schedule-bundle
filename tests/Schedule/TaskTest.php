@@ -5,15 +5,13 @@ namespace Zenstruck\ScheduleBundle\Tests\Schedule;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Email;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Zenstruck\ScheduleBundle\Event\AfterTaskEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\Task;
-use Zenstruck\ScheduleBundle\Schedule\Task\Result;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 
 /**
@@ -167,7 +165,7 @@ final class TaskTest extends TestCase
         $this->expectException(SkipTask::class);
         $this->expectExceptionMessage('boolean value');
 
-        $task->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
+        $task->getExtensions()[0]->filterTask(self::taskRunContext());
     }
 
     /**
@@ -182,7 +180,7 @@ final class TaskTest extends TestCase
         $this->expectException(SkipTask::class);
         $this->expectExceptionMessage('callback value');
 
-        $task->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
+        $task->getExtensions()[0]->filterTask(self::taskRunContext());
     }
 
     /**
@@ -194,7 +192,7 @@ final class TaskTest extends TestCase
 
         $task->when('boolean value', true);
 
-        $task->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
+        $task->getExtensions()[0]->filterTask(self::taskRunContext());
 
         $this->assertTrue(true);
     }
@@ -208,7 +206,7 @@ final class TaskTest extends TestCase
 
         $task->when('callback value', function () { return true; });
 
-        $task->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
+        $task->getExtensions()[0]->filterTask(self::taskRunContext());
 
         $this->assertTrue(true);
     }
@@ -225,7 +223,7 @@ final class TaskTest extends TestCase
         $this->expectException(SkipTask::class);
         $this->expectExceptionMessage('boolean value');
 
-        $task->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
+        $task->getExtensions()[0]->filterTask(self::taskRunContext());
     }
 
     /**
@@ -240,7 +238,7 @@ final class TaskTest extends TestCase
         $this->expectException(SkipTask::class);
         $this->expectExceptionMessage('callback value');
 
-        $task->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
+        $task->getExtensions()[0]->filterTask(self::taskRunContext());
     }
 
     /**
@@ -252,7 +250,7 @@ final class TaskTest extends TestCase
 
         $task->skip('boolean value', false);
 
-        $task->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
+        $task->getExtensions()[0]->filterTask(self::taskRunContext());
 
         $this->assertTrue(true);
     }
@@ -266,7 +264,7 @@ final class TaskTest extends TestCase
 
         $task->skip('callback value', function () { return false; });
 
-        $task->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
+        $task->getExtensions()[0]->filterTask(self::taskRunContext());
 
         $this->assertTrue(true);
     }
@@ -286,12 +284,12 @@ final class TaskTest extends TestCase
         $task->onSuccess(function () use (&$calls) { $calls[] = 'onSuccess'; });
         $task->onFailure(function () use (&$calls) { $calls[] = 'onFailure'; });
 
-        $task->getExtensions()[0]->filterTask($event = new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
-        $task->getExtensions()[1]->beforeTask($event);
-        $task->getExtensions()[2]->afterTask($event = new AfterTaskEvent($event, Result::successful($task)));
-        $task->getExtensions()[3]->afterTask($event);
-        $task->getExtensions()[4]->onTaskSuccess($event);
-        $task->getExtensions()[5]->onTaskFailure($event);
+        $task->getExtensions()[0]->filterTask(self::taskRunContext());
+        $task->getExtensions()[1]->beforeTask(self::taskRunContext());
+        $task->getExtensions()[2]->afterTask(self::taskRunContext());
+        $task->getExtensions()[3]->afterTask(self::taskRunContext());
+        $task->getExtensions()[4]->onTaskSuccess(self::taskRunContext());
+        $task->getExtensions()[5]->onTaskFailure(self::taskRunContext());
 
         $this->assertSame([
             'filter',
@@ -325,11 +323,11 @@ final class TaskTest extends TestCase
             [$this->equalTo('GET'), $this->equalTo('http://failure.com'), $this->isType('array')]
         );
 
-        $task->getExtensions()[0]->setHttpClient($client)->beforeTask($event = new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
-        $task->getExtensions()[1]->setHttpClient($client)->afterTask($event = new AfterTaskEvent($event, Result::successful($task)));
-        $task->getExtensions()[2]->setHttpClient($client)->afterTask($event);
-        $task->getExtensions()[3]->setHttpClient($client)->onTaskSuccess($event);
-        $task->getExtensions()[4]->setHttpClient($client)->onTaskFailure($event);
+        $task->getExtensions()[0]->setHttpClient($client)->beforeTask(self::taskRunContext());
+        $task->getExtensions()[1]->setHttpClient($client)->afterTask(self::taskRunContext());
+        $task->getExtensions()[2]->setHttpClient($client)->afterTask(self::taskRunContext());
+        $task->getExtensions()[3]->setHttpClient($client)->onTaskSuccess(self::taskRunContext());
+        $task->getExtensions()[4]->setHttpClient($client)->onTaskFailure(self::taskRunContext());
     }
 
     /**
@@ -391,12 +389,12 @@ final class TaskTest extends TestCase
         $task1 = self::task('task')->withoutOverlapping();
         $task2 = self::task('task')->withoutOverlapping();
 
-        $task1->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task1));
+        $task1->getExtensions()[0]->filterTask(self::taskRunContext());
 
         $this->expectException(SkipTask::class);
         $this->expectExceptionMessage('Task running in another process.');
 
-        $task2->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task2));
+        $task2->getExtensions()[0]->filterTask(self::taskRunContext());
     }
 
     /**
@@ -413,7 +411,7 @@ final class TaskTest extends TestCase
         $this->expectException(SkipTask::class);
         $this->expectExceptionMessage("Only runs between {$start} and {$end}");
 
-        $task->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
+        $task->getExtensions()[0]->filterTask(self::taskRunContext());
     }
 
     public static function onlyBetweenExtensionSkipProvider()
@@ -436,7 +434,7 @@ final class TaskTest extends TestCase
 
         $task = self::task()->onlyBetween($start, $end, $inclusive);
 
-        $task->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
+        $task->getExtensions()[0]->filterTask(self::taskRunContext());
 
         $this->assertTrue(true);
     }
@@ -464,7 +462,7 @@ final class TaskTest extends TestCase
         $this->expectException(SkipTask::class);
         $this->expectExceptionMessage("Only runs if not between {$start} and {$end}");
 
-        $task->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
+        $task->getExtensions()[0]->filterTask(self::taskRunContext());
     }
 
     public static function unlessBetweenExtensionSkipProvider()
@@ -487,7 +485,7 @@ final class TaskTest extends TestCase
 
         $task = self::task()->unlessBetween($start, $end, $inclusive);
 
-        $task->getExtensions()[0]->filterTask(new BeforeTaskEvent(new BeforeScheduleEvent(new Schedule()), $task));
+        $task->getExtensions()[0]->filterTask(self::taskRunContext());
 
         $this->assertTrue(true);
     }
@@ -499,6 +497,11 @@ final class TaskTest extends TestCase
             ['+1 minute', '+3 minutes', true],
             ['+5 minutes', '+23 hours', true],
         ];
+    }
+
+    private static function taskRunContext(): TaskRunContext
+    {
+        return new TaskRunContext(new ScheduleRunContext(new Schedule()), self::task());
     }
 
     private static function task(string $description = 'task description'): Task

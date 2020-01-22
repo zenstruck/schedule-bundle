@@ -34,17 +34,19 @@ final class ScheduleConsoleOutputSubscriber implements EventSubscriberInterface
 
     public function afterSchedule(AfterScheduleEvent $event): void
     {
-        if ($event->isSkipped()) {
-            $this->io->note($event->getSkipReason());
+        $context = $event->runContext();
+
+        if ($context->isSkipped()) {
+            $this->io->note($context->skipReason());
 
             return;
         }
 
-        $total = \count($event->getResults());
-        $successful = \count($event->getSuccessful());
-        $failures = \count($event->getFailures());
-        $skipped = \count($event->getSkipped());
-        $run = \count($event->getRun());
+        $total = \count($context->getResults());
+        $successful = \count($context->getSuccessful());
+        $failures = \count($context->getFailures());
+        $skipped = \count($context->getSkipped());
+        $run = \count($context->getRun());
         $messages = ["{$run}/{$total} tasks ran"];
 
         if (0 === $total) {
@@ -64,46 +66,61 @@ final class ScheduleConsoleOutputSubscriber implements EventSubscriberInterface
         }
 
         $messages = \implode(', ', $messages).'.';
-        $messages .= " (Duration: {$event->getFormattedDuration()}, Memory: {$event->getFormattedMemory()})";
+        $messages .= " (Duration: {$context->getFormattedDuration()}, Memory: {$context->getFormattedMemory()})";
 
-        $this->io->{$event->isSuccessful() ? 'success' : 'error'}($messages);
+        $this->io->{$context->isSuccessful() ? 'success' : 'error'}($messages);
     }
 
     public function beforeSchedule(BeforeScheduleEvent $event): void
     {
-        $dueTaskCount = \count($event->getSchedule()->due());
+        $context = $event->runContext();
+
+        $allTaskCount = \count($context->schedule()->all());
+        $dueTaskCount = \count($context->dueTasks());
 
         if (0 === $dueTaskCount) {
-            $this->io->note(\sprintf('No tasks due to run. (%s total tasks)', \count($event->getSchedule()->all())));
+            $this->io->note(\sprintf('No tasks due to run. (%s total tasks)', $allTaskCount));
 
             return;
         }
 
         $this->io->comment(\sprintf(
-            'Running <info>%s</info> due task%s. (%s total tasks)',
+            '%sRunning <info>%s</info> %stask%s. (%s total tasks)',
+            $context->isForceRun() ? '<error>Force</error> ' : '',
             $dueTaskCount,
+            $context->isForceRun() ? '' : 'due ',
             $dueTaskCount > 1 ? 's' : '',
-            \count($event->getSchedule()->all())
+            $allTaskCount
         ));
     }
 
     public function beforeTask(BeforeTaskEvent $event): void
     {
-        $this->io->text("<comment>Running {$event->getTask()->getType()}:</comment> {$event->getTask()}");
+        $context = $event->runContext();
+        $task = $context->task();
+
+        $this->io->text(\sprintf(
+            '%sRunning <comment>%s:</comment> %s',
+            $context->scheduleRunContext()->isForceRun() ? '<error>Force</error> ' : '',
+            $task->getType(),
+            $task
+        ));
     }
 
     public function afterTask(AfterTaskEvent $event): void
     {
-        if ($this->io->isVerbose() && $output = $event->getResult()->getOutput()) {
+        $context = $event->runContext();
+
+        if ($this->io->isVerbose() && $output = $context->result()->getOutput()) {
             $this->io->text('---begin output---');
             $this->io->write($output);
             $this->io->text('---end output---');
         }
 
         $this->io->text(\sprintf('%s (<comment>Duration:</comment> %s, <comment>Memory:</comment> %s)',
-            $this->afterTaskMessage($event->getResult()),
-            $event->getFormattedDuration(),
-            $event->getFormattedMemory()
+            $this->afterTaskMessage($context->result()),
+            $context->getFormattedDuration(),
+            $context->getFormattedMemory()
         ));
         $this->io->newLine();
     }

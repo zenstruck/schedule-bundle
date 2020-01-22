@@ -2,13 +2,11 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension\Handler;
 
-use Zenstruck\ScheduleBundle\Event\AfterScheduleEvent;
-use Zenstruck\ScheduleBundle\Event\AfterTaskEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SelfHandlingExtension;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -18,81 +16,81 @@ final class SelfHandlingHandler extends ExtensionHandler
     /**
      * @param SelfHandlingExtension $extension
      */
-    public function filterSchedule(BeforeScheduleEvent $event, Extension $extension): void
+    public function filterSchedule(ScheduleRunContext $context, Extension $extension): void
     {
-        $extension->filterSchedule($event);
+        $extension->filterSchedule($context);
     }
 
     /**
      * @param SelfHandlingExtension $extension
      */
-    public function beforeSchedule(BeforeScheduleEvent $event, Extension $extension): void
+    public function beforeSchedule(ScheduleRunContext $context, Extension $extension): void
     {
-        $extension->beforeSchedule($event);
+        $extension->beforeSchedule($context);
     }
 
     /**
      * @param SelfHandlingExtension $extension
      */
-    public function afterSchedule(AfterScheduleEvent $event, Extension $extension): void
+    public function afterSchedule(ScheduleRunContext $context, Extension $extension): void
     {
-        $extension->afterSchedule($event);
+        $extension->afterSchedule($context);
     }
 
     /**
      * @param SelfHandlingExtension $extension
      */
-    public function onScheduleSuccess(AfterScheduleEvent $event, Extension $extension): void
+    public function onScheduleSuccess(ScheduleRunContext $context, Extension $extension): void
     {
-        $extension->onScheduleSuccess($event);
+        $extension->onScheduleSuccess($context);
     }
 
     /**
      * @param SelfHandlingExtension $extension
      */
-    public function onScheduleFailure(AfterScheduleEvent $event, Extension $extension): void
+    public function onScheduleFailure(ScheduleRunContext $context, Extension $extension): void
     {
-        $extension->onScheduleFailure($event);
+        $extension->onScheduleFailure($context);
     }
 
     /**
      * @param SelfHandlingExtension $extension
      */
-    public function filterTask(BeforeTaskEvent $event, Extension $extension): void
+    public function filterTask(TaskRunContext $context, Extension $extension): void
     {
-        $extension->filterTask($event);
+        $extension->filterTask($context);
     }
 
     /**
      * @param SelfHandlingExtension $extension
      */
-    public function beforeTask(BeforeTaskEvent $event, Extension $extension): void
+    public function beforeTask(TaskRunContext $context, Extension $extension): void
     {
-        $extension->beforeTask($event);
+        $extension->beforeTask($context);
     }
 
     /**
      * @param SelfHandlingExtension $extension
      */
-    public function afterTask(AfterTaskEvent $event, Extension $extension): void
+    public function afterTask(TaskRunContext $context, Extension $extension): void
     {
-        $extension->afterTask($event);
+        $extension->afterTask($context);
     }
 
     /**
      * @param SelfHandlingExtension $extension
      */
-    public function onTaskSuccess(AfterTaskEvent $event, Extension $extension): void
+    public function onTaskSuccess(TaskRunContext $context, Extension $extension): void
     {
-        $extension->onTaskSuccess($event);
+        $extension->onTaskSuccess($context);
     }
 
     /**
      * @param SelfHandlingExtension $extension
      */
-    public function onTaskFailure(AfterTaskEvent $event, Extension $extension): void
+    public function onTaskFailure(TaskRunContext $context, Extension $extension): void
     {
-        $extension->onTaskFailure($event);
+        $extension->onTaskFailure($context);
     }
 
     public function supports(Extension $extension): bool

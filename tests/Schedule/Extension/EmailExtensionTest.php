@@ -33,9 +33,9 @@ final class EmailExtensionTest extends TestCase
                     $schedule->emailOnFailure();
                 }
             })
-            ->addTask(MockTask::exception(new \Exception('task 1 exception message'), 'my task 1'))
+            ->addTask($task1 = MockTask::exception(new \Exception('task 1 exception message'), 'my task 1'))
             ->addTask(MockTask::success('my task 2'))
-            ->addTask(MockTask::exception(new \Exception('task 3 exception message'), 'my task 3'))
+            ->addTask($task2 = MockTask::exception(new \Exception('task 3 exception message'), 'my task 3'))
             ->run()
         ;
 
@@ -49,6 +49,8 @@ final class EmailExtensionTest extends TestCase
         $this->assertStringContainsString('# (Failure 2/2) MockTask: my task 3', $mailer->lastMessage->getTextBody());
         $this->assertStringContainsString('## Exception', $mailer->lastMessage->getTextBody());
         $this->assertStringContainsString('Exception: task 3 exception message', $mailer->lastMessage->getTextBody());
+        $this->assertStringContainsString('Task ID: '.$task1->getId(), $mailer->lastMessage->getTextBody());
+        $this->assertStringContainsString('Task ID: '.$task2->getId(), $mailer->lastMessage->getTextBody());
     }
 
     /**
@@ -112,7 +114,7 @@ final class EmailExtensionTest extends TestCase
 
         (new MockScheduleBuilder())
             ->addHandler(new EmailHandler($mailer, 'webmaster@example.com', 'kevin@example.com'))
-            ->addTask(MockTask::failure('Exit 127: Command not found', 'my task', 'sh: 1: sdsdsd: not found')
+            ->addTask($task = MockTask::failure('Exit 127: Command not found', 'my task', 'sh: 1: sdsdsd: not found')
                 ->emailOnFailure()
             )
             ->run()
@@ -124,6 +126,7 @@ final class EmailExtensionTest extends TestCase
         $this->assertStringContainsString('Exit 127: Command not found', $mailer->lastMessage->getTextBody());
         $this->assertStringContainsString('## Task Output:', $mailer->lastMessage->getTextBody());
         $this->assertStringContainsString('sh: 1: sdsdsd: not found', $mailer->lastMessage->getTextBody());
+        $this->assertStringContainsString('Task ID: '.$task->getId(), $mailer->lastMessage->getTextBody());
     }
 
     /**
@@ -175,7 +178,7 @@ final class EmailExtensionTest extends TestCase
 
         (new MockScheduleBuilder())
             ->addHandler(new EmailHandler($mailer, 'webmaster@example.com', 'kevin@example.com'))
-            ->addTask(MockTask::success('my task', 'my task output')->emailAfter())
+            ->addTask($task = MockTask::success('my task', 'my task output')->emailAfter())
             ->run()
         ;
 
@@ -185,6 +188,7 @@ final class EmailExtensionTest extends TestCase
         $this->assertStringContainsString('Successful', $mailer->lastMessage->getTextBody());
         $this->assertStringContainsString('## Task Output:', $mailer->lastMessage->getTextBody());
         $this->assertStringContainsString('my task output', $mailer->lastMessage->getTextBody());
+        $this->assertStringContainsString('Task ID: '.$task->getId(), $mailer->lastMessage->getTextBody());
     }
 
     /**
@@ -249,14 +253,30 @@ final class EmailExtensionTest extends TestCase
      */
     public function to_address_must_be_configured_or_passed_to_extension()
     {
-        $event = (new MockScheduleBuilder())
+        $context = (new MockScheduleBuilder())
             ->addHandler(new EmailHandler($this->createMailer()))
             ->addTask(MockTask::failure()->emailOnFailure())
             ->run()
         ;
 
-        $this->assertInstanceOf(\LogicException::class, $event->getResults()[0]->getException());
-        $this->assertSame('There is no "To" configured for the email. Either set it when adding the extension or in your configuration (config path: "zenstruck_schedule.email_handler.default_to").', $event->getResults()[0]->getException()->getMessage());
+        $this->assertInstanceOf(\LogicException::class, $context->getResults()[0]->getException());
+        $this->assertSame('There is no "To" configured for the email. Either set it when adding the extension or in your configuration (config path: "zenstruck_schedule.email_handler.default_to").', $context->getResults()[0]->getException()->getMessage());
+    }
+
+    /**
+     * @test
+     */
+    public function email_shows_if_task_was_force_run()
+    {
+        $mailer = $this->createMailer();
+
+        (new MockScheduleBuilder())
+            ->addHandler(new EmailHandler($mailer, 'webmaster@example.com', 'kevin@example.com'))
+            ->addTask($task = MockTask::success('my task', 'my task output')->emailAfter())
+            ->run($task->getId())
+        ;
+
+        $this->assertStringContainsString('This task was force run', $mailer->lastMessage->getTextBody());
     }
 
     private function createMailer(): MailerInterface

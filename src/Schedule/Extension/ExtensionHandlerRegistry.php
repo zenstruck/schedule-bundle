@@ -2,11 +2,9 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
-use Zenstruck\ScheduleBundle\Event\AfterScheduleEvent;
-use Zenstruck\ScheduleBundle\Event\AfterTaskEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -47,66 +45,66 @@ final class ExtensionHandlerRegistry
         throw new \LogicException($message);
     }
 
-    public function beforeSchedule(BeforeScheduleEvent $event): void
+    public function beforeSchedule(ScheduleRunContext $context): void
     {
-        foreach ($event->getSchedule()->getExtensions() as $extension) {
-            $this->handlerFor($extension)->filterSchedule($event, $extension);
+        foreach ($context->schedule()->getExtensions() as $extension) {
+            $this->handlerFor($extension)->filterSchedule($context, $extension);
         }
 
-        foreach ($event->getSchedule()->getExtensions() as $extension) {
-            $this->handlerFor($extension)->beforeSchedule($event, $extension);
+        foreach ($context->schedule()->getExtensions() as $extension) {
+            $this->handlerFor($extension)->beforeSchedule($context, $extension);
         }
     }
 
-    public function afterSchedule(AfterScheduleEvent $event): void
+    public function afterSchedule(ScheduleRunContext $context): void
     {
-        foreach ($event->getSchedule()->getExtensions() as $extension) {
-            $this->handlerFor($extension)->afterSchedule($event, $extension);
+        foreach ($context->schedule()->getExtensions() as $extension) {
+            $this->handlerFor($extension)->afterSchedule($context, $extension);
         }
 
-        if ($event->isSuccessful()) {
-            foreach ($event->getSchedule()->getExtensions() as $extension) {
-                $this->handlerFor($extension)->onScheduleSuccess($event, $extension);
+        if ($context->isSuccessful()) {
+            foreach ($context->schedule()->getExtensions() as $extension) {
+                $this->handlerFor($extension)->onScheduleSuccess($context, $extension);
             }
         }
 
-        if ($event->isFailure()) {
-            foreach ($event->getSchedule()->getExtensions() as $extension) {
-                $this->handlerFor($extension)->onScheduleFailure($event, $extension);
+        if ($context->isFailure()) {
+            foreach ($context->schedule()->getExtensions() as $extension) {
+                $this->handlerFor($extension)->onScheduleFailure($context, $extension);
             }
         }
     }
 
-    public function beforeTask(BeforeTaskEvent $event): void
+    public function beforeTask(TaskRunContext $context): void
     {
-        foreach ($event->getTask()->getExtensions() as $extension) {
-            $this->handlerFor($extension)->filterTask($event, $extension);
+        foreach ($context->task()->getExtensions() as $extension) {
+            $this->handlerFor($extension)->filterTask($context, $extension);
         }
 
-        foreach ($event->getTask()->getExtensions() as $extension) {
-            $this->handlerFor($extension)->beforeTask($event, $extension);
+        foreach ($context->task()->getExtensions() as $extension) {
+            $this->handlerFor($extension)->beforeTask($context, $extension);
         }
     }
 
-    public function afterTask(AfterTaskEvent $event): void
+    public function afterTask(TaskRunContext $context): void
     {
-        if (!$event->getResult()->hasRun()) {
+        if (!$context->hasRun()) {
             return;
         }
 
-        foreach ($event->getTask()->getExtensions() as $extension) {
-            $this->handlerFor($extension)->afterTask($event, $extension);
+        foreach ($context->task()->getExtensions() as $extension) {
+            $this->handlerFor($extension)->afterTask($context, $extension);
         }
 
-        if ($event->isSuccessful()) {
-            foreach ($event->getTask()->getExtensions() as $extension) {
-                $this->handlerFor($extension)->onTaskSuccess($event, $extension);
+        if ($context->isSuccessful()) {
+            foreach ($context->task()->getExtensions() as $extension) {
+                $this->handlerFor($extension)->onTaskSuccess($context, $extension);
             }
         }
 
-        if ($event->isFailure()) {
-            foreach ($event->getTask()->getExtensions() as $extension) {
-                $this->handlerFor($extension)->onTaskFailure($event, $extension);
+        if ($context->isFailure()) {
+            foreach ($context->task()->getExtensions() as $extension) {
+                $this->handlerFor($extension)->onTaskFailure($context, $extension);
             }
         }
     }

@@ -6,9 +6,8 @@ use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\PersistingStoreInterface;
 use Symfony\Component\Lock\Store\FlockStore;
 use Symfony\Component\Lock\Store\SemaphoreStore;
-use Zenstruck\ScheduleBundle\Event\AfterTaskEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -35,14 +34,14 @@ final class WithoutOverlappingExtension extends SelfHandlingExtension
         return 'Without overlapping';
     }
 
-    public function filterTask(BeforeTaskEvent $event): void
+    public function filterTask(TaskRunContext $context): void
     {
-        if (!$this->lock->aquire($this->getLockFactory(), $event->getTask()->getId(), $this->ttl)) {
+        if (!$this->lock->aquire($this->getLockFactory(), $context->task()->getId(), $this->ttl)) {
             throw new SkipTask('Task running in another process.');
         }
     }
 
-    public function afterTask(AfterTaskEvent $event): void
+    public function afterTask(TaskRunContext $context): void
     {
         $this->lock->release();
     }

@@ -44,7 +44,6 @@ final class ScheduleLoggerSubscriberTest extends TestCase
             ->addTask(MockTask::success('my task'))
             ->run()
         ;
-
         $this->assertCount(4, $this->logger->records);
         $this->assertTrue($this->logger->hasInfoThatContains('Running 1 due task.'));
         $this->assertTrue($this->logger->hasInfoThatContains('Running "MockTask": my task'));
@@ -110,7 +109,7 @@ final class ScheduleLoggerSubscriberTest extends TestCase
      */
     public function run_schedule_that_skips()
     {
-        $event = $this->createRunnerBuilder()
+        $context = $this->createRunnerBuilder()
             ->addTask(new MockTask())
             ->addExtension(CallbackExtension::scheduleFilter(function () {
                 throw new SkipSchedule('the schedule has skipped');
@@ -118,11 +117,27 @@ final class ScheduleLoggerSubscriberTest extends TestCase
             ->run()
         ;
 
-        $this->assertTrue($event->isSkipped());
-        $this->assertTrue($event->isSuccessful());
+        $this->assertTrue($context->isSkipped());
+        $this->assertTrue($context->isSuccessful());
         $this->assertCount(2, $this->logger->records);
         $this->assertTrue($this->logger->hasInfoThatContains('Running 1 due task.'));
         $this->assertTrue($this->logger->hasInfoThatContains('the schedule has skipped'));
+    }
+
+    /**
+     * @test
+     */
+    public function force_run_tasks()
+    {
+        $this->createRunnerBuilder()
+            ->addTask($task = MockTask::success('my task'))
+            ->run($task->getId())
+        ;
+        $this->assertCount(4, $this->logger->records);
+        $this->assertTrue($this->logger->hasInfoThatContains('Force running 1 task.'));
+        $this->assertTrue($this->logger->hasInfoThatContains('Force running "MockTask": my task'));
+        $this->assertTrue($this->logger->hasInfoThatContains('Successfully ran "MockTask": my task'));
+        $this->assertTrue($this->logger->hasInfoThatContains('1/1 tasks ran'));
     }
 
     private function createRunnerBuilder(): MockScheduleBuilder

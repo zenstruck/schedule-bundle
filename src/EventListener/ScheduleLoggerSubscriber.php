@@ -34,32 +34,46 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
 
     public function beforeSchedule(BeforeScheduleEvent $event): void
     {
-        $dueTaskCount = \count($event->getSchedule()->due());
+        $context = $event->runContext();
+
+        $allTaskCount = \count($context->schedule()->all());
+        $dueTaskCount = \count($context->dueTasks());
 
         if (0 === $dueTaskCount) {
-            $this->logger->debug('No tasks due to run.', ['total' => \count($event->getSchedule()->all())]);
+            $this->logger->debug('No tasks due to run.', ['total' => $allTaskCount]);
 
             return;
         }
 
-        $this->logger->info(\sprintf('Running %s due task%s.', $dueTaskCount, $dueTaskCount > 1 ? 's' : ''), [
-            'total' => \count($event->getSchedule()->all()),
+        $message = \sprintf('%s %d %stask%s.',
+            $context->isForceRun() ? 'Force running' : 'Running',
+            $dueTaskCount,
+            $context->isForceRun() ? '' : 'due ',
+            $dueTaskCount > 1 ? 's' : ''
+        );
+
+        $this->logger->info($message, [
+            'total' => $allTaskCount,
             'due' => $dueTaskCount,
         ]);
     }
 
     public function afterSchedule(AfterScheduleEvent $event): void
     {
-        if ($event->isSkipped()) {
-            $this->logger->info($event->getSkipReason());
+        $context = $event->runContext();
+
+        if ($context->isSkipped()) {
+            $this->logger->info($context->skipReason());
+
+            return;
         }
 
-        $total = \count($event->getResults());
-        $successful = \count($event->getSuccessful());
-        $failures = \count($event->getFailures());
-        $skipped = \count($event->getSkipped());
-        $run = \count($event->getRun());
-        $level = $event->isSuccessful() ? LogLevel::INFO : LogLevel::ERROR;
+        $total = \count($context->getResults());
+        $successful = \count($context->getSuccessful());
+        $failures = \count($context->getFailures());
+        $skipped = \count($context->getSkipped());
+        $run = \count($context->getRun());
+        $level = $context->isSuccessful() ? LogLevel::INFO : LogLevel::ERROR;
 
         if (0 === $total) {
             return;
@@ -70,19 +84,29 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
             'successful' => $successful,
             'skipped' => $skipped,
             'failures' => $failures,
-            'duration' => $event->getFormattedDuration(),
-            'memory' => $event->getFormattedMemory(),
+            'duration' => $context->getFormattedDuration(),
+            'memory' => $context->getFormattedMemory(),
+            'forced' => $context->isForceRun(),
         ]);
     }
 
     public function beforeTask(BeforeTaskEvent $event): void
     {
-        $this->logger->info("Running \"{$event->getTask()->getType()}\": {$event->getTask()}");
+        $context = $event->runContext();
+        $task = $context->task();
+
+        $this->logger->info(\sprintf('%s "%s": %s',
+            $context->scheduleRunContext()->isForceRun() ? 'Force running' : 'Running',
+            $task->getType(),
+            $task
+        ), ['id' => $task->getId()]);
     }
 
     public function afterTask(AfterTaskEvent $event): void
     {
-        $result = $event->getResult();
+        $context = $event->runContext();
+
+        $result = $context->result();
         $task = $result->getTask();
 
         if ($result->isSkipped()) {
@@ -91,29 +115,31 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $context = [
-            'duration' => $event->getFormattedDuration(),
-            'memory' => $event->getFormattedMemory(),
+        $logContext = [
+            'duration' => $context->getFormattedDuration(),
+            'memory' => $context->getFormattedMemory(),
             'task' => $task,
             'result' => $result,
+            'id' => $task->getId(),
+            'forced' => $context->scheduleRunContext()->isForceRun(),
         ];
 
         if ($result->isSuccessful()) {
-            $this->logger->info("Successfully ran \"{$task->getType()}\": {$task}", $context);
+            $this->logger->info("Successfully ran \"{$task->getType()}\": {$task}", $logContext);
 
             return;
         }
 
-        $context['output'] = $result->getOutput();
+        $logContext['output'] = $result->getOutput();
 
         if (!$result->isException()) {
-            $this->logger->error("Failure when running \"{$task->getType()}\": {$task}", $context);
+            $this->logger->error("Failure when running \"{$task->getType()}\": {$task}", $logContext);
 
             return;
         }
 
-        $context['exception'] = $result->getException();
+        $logContext['exception'] = $result->getException();
 
-        $this->logger->critical("Exception thrown when running \"{$task->getType()}\": {$task}", $context);
+        $this->logger->critical("Exception thrown when running \"{$task->getType()}\": {$task}", $logContext);
     }
 }

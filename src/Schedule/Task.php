@@ -2,7 +2,6 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule;
 
-use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 use Zenstruck\ScheduleBundle\Schedule\Extension\BetweenTimeExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\CallbackExtension;
@@ -10,6 +9,7 @@ use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\WithoutOverlappingExtension;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
  * @author Taylor Otwell <taylor@laravel.com>
@@ -115,7 +115,7 @@ abstract class Task
     /**
      * Prevent task from running if callback throws \Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask.
      *
-     * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Event\BeforeTaskEvent
+     * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext
      */
     final public function filter(callable $callback): self
     {
@@ -126,7 +126,7 @@ abstract class Task
      * Only run task if true.
      *
      * @param bool|callable $callback bool: skip if false, callable: skip if return value is false
-     *                                callable receives an instance of \Zenstruck\ScheduleBundle\Event\BeforeTaskEvent
+     *                                callable receives an instance of \Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext
      */
     final public function when(string $description, $callback): self
     {
@@ -134,8 +134,8 @@ abstract class Task
             return (bool) $callback;
         };
 
-        return $this->filter(function (BeforeTaskEvent $event) use ($callback, $description) {
-            if (!$callback($event)) {
+        return $this->filter(function (TaskRunContext $context) use ($callback, $description) {
+            if (!$callback($context)) {
                 throw new SkipTask($description);
             }
         });
@@ -145,7 +145,7 @@ abstract class Task
      * Skip task if true.
      *
      * @param bool|callable $callback bool: skip if true, callable: skip if return value is true
-     *                                callable receives an instance of \Zenstruck\ScheduleBundle\Event\BeforeTaskEvent
+     *                                callable receives an instance of \Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext
      */
     final public function skip(string $description, $callback): self
     {
@@ -153,8 +153,8 @@ abstract class Task
             return (bool) $callback;
         };
 
-        return $this->filter(function (BeforeTaskEvent $event) use ($callback, $description) {
-            if ($callback($event)) {
+        return $this->filter(function (TaskRunContext $context) use ($callback, $description) {
+            if ($callback($context)) {
                 throw new SkipTask($description);
             }
         });
@@ -163,7 +163,7 @@ abstract class Task
     /**
      * Execute callback before task runs.
      *
-     * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Event\BeforeTaskEvent
+     * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext
      */
     final public function before(callable $callback): self
     {
@@ -173,7 +173,7 @@ abstract class Task
     /**
      * Execute callback after task has run (will not execute if skipped).
      *
-     * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Event\AfterTaskEvent
+     * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext
      */
     final public function after(callable $callback): self
     {
@@ -191,7 +191,7 @@ abstract class Task
     /**
      * Execute callback if task was successful (will not execute if skipped).
      *
-     * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Event\AfterTaskEvent
+     * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext
      */
     final public function onSuccess(callable $callback): self
     {
@@ -201,7 +201,7 @@ abstract class Task
     /**
      * Execute callback if task failed (will not execute if skipped).
      *
-     * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Event\AfterTaskEvent
+     * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext
      */
     final public function onFailure(callable $callback): self
     {

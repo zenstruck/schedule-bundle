@@ -3,13 +3,11 @@
 namespace Zenstruck\ScheduleBundle\Schedule\Extension\Handler;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Zenstruck\ScheduleBundle\Event\AfterScheduleEvent;
-use Zenstruck\ScheduleBundle\Event\AfterTaskEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -26,65 +24,65 @@ final class PingHandler extends ExtensionHandler
     /**
      * @param PingExtension $extension
      */
-    public function beforeSchedule(BeforeScheduleEvent $event, Extension $extension): void
+    public function beforeSchedule(ScheduleRunContext $context, Extension $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->beforeSchedule($event);
+        $extension->setHttpClient($this->httpClient)->beforeSchedule($context);
     }
 
     /**
      * @param PingExtension $extension
      */
-    public function afterSchedule(AfterScheduleEvent $event, Extension $extension): void
+    public function afterSchedule(ScheduleRunContext $context, Extension $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->afterSchedule($event);
+        $extension->setHttpClient($this->httpClient)->afterSchedule($context);
     }
 
     /**
      * @param PingExtension $extension
      */
-    public function onScheduleSuccess(AfterScheduleEvent $event, Extension $extension): void
+    public function onScheduleSuccess(ScheduleRunContext $context, Extension $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->onScheduleSuccess($event);
+        $extension->setHttpClient($this->httpClient)->onScheduleSuccess($context);
     }
 
     /**
      * @param PingExtension $extension
      */
-    public function onScheduleFailure(AfterScheduleEvent $event, Extension $extension): void
+    public function onScheduleFailure(ScheduleRunContext $context, Extension $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->onScheduleFailure($event);
+        $extension->setHttpClient($this->httpClient)->onScheduleFailure($context);
     }
 
     /**
      * @param PingExtension $extension
      */
-    public function beforeTask(BeforeTaskEvent $event, Extension $extension): void
+    public function beforeTask(TaskRunContext $context, Extension $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->beforeTask($event);
+        $extension->setHttpClient($this->httpClient)->beforeTask($context);
     }
 
     /**
      * @param PingExtension $extension
      */
-    public function afterTask(AfterTaskEvent $event, Extension $extension): void
+    public function afterTask(TaskRunContext $context, Extension $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->afterTask($event);
+        $extension->setHttpClient($this->httpClient)->afterTask($context);
     }
 
     /**
      * @param PingExtension $extension
      */
-    public function onTaskSuccess(AfterTaskEvent $event, Extension $extension): void
+    public function onTaskSuccess(TaskRunContext $context, Extension $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->onTaskSuccess($event);
+        $extension->setHttpClient($this->httpClient)->onTaskSuccess($context);
     }
 
     /**
      * @param PingExtension $extension
      */
-    public function onTaskFailure(AfterTaskEvent $event, Extension $extension): void
+    public function onTaskFailure(TaskRunContext $context, Extension $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->onTaskFailure($event);
+        $extension->setHttpClient($this->httpClient)->onTaskFailure($context);
     }
 
     public function supports(Extension $extension): bool

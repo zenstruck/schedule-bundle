@@ -319,7 +319,9 @@ $schedule->emailOnFailure('admin@example.com', 'my email subject', function (\Sy
 
     # (Failure 1/2) CommandTask: failed task 1 description
 
-    failure description (ie exception message)
+    Result: "failure description (ie exception message)"
+
+    Task ID: <task ID>
 
     ## Task Output
 
@@ -333,7 +335,9 @@ $schedule->emailOnFailure('admin@example.com', 'my email subject', function (\Sy
 
     # (Failure 2/2) CommandTask: failed task 2 description
 
-    failure description (ie exception message)
+    Result: "failure description (ie exception message)"
+
+    Task ID: <task ID>
 
     ## Task Output
 

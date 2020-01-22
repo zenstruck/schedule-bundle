@@ -3,6 +3,7 @@
 namespace Zenstruck\ScheduleBundle\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -32,7 +33,12 @@ final class ScheduleRunCommand extends Command
     {
         $this
             ->setDescription('Runs scheduled tasks that are due')
+            ->addArgument('id', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, '(optional) Task ID\'s to "force" run')
             ->setHelp(<<<EOF
+If no arguments are passed, all the tasks currently due are run. Pass one or
+more Task ID's to "force" run these even if they are not due (only these are
+run).
+
 Exit code 0: no tasks ran, schedule skipped, or all tasks run were successful.
 Exit code 1: one or more tasks failed.
 
@@ -50,6 +56,6 @@ EOF
 
         $this->dispatcher->addSubscriber(new ScheduleConsoleOutputSubscriber($io));
 
-        return ($this->scheduleRunner)()->isSuccessful() ? 0 : 1;
+        return ($this->scheduleRunner)(...$input->getArgument('id'))->isSuccessful() ? 0 : 1;
     }
 }

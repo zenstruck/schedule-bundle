@@ -397,6 +397,17 @@ $task
 ;
 ```
 
+## Task ID
+
+Each task has an ID that is a hash of the task type,
+[frequency expression](#frequency) and [description](#task-description).
+The [`schedule:list --detail`](cli-commands.md#schedulelist) command
+shows each task's ID. These ID's should be unique but it is not enforced.
+If you have multiple tasks of the same type, frequency and description, the
+their ID's will be duplicated. Running `schedule:list` will alert you if
+this is the case. ID's can be used to "[force run](run-schedule.md#force-run)"
+tasks.
+
 ## Timezone
 
 You may optionally define the timezone to use when determining when to
@@ -620,14 +631,16 @@ $task->emailOnFailure('admin@example.com', 'my email subject', function (Symfony
    structure:
 
     ```
-    failure description (ie exception message)
-    
+    Result: "failure description (ie exception message)"
+
+    Task ID: <task ID>
+
     ## Task Output
-    
+
     Failed task's output (if any)
-    
+
     ## Exception
-    
+
     Failed task's exception stack trace (if any)
     ```
 
@@ -636,10 +649,12 @@ $task->emailOnFailure('admin@example.com', 'my email subject', function (Symfony
    has the following structure:
 
     ```
-    Successful
-    
+    Result: "Successful"
+
+    Task ID: <task ID>
+
     ## Task Output:
-    
+
     Task's output (if any) 
     ```
 

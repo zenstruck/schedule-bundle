@@ -3,11 +3,10 @@
 namespace Zenstruck\ScheduleBundle\Schedule\Extension\Handler;
 
 use Symfony\Component\Lock\LockFactory;
-use Zenstruck\ScheduleBundle\Event\AfterTaskEvent;
-use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\WithoutOverlappingExtension;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -24,17 +23,17 @@ final class WithoutOverlappingHandler extends ExtensionHandler
     /**
      * @param WithoutOverlappingExtension $extension
      */
-    public function filterTask(BeforeTaskEvent $event, Extension $extension): void
+    public function filterTask(TaskRunContext $context, Extension $extension): void
     {
-        $extension->setLockFactory($this->lockFactory)->filterTask($event);
+        $extension->setLockFactory($this->lockFactory)->filterTask($context);
     }
 
     /**
      * @param WithoutOverlappingExtension $extension
      */
-    public function afterTask(AfterTaskEvent $event, Extension $extension): void
+    public function afterTask(TaskRunContext $context, Extension $extension): void
     {
-        $extension->setLockFactory($this->lockFactory)->afterTask($event);
+        $extension->setLockFactory($this->lockFactory)->afterTask($context);
     }
 
     public function supports(Extension $extension): bool

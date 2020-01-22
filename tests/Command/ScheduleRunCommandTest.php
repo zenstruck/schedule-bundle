@@ -214,4 +214,67 @@ final class ScheduleRunCommandTest extends TestCase
         $this->assertStringContainsString("Running MockTask: my task 1\n ---begin output---\ntask 1 output\n ---end output---\n Exception: RuntimeException: task 1 exception message", $commandTester->getDisplay());
         $this->assertStringContainsString("Running MockTask: my task 2\n Success.", $commandTester->getDisplay());
     }
+
+    /**
+     * @test
+     */
+    public function can_force_run_tasks()
+    {
+        $dispatcher = new EventDispatcher();
+        $runner = (new MockScheduleBuilder())
+            ->addTask(MockTask::success('my task 1'))
+            ->addTask($task2 = MockTask::success('my task 2')->cron('@yearly'))
+            ->addTask($task3 = MockTask::success('my task 3')->cron('@yearly'))
+            ->getRunner($dispatcher)
+        ;
+        $commandTester = new CommandTester(new ScheduleRunCommand($runner, $dispatcher));
+
+        $exit = $commandTester->execute([
+            'id' => [$task2->getId(), $task3->getId()],
+        ]);
+
+        $this->assertSame(0, $exit);
+        $this->assertStringContainsString('Force Running 2 tasks. (3 total tasks)', $commandTester->getDisplay());
+        $this->assertStringContainsString('2/2 tasks ran, 2 succeeded.', $commandTester->getDisplay());
+        $this->assertStringContainsString("Force Running MockTask: my task 2\n Success", $commandTester->getDisplay());
+        $this->assertStringContainsString("Force Running MockTask: my task 3\n Success.", $commandTester->getDisplay());
+        $this->assertStringNotContainsString("MockTask: my task 1\n Success.", $commandTester->getDisplay());
+    }
+
+    /**
+     * @test
+     */
+    public function force_running_an_invalid_task_throws_exception()
+    {
+        $dispatcher = new EventDispatcher();
+        $runner = (new MockScheduleBuilder())
+            ->addTask(MockTask::success('my task 1'))
+            ->getRunner($dispatcher)
+        ;
+        $commandTester = new CommandTester(new ScheduleRunCommand($runner, $dispatcher));
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Task with ID "invalid-id" not found.');
+
+        $commandTester->execute(['id' => ['invalid-id']]);
+    }
+
+    /**
+     * @test
+     */
+    public function force_running_a_task_with_a_duplicate_id_throws_exception()
+    {
+        $dispatcher = new EventDispatcher();
+        $runner = (new MockScheduleBuilder())
+            ->addTask($task = MockTask::success('my task'))
+            ->addTask(MockTask::success('my task'))
+            ->getRunner($dispatcher)
+        ;
+        $commandTester = new CommandTester(new ScheduleRunCommand($runner, $dispatcher));
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage("Task ID \"{$task->getId()}\" is ambiguous, there are 2 tasks this id.");
+
+        $commandTester->execute(['id' => [$task->getId()]]);
+    }
 }
