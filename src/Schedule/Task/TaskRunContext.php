@@ -26,15 +26,15 @@ final class TaskRunContext extends RunContext
 
     public function __toString(): string
     {
-        return (string) $this->task();
+        return (string) $this->getTask();
     }
 
-    public function scheduleRunContext(): ScheduleRunContext
+    public function getScheduleRunContext(): ScheduleRunContext
     {
         return $this->scheduleRunContext;
     }
 
-    public function task(): Task
+    public function getTask(): Task
     {
         return $this->task;
     }
@@ -42,7 +42,7 @@ final class TaskRunContext extends RunContext
     /**
      * @throws \LogicException if has not yet run
      */
-    public function result(): Result
+    public function getResult(): Result
     {
         $this->ensureHasRun();
 
@@ -53,8 +53,8 @@ final class TaskRunContext extends RunContext
     {
         $resultTask = $result->getTask();
 
-        if ($resultTask->getId() !== $this->task()->getId()) {
-            throw new \LogicException("The result's task ({$resultTask}) does not match the context's task ({$this->task()}).");
+        if ($resultTask->getId() !== $this->getTask()->getId()) {
+            throw new \LogicException("The result's task ({$resultTask}) does not match the context's task ({$this->getTask()}).");
         }
 
         $this->markAsRun(\memory_get_usage(true));
@@ -67,7 +67,7 @@ final class TaskRunContext extends RunContext
      */
     public function isSuccessful(): bool
     {
-        return $this->result()->isSuccessful();
+        return $this->getResult()->isSuccessful();
     }
 
     /**
@@ -75,6 +75,6 @@ final class TaskRunContext extends RunContext
      */
     public function isFailure(): bool
     {
-        return $this->result()->isFailure();
+        return $this->getResult()->isFailure();
     }
 }

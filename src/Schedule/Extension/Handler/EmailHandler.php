@@ -46,7 +46,7 @@ final class EmailHandler extends ExtensionHandler
     public function afterTask(TaskRunContext $context, Extension $extension): void
     {
         if ($extension->isHook(Extension::TASK_AFTER)) {
-            $this->sendTaskEmail($extension, $context->result(), $context->scheduleRunContext());
+            $this->sendTaskEmail($extension, $context->getResult(), $context->getScheduleRunContext());
         }
     }
 
@@ -56,7 +56,7 @@ final class EmailHandler extends ExtensionHandler
     public function onTaskFailure(TaskRunContext $context, Extension $extension): void
     {
         if ($extension->isHook(Extension::TASK_FAILURE)) {
-            $this->sendTaskEmail($extension, $context->result(), $context->scheduleRunContext());
+            $this->sendTaskEmail($extension, $context->getResult(), $context->getScheduleRunContext());
         }
     }
 

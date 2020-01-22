@@ -37,7 +37,7 @@ final class ScheduleConsoleOutputSubscriber implements EventSubscriberInterface
         $context = $event->runContext();
 
         if ($context->isSkipped()) {
-            $this->io->note($context->skipReason());
+            $this->io->note($context->getSkipReason());
 
             return;
         }
@@ -75,7 +75,7 @@ final class ScheduleConsoleOutputSubscriber implements EventSubscriberInterface
     {
         $context = $event->runContext();
 
-        $allTaskCount = \count($context->schedule()->all());
+        $allTaskCount = \count($context->getSchedule()->all());
         $dueTaskCount = \count($context->dueTasks());
 
         if (0 === $dueTaskCount) {
@@ -97,11 +97,11 @@ final class ScheduleConsoleOutputSubscriber implements EventSubscriberInterface
     public function beforeTask(BeforeTaskEvent $event): void
     {
         $context = $event->runContext();
-        $task = $context->task();
+        $task = $context->getTask();
 
         $this->io->text(\sprintf(
             '%s<comment>Running %s:</comment> %s',
-            $context->scheduleRunContext()->isForceRun() ? '<error>Force</error> ' : '',
+            $context->getScheduleRunContext()->isForceRun() ? '<error>Force</error> ' : '',
             $task->getType(),
             $task->getDescription()
         ));
@@ -111,14 +111,14 @@ final class ScheduleConsoleOutputSubscriber implements EventSubscriberInterface
     {
         $context = $event->runContext();
 
-        if ($this->io->isVerbose() && $output = $context->result()->getOutput()) {
+        if ($this->io->isVerbose() && $output = $context->getResult()->getOutput()) {
             $this->io->text('---begin output---');
             $this->io->write($output);
             $this->io->text('---end output---');
         }
 
         $this->io->text(\sprintf('%s (<comment>Duration:</comment> %s, <comment>Memory:</comment> %s)',
-            $this->afterTaskMessage($context->result()),
+            $this->afterTaskMessage($context->getResult()),
             $context->getFormattedDuration(),
             $context->getFormattedMemory()
         ));

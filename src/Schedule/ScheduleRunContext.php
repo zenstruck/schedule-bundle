@@ -37,7 +37,7 @@ final class ScheduleRunContext extends RunContext
         return 'The Schedule';
     }
 
-    public function schedule(): Schedule
+    public function getSchedule(): Schedule
     {
         return $this->schedule;
     }
@@ -74,7 +74,7 @@ final class ScheduleRunContext extends RunContext
         $this->skipReason = $exception->getMessage();
     }
 
-    public function skipReason(): ?string
+    public function getSkipReason(): ?string
     {
         return $this->skipReason;
     }

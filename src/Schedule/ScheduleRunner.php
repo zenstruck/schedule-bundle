@@ -63,7 +63,7 @@ final class ScheduleRunner
 
             $this->dispatcher->dispatch(new AfterTaskEvent($taskRunContext));
 
-            $results[] = $taskRunContext->result();
+            $results[] = $taskRunContext->getResult();
         }
 
         $scheduleRunContext->setResults(...$results);
@@ -94,7 +94,7 @@ final class ScheduleRunner
 
     private function runTask(TaskRunContext $context): Result
     {
-        $task = $context->task();
+        $task = $context->getTask();
 
         try {
             $this->extensions->beforeTask($context);
@@ -112,7 +112,7 @@ final class ScheduleRunner
         try {
             $this->extensions->afterTask($context);
         } catch (\Throwable $e) {
-            $context->setResult(Result::exception($context->task(), $e));
+            $context->setResult(Result::exception($context->getTask(), $e));
         }
     }
 

@@ -36,7 +36,7 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
     {
         $context = $event->runContext();
 
-        $allTaskCount = \count($context->schedule()->all());
+        $allTaskCount = \count($context->getSchedule()->all());
         $dueTaskCount = \count($context->dueTasks());
 
         if (0 === $dueTaskCount) {
@@ -63,7 +63,7 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
         $context = $event->runContext();
 
         if ($context->isSkipped()) {
-            $this->logger->info($context->skipReason());
+            $this->logger->info($context->getSkipReason());
 
             return;
         }
@@ -93,10 +93,10 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
     public function beforeTask(BeforeTaskEvent $event): void
     {
         $context = $event->runContext();
-        $task = $context->task();
+        $task = $context->getTask();
 
         $this->logger->info(\sprintf('%s "%s"',
-            $context->scheduleRunContext()->isForceRun() ? 'Force running' : 'Running',
+            $context->getScheduleRunContext()->isForceRun() ? 'Force running' : 'Running',
             $task
         ), ['id' => $task->getId()]);
     }
@@ -105,7 +105,7 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
     {
         $context = $event->runContext();
 
-        $result = $context->result();
+        $result = $context->getResult();
         $task = $result->getTask();
         $logContext = ['id' => $task->getId()];
 
@@ -118,7 +118,7 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
         $logContext['result'] = $result->getDescription();
         $logContext['duration'] = $context->getFormattedDuration();
         $logContext['memory'] = $context->getFormattedMemory();
-        $logContext['forced'] = $context->scheduleRunContext()->isForceRun();
+        $logContext['forced'] = $context->getScheduleRunContext()->isForceRun();
 
         if ($result->isSuccessful()) {
             $this->logger->info("Successfully ran \"{$task}\"", $logContext);

@@ -20,7 +20,7 @@ abstract class RunContext
 
     abstract public function __toString(): string;
 
-    final public function startTime(): int
+    final public function getStartTime(): int
     {
         return $this->startTime;
     }
@@ -56,7 +56,7 @@ abstract class RunContext
 
     final protected function markAsRun(int $memory): void
     {
-        $this->duration = \time() - $this->startTime();
+        $this->duration = \time() - $this->getStartTime();
         $this->memory = $memory;
     }
 

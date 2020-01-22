@@ -34,7 +34,7 @@ final class BetweenTimeExtension extends SelfHandlingExtension
 
     public function filterTask(TaskRunContext $context): void
     {
-        $isBetween = $this->isBetween($context->task()->getTimezone());
+        $isBetween = $this->isBetween($context->getTask()->getTimezone());
 
         if ($this->within && !$isBetween) {
             throw new SkipTask("Only runs between {$this->startTime} and {$this->endTime}");

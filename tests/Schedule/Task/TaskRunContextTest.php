@@ -24,7 +24,7 @@ final class TaskRunContextTest extends TestCase
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('"MockTask: my task" has not yet run.');
 
-        $context->result();
+        $context->getResult();
     }
 
     /**

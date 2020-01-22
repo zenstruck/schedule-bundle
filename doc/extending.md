@@ -254,8 +254,8 @@ class SendFailingTaskToWebhook extends SelfHandlingExtension
 
     public function onTaskFailure(TaskRunContext $context): void
     {
-        $task = $context->task();
-        $result = $context->result();
+        $task = $context->getTask();
+        $result = $context->getResult();
     
         HttpClient::create()->request('GET', $this->url, [
             'json' => [

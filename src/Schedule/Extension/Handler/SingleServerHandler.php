@@ -28,7 +28,7 @@ final class SingleServerHandler extends ExtensionHandler
      */
     public function filterSchedule(ScheduleRunContext $context, Extension $extension): void
     {
-        if (!$extension->aquireLock($this->lockFactory, $context->schedule()->getId(), $context->startTime())) {
+        if (!$extension->aquireLock($this->lockFactory, $context->getSchedule()->getId(), $context->getStartTime())) {
             throw new SkipSchedule('Schedule running on another server.');
         }
     }
@@ -38,7 +38,7 @@ final class SingleServerHandler extends ExtensionHandler
      */
     public function filterTask(TaskRunContext $context, Extension $extension): void
     {
-        if (!$extension->aquireLock($this->lockFactory, $context->task()->getId(), $context->scheduleRunContext()->startTime())) {
+        if (!$extension->aquireLock($this->lockFactory, $context->getTask()->getId(), $context->getScheduleRunContext()->getStartTime())) {
             throw new SkipTask('Task running on another server.');
         }
     }

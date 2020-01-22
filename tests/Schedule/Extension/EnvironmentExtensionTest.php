@@ -25,7 +25,7 @@ final class EnvironmentExtensionTest extends TestCase
 
         $this->assertTrue($context->isSkipped());
         $this->assertTrue($context->isSuccessful());
-        $this->assertSame('Schedule configured not to run in [dev] environment (only [prod, stage]).', $context->skipReason());
+        $this->assertSame('Schedule configured not to run in [dev] environment (only [prod, stage]).', $context->getSkipReason());
     }
 
     /**

@@ -36,7 +36,7 @@ final class WithoutOverlappingExtension extends SelfHandlingExtension
 
     public function filterTask(TaskRunContext $context): void
     {
-        if (!$this->lock->aquire($this->getLockFactory(), $context->task()->getId(), $this->ttl)) {
+        if (!$this->lock->aquire($this->getLockFactory(), $context->getTask()->getId(), $this->ttl)) {
             throw new SkipTask('Task running in another process.');
         }
     }

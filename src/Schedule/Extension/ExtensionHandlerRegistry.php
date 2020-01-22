@@ -47,29 +47,29 @@ final class ExtensionHandlerRegistry
 
     public function beforeSchedule(ScheduleRunContext $context): void
     {
-        foreach ($context->schedule()->getExtensions() as $extension) {
+        foreach ($context->getSchedule()->getExtensions() as $extension) {
             $this->handlerFor($extension)->filterSchedule($context, $extension);
         }
 
-        foreach ($context->schedule()->getExtensions() as $extension) {
+        foreach ($context->getSchedule()->getExtensions() as $extension) {
             $this->handlerFor($extension)->beforeSchedule($context, $extension);
         }
     }
 
     public function afterSchedule(ScheduleRunContext $context): void
     {
-        foreach ($context->schedule()->getExtensions() as $extension) {
+        foreach ($context->getSchedule()->getExtensions() as $extension) {
             $this->handlerFor($extension)->afterSchedule($context, $extension);
         }
 
         if ($context->isSuccessful()) {
-            foreach ($context->schedule()->getExtensions() as $extension) {
+            foreach ($context->getSchedule()->getExtensions() as $extension) {
                 $this->handlerFor($extension)->onScheduleSuccess($context, $extension);
             }
         }
 
         if ($context->isFailure()) {
-            foreach ($context->schedule()->getExtensions() as $extension) {
+            foreach ($context->getSchedule()->getExtensions() as $extension) {
                 $this->handlerFor($extension)->onScheduleFailure($context, $extension);
             }
         }
@@ -77,11 +77,11 @@ final class ExtensionHandlerRegistry
 
     public function beforeTask(TaskRunContext $context): void
     {
-        foreach ($context->task()->getExtensions() as $extension) {
+        foreach ($context->getTask()->getExtensions() as $extension) {
             $this->handlerFor($extension)->filterTask($context, $extension);
         }
 
-        foreach ($context->task()->getExtensions() as $extension) {
+        foreach ($context->getTask()->getExtensions() as $extension) {
             $this->handlerFor($extension)->beforeTask($context, $extension);
         }
     }
@@ -92,18 +92,18 @@ final class ExtensionHandlerRegistry
             return;
         }
 
-        foreach ($context->task()->getExtensions() as $extension) {
+        foreach ($context->getTask()->getExtensions() as $extension) {
             $this->handlerFor($extension)->afterTask($context, $extension);
         }
 
         if ($context->isSuccessful()) {
-            foreach ($context->task()->getExtensions() as $extension) {
+            foreach ($context->getTask()->getExtensions() as $extension) {
                 $this->handlerFor($extension)->onTaskSuccess($context, $extension);
             }
         }
 
         if ($context->isFailure()) {
-            foreach ($context->task()->getExtensions() as $extension) {
+            foreach ($context->getTask()->getExtensions() as $extension) {
                 $this->handlerFor($extension)->onTaskFailure($context, $extension);
             }
         }
