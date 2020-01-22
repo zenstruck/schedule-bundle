@@ -100,7 +100,7 @@ final class ScheduleLoggerSubscriberTest extends TestCase
         $this->assertCount(4, $this->logger->records);
         $this->assertTrue($this->logger->hasInfoThatContains('Running 1 due task.'));
         $this->assertTrue($this->logger->hasInfoThatContains('Running "MockTask: my task"'));
-        $this->assertTrue($this->logger->hasInfoThatContains('Skipped "MockTask: my task"'));
+        $this->assertTrue($this->logger->hasInfoThatContains('Skipped "MockTask: my task" (skip reason)'));
         $this->assertTrue($this->logger->hasInfoThatContains('0/1 tasks ran'));
     }
 

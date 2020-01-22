@@ -107,21 +107,18 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
 
         $result = $context->result();
         $task = $result->getTask();
+        $logContext = ['id' => $task->getId()];
 
         if ($result->isSkipped()) {
-            $this->logger->info("Skipped \"{$task}\"", ['reason' => $result->getDescription()]);
+            $this->logger->info("Skipped \"{$task}\" ({$result->getDescription()})", $logContext);
 
             return;
         }
 
-        $logContext = [
-            'duration' => $context->getFormattedDuration(),
-            'memory' => $context->getFormattedMemory(),
-            'task' => $task,
-            'result' => $result,
-            'id' => $task->getId(),
-            'forced' => $context->scheduleRunContext()->isForceRun(),
-        ];
+        $logContext['result'] = $result->getDescription();
+        $logContext['duration'] = $context->getFormattedDuration();
+        $logContext['memory'] = $context->getFormattedMemory();
+        $logContext['forced'] = $context->scheduleRunContext()->isForceRun();
 
         if ($result->isSuccessful()) {
             $this->logger->info("Successfully ran \"{$task}\"", $logContext);
@@ -129,7 +126,9 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $logContext['output'] = $result->getOutput();
+        if ($result->getOutput()) {
+            $logContext['output'] = $result->getOutput();
+        }
 
         if (!$result->isException()) {
             $this->logger->error("Failure when running \"{$task}\"", $logContext);

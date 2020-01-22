@@ -49,7 +49,7 @@ final class Result
 
     public static function exception(Task $task, \Throwable $exception, string $output = null, string $description = null): self
     {
-        $description = $description ?: \sprintf('%s: %s', \get_class($exception), $exception->getMessage());
+        $description = $description ?: \sprintf('%s: %s', (new \ReflectionClass($exception))->getShortName(), $exception->getMessage());
 
         $result = self::failure($task, $description, $output);
         $result->exception = $exception;
