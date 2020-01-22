@@ -60,6 +60,9 @@ abstract class RunContext
         $this->memory = $memory;
     }
 
+    /**
+     * @throws \LogicException if has not yet run
+     */
     final protected function ensureHasRun(): void
     {
         if (!$this->hasRun()) {

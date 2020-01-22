@@ -74,6 +74,8 @@ final class ScheduleRunContext extends RunContext
 
     /**
      * @return Result[]
+     *
+     * @throws \LogicException if has not yet run
      */
     public function getResults(): array
     {
@@ -82,11 +84,17 @@ final class ScheduleRunContext extends RunContext
         return $this->results;
     }
 
+    /**
+     * @throws \LogicException if has not yet run and has not been marked as skipped
+     */
     public function isSuccessful(): bool
     {
         return $this->isSkipped() || 0 === \count($this->getFailures());
     }
 
+    /**
+     * @throws \LogicException if has not yet run
+     */
     public function isFailure(): bool
     {
         return !$this->isSuccessful();
@@ -99,6 +107,8 @@ final class ScheduleRunContext extends RunContext
 
     /**
      * @return Result[]
+     *
+     * @throws \LogicException if has not yet run
      */
     public function getSuccessful(): array
     {
@@ -119,6 +129,8 @@ final class ScheduleRunContext extends RunContext
 
     /**
      * @return Result[]
+     *
+     * @throws \LogicException if has not yet run
      */
     public function getFailures(): array
     {
@@ -139,6 +151,8 @@ final class ScheduleRunContext extends RunContext
 
     /**
      * @return Result[]
+     *
+     * @throws \LogicException if has not yet run
      */
     public function getSkipped(): array
     {
@@ -159,6 +173,8 @@ final class ScheduleRunContext extends RunContext
 
     /**
      * @return Result[]
+     *
+     * @throws \LogicException if has not yet run
      */
     public function getRun(): array
     {

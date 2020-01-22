@@ -39,6 +39,9 @@ final class TaskRunContext extends RunContext
         return $this->task;
     }
 
+    /**
+     * @throws \LogicException if has not yet run
+     */
     public function result(): Result
     {
         $this->ensureHasRun();
@@ -59,11 +62,17 @@ final class TaskRunContext extends RunContext
         $this->result = $result;
     }
 
+    /**
+     * @throws \LogicException if has not yet run
+     */
     public function isSuccessful(): bool
     {
         return $this->result()->isSuccessful();
     }
 
+    /**
+     * @throws \LogicException if has not yet run
+     */
     public function isFailure(): bool
     {
         return $this->result()->isFailure();
