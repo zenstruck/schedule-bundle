@@ -99,7 +99,7 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
             $context->scheduleRunContext()->isForceRun() ? 'Force running' : 'Running',
             $task->getType(),
             $task
-        ));
+        ), ['id' => $task->getId()]);
     }
 
     public function afterTask(AfterTaskEvent $event): void
@@ -120,6 +120,7 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
             'memory' => $context->getFormattedMemory(),
             'task' => $task,
             'result' => $result,
+            'id' => $task->getId(),
             'forced' => $context->scheduleRunContext()->isForceRun(),
         ];
 
