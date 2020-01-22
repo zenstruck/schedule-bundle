@@ -133,7 +133,7 @@ final class EmailHandler extends ExtensionHandler
     {
         $email = $extension->getEmail();
 
-        if (null !== $this->defaultTo && empty($email->getFrom())) {
+        if (null !== $this->defaultFrom && empty($email->getFrom())) {
             $email->from(Address::fromString($this->defaultFrom));
         }
 
