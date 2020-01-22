@@ -77,7 +77,7 @@ final class EmailHandler extends ExtensionHandler
 
         foreach ($context->getFailures() as $i => $failure) {
             $task = $failure->getTask();
-            $text .= \sprintf("\n\n# (Failure %d/%d) %s: %s\n\n", $i + 1, $failureCount, $task->getType(), $task);
+            $text .= \sprintf("\n\n# (Failure %d/%d) %s\n\n", $i + 1, $failureCount, $task);
             $text .= $this->getTaskOutput($failure, $context);
 
             if ($i < $failureCount - 1) {
@@ -115,9 +115,8 @@ final class EmailHandler extends ExtensionHandler
     {
         $email = $this->emailHeaderFor($extension);
 
-        $this->prefixSubject($email, \sprintf('[Scheduled Task %s] %s: %s',
+        $this->prefixSubject($email, \sprintf('[Scheduled Task %s] %s',
             $result->isFailure() ? 'Failed' : 'Succeeded',
-            $result->getTask()->getType(),
             $result->getTask()
         ));
 

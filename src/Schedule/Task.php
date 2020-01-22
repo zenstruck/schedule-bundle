@@ -33,7 +33,7 @@ abstract class Task
 
     final public function __toString(): string
     {
-        return $this->getDescription();
+        return "{$this->getType()}: {$this->getDescription()}";
     }
 
     public function getType(): string

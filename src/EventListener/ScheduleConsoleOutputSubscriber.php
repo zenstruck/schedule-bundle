@@ -100,10 +100,10 @@ final class ScheduleConsoleOutputSubscriber implements EventSubscriberInterface
         $task = $context->task();
 
         $this->io->text(\sprintf(
-            '%sRunning <comment>%s:</comment> %s',
+            '%s<comment>Running %s:</comment> %s',
             $context->scheduleRunContext()->isForceRun() ? '<error>Force</error> ' : '',
             $task->getType(),
-            $task
+            $task->getDescription()
         ));
     }
 

@@ -46,8 +46,8 @@ final class ScheduleLoggerSubscriberTest extends TestCase
         ;
         $this->assertCount(4, $this->logger->records);
         $this->assertTrue($this->logger->hasInfoThatContains('Running 1 due task.'));
-        $this->assertTrue($this->logger->hasInfoThatContains('Running "MockTask": my task'));
-        $this->assertTrue($this->logger->hasInfoThatContains('Successfully ran "MockTask": my task'));
+        $this->assertTrue($this->logger->hasInfoThatContains('Running "MockTask: my task"'));
+        $this->assertTrue($this->logger->hasInfoThatContains('Successfully ran "MockTask: my task"'));
         $this->assertTrue($this->logger->hasInfoThatContains('1/1 tasks ran'));
     }
 
@@ -63,8 +63,8 @@ final class ScheduleLoggerSubscriberTest extends TestCase
 
         $this->assertCount(4, $this->logger->records);
         $this->assertTrue($this->logger->hasInfoThatContains('Running 1 due task.'));
-        $this->assertTrue($this->logger->hasInfoThatContains('Running "MockTask": my task'));
-        $this->assertTrue($this->logger->hasCriticalThatContains('Exception thrown when running "MockTask": my task'));
+        $this->assertTrue($this->logger->hasInfoThatContains('Running "MockTask: my task"'));
+        $this->assertTrue($this->logger->hasCriticalThatContains('Exception thrown when running "MockTask: my task"'));
         $this->assertTrue($this->logger->hasErrorThatContains('1/1 tasks ran'));
         $this->assertSame('failed...', $this->logger->records[2]['context']['exception']->getMessage());
     }
@@ -81,8 +81,8 @@ final class ScheduleLoggerSubscriberTest extends TestCase
 
         $this->assertCount(4, $this->logger->records);
         $this->assertTrue($this->logger->hasInfoThatContains('Running 1 due task.'));
-        $this->assertTrue($this->logger->hasInfoThatContains('Running "MockTask": my task'));
-        $this->assertTrue($this->logger->hasErrorThatContains('Failure when running "MockTask": my task'));
+        $this->assertTrue($this->logger->hasInfoThatContains('Running "MockTask: my task"'));
+        $this->assertTrue($this->logger->hasErrorThatContains('Failure when running "MockTask: my task"'));
         $this->assertTrue($this->logger->hasErrorThatContains('1/1 tasks ran'));
         $this->assertSame('task output', $this->logger->records[2]['context']['output']);
     }
@@ -99,8 +99,8 @@ final class ScheduleLoggerSubscriberTest extends TestCase
 
         $this->assertCount(4, $this->logger->records);
         $this->assertTrue($this->logger->hasInfoThatContains('Running 1 due task.'));
-        $this->assertTrue($this->logger->hasInfoThatContains('Running "MockTask": my task'));
-        $this->assertTrue($this->logger->hasInfoThatContains('Skipped "MockTask": my task'));
+        $this->assertTrue($this->logger->hasInfoThatContains('Running "MockTask: my task"'));
+        $this->assertTrue($this->logger->hasInfoThatContains('Skipped "MockTask: my task"'));
         $this->assertTrue($this->logger->hasInfoThatContains('0/1 tasks ran'));
     }
 
@@ -135,8 +135,8 @@ final class ScheduleLoggerSubscriberTest extends TestCase
         ;
         $this->assertCount(4, $this->logger->records);
         $this->assertTrue($this->logger->hasInfoThatContains('Force running 1 task.'));
-        $this->assertTrue($this->logger->hasInfoThatContains('Force running "MockTask": my task'));
-        $this->assertTrue($this->logger->hasInfoThatContains('Successfully ran "MockTask": my task'));
+        $this->assertTrue($this->logger->hasInfoThatContains('Force running "MockTask: my task"'));
+        $this->assertTrue($this->logger->hasInfoThatContains('Successfully ran "MockTask: my task"'));
         $this->assertTrue($this->logger->hasInfoThatContains('1/1 tasks ran'));
     }
 

@@ -27,7 +27,16 @@ final class TaskTest extends TestCase
         $task = self::task()->description('my description');
 
         $this->assertSame('my description', $task->getDescription());
-        $this->assertSame('my description', (string) $task);
+    }
+
+    /**
+     * @test
+     */
+    public function can_cast_to_string()
+    {
+        $task = new MockTask('my description');
+
+        $this->assertSame('MockTask: my description', (string) $task);
     }
 
     /**

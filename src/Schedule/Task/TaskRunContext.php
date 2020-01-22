@@ -26,7 +26,7 @@ final class TaskRunContext extends RunContext
 
     public function __toString(): string
     {
-        return "{$this->task()->getType()}: {$this->task()}";
+        return (string) $this->task();
     }
 
     public function scheduleRunContext(): ScheduleRunContext
@@ -54,7 +54,7 @@ final class TaskRunContext extends RunContext
         $resultTask = $result->getTask();
 
         if ($resultTask->getId() !== $this->task()->getId()) {
-            throw new \LogicException(\sprintf("The result's task (%s: %s) does not match the context's task (%s: %s).", $resultTask->getType(), $resultTask, $this->task()->getType(), $this->task()));
+            throw new \LogicException("The result's task ({$resultTask}) does not match the context's task ({$this->task()}).");
         }
 
         $this->markAsRun(\memory_get_usage(true));

@@ -29,20 +29,20 @@ final class CommandTaskTest extends TestCase
     public function can_create_with_arguments()
     {
         $task1 = new CommandTask('my:command');
-        $this->assertSame('my:command', (string) $task1);
+        $this->assertSame('CommandTask: my:command', (string) $task1);
         $this->assertSame('', $task1->getArguments());
 
         $task2 = new CommandTask('my:command arg');
-        $this->assertSame('my:command', (string) $task2);
+        $this->assertSame('CommandTask: my:command', (string) $task2);
         $this->assertSame('arg', $task2->getArguments());
 
         $task3 = new CommandTask('my:command arg', '--option1 --option2', '--option3');
-        $this->assertSame('my:command', (string) $task3);
+        $this->assertSame('CommandTask: my:command', (string) $task3);
         $this->assertSame('arg --option1 --option2 --option3', $task3->getArguments());
 
         $task4 = new CommandTask('my:command arg', '--option1 --option2', '--option3');
         $task4->arguments('--option1');
-        $this->assertSame('my:command', (string) $task4);
+        $this->assertSame('CommandTask: my:command', (string) $task4);
         $this->assertSame('--option1', $task4->getArguments());
     }
 

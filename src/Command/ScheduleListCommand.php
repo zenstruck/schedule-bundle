@@ -85,7 +85,7 @@ EOF
         $exit = 0;
 
         foreach ($schedule->all() as $i => $task) {
-            $io->section(\sprintf('(%d/%d) %s: %s', $i + 1, \count($schedule->all()), $task->getType(), $task));
+            $io->section(\sprintf('(%d/%d) %s', $i + 1, \count($schedule->all()), $task));
 
             $details = [
                 ['ID' => $task->getId()],
@@ -154,7 +154,7 @@ EOF
 
             $rows[] = [
                 \count($issues) ? "<error>[!] {$task->getType()}</error>" : $task->getType(),
-                $this->getHelper('formatter')->truncate($task, 50),
+                $this->getHelper('formatter')->truncate($task->getDescription(), 50),
                 \count($task->getExtensions()),
                 $this->renderFrequency($task),
                 $task->getNextRun()->format(DATE_ATOM),
@@ -163,7 +163,7 @@ EOF
 
         $taskIssues = \array_merge([], ...$taskIssues);
 
-        $io->table(['Type', 'Task', 'Extensions', 'Frequency', 'Next Run'], $rows);
+        $io->table(['Type', 'Description', 'Extensions', 'Frequency', 'Next Run'], $rows);
 
         if ($issueCount = \count($taskIssues)) {
             $io->warning(\sprintf('%d task issue%s:', $issueCount, $issueCount > 1 ? 's' : ''));
@@ -226,7 +226,7 @@ EOF
 
             $task = $taskGroup[0];
 
-            yield new \LogicException(\sprintf('Task "%s: %s" (%s) is duplicated %d times. Make their descriptions unique to fix.', $task->getType(), $task, $task->getExpression(), $count));
+            yield new \LogicException(\sprintf('Task "%s" (%s) is duplicated %d times. Make their descriptions unique to fix.', $task, $task->getExpression(), $count));
         }
     }
 

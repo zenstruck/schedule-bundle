@@ -95,9 +95,8 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
         $context = $event->runContext();
         $task = $context->task();
 
-        $this->logger->info(\sprintf('%s "%s": %s',
+        $this->logger->info(\sprintf('%s "%s"',
             $context->scheduleRunContext()->isForceRun() ? 'Force running' : 'Running',
-            $task->getType(),
             $task
         ), ['id' => $task->getId()]);
     }
@@ -110,7 +109,7 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
         $task = $result->getTask();
 
         if ($result->isSkipped()) {
-            $this->logger->info("Skipped \"{$task->getType()}\": {$task}", ['reason' => $result->getDescription()]);
+            $this->logger->info("Skipped \"{$task}\"", ['reason' => $result->getDescription()]);
 
             return;
         }
@@ -125,7 +124,7 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
         ];
 
         if ($result->isSuccessful()) {
-            $this->logger->info("Successfully ran \"{$task->getType()}\": {$task}", $logContext);
+            $this->logger->info("Successfully ran \"{$task}\"", $logContext);
 
             return;
         }
@@ -133,13 +132,13 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
         $logContext['output'] = $result->getOutput();
 
         if (!$result->isException()) {
-            $this->logger->error("Failure when running \"{$task->getType()}\": {$task}", $logContext);
+            $this->logger->error("Failure when running \"{$task}\"", $logContext);
 
             return;
         }
 
         $logContext['exception'] = $result->getException();
 
-        $this->logger->critical("Exception thrown when running \"{$task->getType()}\": {$task}", $logContext);
+        $this->logger->critical("Exception thrown when running \"{$task}\"", $logContext);
     }
 }

@@ -35,7 +35,7 @@ final class SelfSchedulingCommandTest extends TestCase
         ;
 
         $this->assertInstanceOf(CommandTask::class, $tasks[0]);
-        $this->assertSame('my:command', (string) $tasks[0]);
+        $this->assertSame('CommandTask: my:command', (string) $tasks[0]);
     }
 
     /**
