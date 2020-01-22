@@ -72,9 +72,9 @@ final class MockScheduleBuilder implements ScheduleBuilder
         return $this;
     }
 
-    public function run(): ScheduleRunContext
+    public function run(string ...$taskIds): ScheduleRunContext
     {
-        return $this->getRunner()();
+        return $this->getRunner()(...$taskIds);
     }
 
     public function getRunner(EventDispatcherInterface $dispatcher = null): ScheduleRunner

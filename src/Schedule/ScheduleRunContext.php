@@ -13,6 +13,7 @@ final class ScheduleRunContext extends RunContext
 {
     private $schedule;
     private $dueTasks;
+    private $force;
 
     private $results;
     private $skipReason;
@@ -26,6 +27,7 @@ final class ScheduleRunContext extends RunContext
     {
         $this->schedule = $schedule;
         $this->dueTasks = empty($forcedTasks) ? $schedule->due() : $forcedTasks;
+        $this->force = !empty($forcedTasks);
 
         parent::__construct();
     }
@@ -46,6 +48,11 @@ final class ScheduleRunContext extends RunContext
     public function dueTasks(): array
     {
         return $this->dueTasks;
+    }
+
+    public function isForceRun(): bool
+    {
+        return $this->force;
     }
 
     public function setResults(Result ...$results): void

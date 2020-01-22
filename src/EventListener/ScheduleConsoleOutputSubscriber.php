@@ -85,8 +85,10 @@ final class ScheduleConsoleOutputSubscriber implements EventSubscriberInterface
         }
 
         $this->io->comment(\sprintf(
-            'Running <info>%s</info> due task%s. (%s total tasks)',
+            '%sRunning <info>%s</info> %stask%s. (%s total tasks)',
+            $context->isForceRun() ? '<error>Force</error> ' : '',
             $dueTaskCount,
+            $context->isForceRun() ? '' : 'due ',
             $dueTaskCount > 1 ? 's' : '',
             $allTaskCount
         ));
@@ -94,9 +96,15 @@ final class ScheduleConsoleOutputSubscriber implements EventSubscriberInterface
 
     public function beforeTask(BeforeTaskEvent $event): void
     {
-        $task = $event->runContext()->task();
+        $context = $event->runContext();
+        $task = $context->task();
 
-        $this->io->text("<comment>Running {$task->getType()}:</comment> {$task}");
+        $this->io->text(\sprintf(
+            '%sRunning <comment>%s:</comment> %s',
+            $context->scheduleRunContext()->isForceRun() ? '<error>Force</error> ' : '',
+            $task->getType(),
+            $task
+        ));
     }
 
     public function afterTask(AfterTaskEvent $event): void

@@ -234,12 +234,11 @@ final class ScheduleRunCommandTest extends TestCase
         ]);
 
         $this->assertSame(0, $exit);
-        // todo change console output when force running
-        $this->assertStringContainsString('Running 2 due tasks. (3 total tasks)', $commandTester->getDisplay());
+        $this->assertStringContainsString('Force Running 2 tasks. (3 total tasks)', $commandTester->getDisplay());
         $this->assertStringContainsString('2/2 tasks ran, 2 succeeded.', $commandTester->getDisplay());
-        $this->assertStringContainsString("Running MockTask: my task 2\n Success", $commandTester->getDisplay());
-        $this->assertStringContainsString("Running MockTask: my task 3\n Success.", $commandTester->getDisplay());
-        $this->assertStringNotContainsString("Running MockTask: my task 1\n Success.", $commandTester->getDisplay());
+        $this->assertStringContainsString("Force Running MockTask: my task 2\n Success", $commandTester->getDisplay());
+        $this->assertStringContainsString("Force Running MockTask: my task 3\n Success.", $commandTester->getDisplay());
+        $this->assertStringNotContainsString("MockTask: my task 1\n Success.", $commandTester->getDisplay());
     }
 
     /**

@@ -45,7 +45,14 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $this->logger->info(\sprintf('Running %s due task%s.', $dueTaskCount, $dueTaskCount > 1 ? 's' : ''), [
+        $message = \sprintf('%s %d %stask%s.',
+            $context->isForceRun() ? 'Force running' : 'Running',
+            $dueTaskCount,
+            $context->isForceRun() ? '' : 'due ',
+            $dueTaskCount > 1 ? 's' : ''
+        );
+
+        $this->logger->info($message, [
             'total' => $allTaskCount,
             'due' => $dueTaskCount,
         ]);
@@ -79,14 +86,20 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
             'failures' => $failures,
             'duration' => $context->getFormattedDuration(),
             'memory' => $context->getFormattedMemory(),
+            'forced' => $context->isForceRun(),
         ]);
     }
 
     public function beforeTask(BeforeTaskEvent $event): void
     {
-        $task = $event->runContext()->task();
+        $context = $event->runContext();
+        $task = $context->task();
 
-        $this->logger->info("Running \"{$task->getType()}\": {$task}");
+        $this->logger->info(\sprintf('%s "%s": %s',
+            $context->scheduleRunContext()->isForceRun() ? 'Force running' : 'Running',
+            $task->getType(),
+            $task
+        ));
     }
 
     public function afterTask(AfterTaskEvent $event): void
@@ -107,6 +120,7 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
             'memory' => $context->getFormattedMemory(),
             'task' => $task,
             'result' => $result,
+            'forced' => $context->scheduleRunContext()->isForceRun(),
         ];
 
         if ($result->isSuccessful()) {

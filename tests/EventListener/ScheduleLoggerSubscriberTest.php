@@ -124,6 +124,22 @@ final class ScheduleLoggerSubscriberTest extends TestCase
         $this->assertTrue($this->logger->hasInfoThatContains('the schedule has skipped'));
     }
 
+    /**
+     * @test
+     */
+    public function force_run_tasks()
+    {
+        $this->createRunnerBuilder()
+            ->addTask($task = MockTask::success('my task'))
+            ->run($task->getId())
+        ;
+        $this->assertCount(4, $this->logger->records);
+        $this->assertTrue($this->logger->hasInfoThatContains('Force running 1 task.'));
+        $this->assertTrue($this->logger->hasInfoThatContains('Force running "MockTask": my task'));
+        $this->assertTrue($this->logger->hasInfoThatContains('Successfully ran "MockTask": my task'));
+        $this->assertTrue($this->logger->hasInfoThatContains('1/1 tasks ran'));
+    }
+
     private function createRunnerBuilder(): MockScheduleBuilder
     {
         return (new MockScheduleBuilder())
