@@ -10,7 +10,7 @@ Usage:
   schedule:list [options]
 
 Options:
-      --detail          Show detailed task list
+  --detail    Show detailed task list
 
 Help:
   Exit code 0: no issues.
@@ -95,9 +95,16 @@ Description:
   Runs scheduled tasks that are due
 
 Usage:
-  schedule:run
+  schedule:run [<id>...]
+
+Arguments:
+  id    (optional) Task ID's to "force" run
 
 Help:
+  If no arguments are passed, all the tasks currently due are run. Pass one or
+  more Task ID's to "force" run these even if they are not due (only these are
+  run).
+
   Exit code 0: no tasks ran, schedule skipped, or all tasks run were successful.
   Exit code 1: one or more tasks failed.
 

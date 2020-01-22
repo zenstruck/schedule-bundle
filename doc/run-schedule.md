@@ -90,6 +90,14 @@ class RunScheduleController
 }
 ```
 
+## Force Run
+
+The [`schedule:run`](cli-commands.md#schedulerun) command optionally takes
+a list of [Task ID's](define-tasks.md#task-id). This will force run these
+tasks (and no others) even if they are not currently due. This can be useful
+for re-running tasks that [fail](#dealing-with-failures). The task ID is show
+in emails/logs and listed in [`schedule:list --detail`](cli-commands.md#schedulelist).
+
 ## Dealing with Failures
 
 It is probable that at some point, a scheduled task will fail. Because the

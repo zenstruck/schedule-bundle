@@ -33,7 +33,7 @@ final class ScheduleRunCommand extends Command
     {
         $this
             ->setDescription('Runs scheduled tasks that are due')
-            ->addArgument('id', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, 'Task ID\'s to force run (if empty, the currently due tasks are run)')
+            ->addArgument('id', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, '(optional) Task ID\'s to "force" run')
             ->setHelp(<<<EOF
 If no arguments are passed, all the tasks currently due are run. Pass one or
 more Task ID's to "force" run these even if they are not due (only these are
