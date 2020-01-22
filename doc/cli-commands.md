@@ -48,7 +48,7 @@ zenstruck_schedule:
 Assuming the bundle has no other configuration, running `schedule:list` shows the
 following output (exit code `1`):
 
-```console
+```
 $ bin/console schedule:list
 
 2 Scheduled Tasks Configured
@@ -81,7 +81,7 @@ $ bin/console schedule:list
 
 Running with the `--detail` flag outputs the following (exit code `1`):
 
-```console
+```
 $ bin/console schedule:list --detail
 
 2 Scheduled Tasks Configured
@@ -146,7 +146,7 @@ zenstruck_schedule:
 
 Running now outputs the following (exit code `0`):
 
-```console
+```
 $ bin/console schedule:list
 
 2 Scheduled Tasks Configured
@@ -172,7 +172,7 @@ $ bin/console schedule:list
 
 Running with the `--detail` flag outputs the following (exit code `0`):
 
-```console
+```
 $ bin/console schedule:list --detail
 
 2 Scheduled Tasks Configured
@@ -255,7 +255,7 @@ Using the example from [`schedule:list`](#schedulelist) above and assuming one o
 the tasks is due at time of run, and the it ran successfully, the command will
 output the following (exit code `0`):
 
-```console
+```
 $ bin/console schedule:run
 
  // Running 1 due task. (2 total tasks)
@@ -271,7 +271,7 @@ $ bin/console schedule:run
 Running the command with the verbose flag (`-v`) displays task output
 (exit code `0`):
 
-```console
+```
 $ bin/console schedule:run -v
 
  // Running 1 due task. (2 total tasks)
@@ -304,7 +304,7 @@ $ bin/console schedule:run -v
 Assuming the due task failed, the command will output the following
 (exit code `1`):
 
-```console
+```
 $ bin/console schedule:run
 
  // Running 1 due task. (2 total tasks)
@@ -320,7 +320,7 @@ $ bin/console schedule:run
 Again, assuming the due task failed, the command with the verbose flag
 (`-v`) displays task output (exit code `1`):
 
-```console
+```
 $ bin/console schedule:run -v
 
  // Running 1 due task. (2 total tasks)
