@@ -46,7 +46,7 @@ final class EmailHandler extends ExtensionHandler
     public function afterTask(TaskRunContext $context, Extension $extension): void
     {
         if ($extension->isHook(Extension::TASK_AFTER)) {
-            $this->sendTaskEmail($extension, $context->result());
+            $this->sendTaskEmail($extension, $context->result(), $context->scheduleRunContext());
         }
     }
 
@@ -56,7 +56,7 @@ final class EmailHandler extends ExtensionHandler
     public function onTaskFailure(TaskRunContext $context, Extension $extension): void
     {
         if ($extension->isHook(Extension::TASK_FAILURE)) {
-            $this->sendTaskEmail($extension, $context->result());
+            $this->sendTaskEmail($extension, $context->result(), $context->scheduleRunContext());
         }
     }
 
@@ -77,8 +77,8 @@ final class EmailHandler extends ExtensionHandler
 
         foreach ($context->getFailures() as $i => $failure) {
             $task = $failure->getTask();
-            $text .= \sprintf("\n\n# (Failure %d/%d) %s: %s\n\n%s", $i + 1, $failureCount, $task->getType(), $task, $failure);
-            $text .= $this->getTaskOutput($failure);
+            $text .= \sprintf("\n\n# (Failure %d/%d) %s: %s\n\n", $i + 1, $failureCount, $task->getType(), $task);
+            $text .= $this->getTaskOutput($failure, $context);
 
             if ($i < $failureCount - 1) {
                 $text .= "\n\n---";
@@ -90,9 +90,15 @@ final class EmailHandler extends ExtensionHandler
         $this->mailer->send($email);
     }
 
-    private function getTaskOutput(Result $result): string
+    private function getTaskOutput(Result $result, ScheduleRunContext $context): string
     {
         $output = '';
+
+        if ($context->isForceRun()) {
+            $output = "!! This task was force run !!\n\n";
+        }
+
+        $output .= \sprintf("Result: \"%s\"\n\nTask ID: %s", $result, $result->getTask()->getId());
 
         if ($result->getOutput()) {
             $output .= "\n\n## Task Output:\n\n{$result->getOutput()}";
@@ -105,7 +111,7 @@ final class EmailHandler extends ExtensionHandler
         return $output;
     }
 
-    private function sendTaskEmail(EmailExtension $extension, Result $result): void
+    private function sendTaskEmail(EmailExtension $extension, Result $result, ScheduleRunContext $context): void
     {
         $email = $this->emailHeaderFor($extension);
 
@@ -119,7 +125,7 @@ final class EmailHandler extends ExtensionHandler
             $email->priority(Email::PRIORITY_HIGHEST);
         }
 
-        $email->text($result->getDescription().$this->getTaskOutput($result));
+        $email->text($this->getTaskOutput($result, $context));
 
         $this->mailer->send($email);
     }

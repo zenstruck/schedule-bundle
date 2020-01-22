@@ -620,14 +620,16 @@ $task->emailOnFailure('admin@example.com', 'my email subject', function (Symfony
    structure:
 
     ```
-    failure description (ie exception message)
-    
+    Result: "failure description (ie exception message)"
+
+    Task ID: <task ID>
+
     ## Task Output
-    
+
     Failed task's output (if any)
-    
+
     ## Exception
-    
+
     Failed task's exception stack trace (if any)
     ```
 
@@ -636,10 +638,12 @@ $task->emailOnFailure('admin@example.com', 'my email subject', function (Symfony
    has the following structure:
 
     ```
-    Successful
-    
+    Result: "Successful"
+
+    Task ID: <task ID>
+
     ## Task Output:
-    
+
     Task's output (if any) 
     ```
 
