@@ -108,7 +108,7 @@ final class Configuration implements ConfigurationInterface
         $node
             ->example([
                 [
-                    'command' => 'send:sales-report --detailed',
+                    'task' => 'send:sales-report --detailed',
                     'frequency' => '0 * * * *',
                     'description' => 'Send sales report hourly',
                     'without_overlapping' => '~',
@@ -120,12 +120,12 @@ final class Configuration implements ConfigurationInterface
             ->arrayPrototype()
                 ->validate()
                     ->ifTrue(function ($v) {
-                        return [null] === $v['command'] && !$v['description'];
+                        return [null] === $v['task'] && !$v['description'];
                     })
                     ->thenInvalid('"null" tasks must have a description.')
                 ->end()
                 ->children()
-                    ->arrayNode('command')
+                    ->arrayNode('task')
                         ->info('Defaults to CommandTask, prefix with "bash:" to create ProcessTask, pass (null) to create NullTask, pass array of commands to create CompoundTask (optionally keyed by description)')
                         ->example('"my:command arg1 --option1=value" or "bash:/bin/my-script"')
                         ->validate()

@@ -39,7 +39,7 @@ final class TaskConfigurationSubscriber implements EventSubscriberInterface
 
     private function addTask(Schedule $schedule, array $config): void
     {
-        $task = $this->createTask($config['command']);
+        $task = $this->createTask($config['task']);
 
         $task->cron($config['frequency']);
 

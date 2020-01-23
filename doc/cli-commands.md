@@ -33,13 +33,13 @@ zenstruck_schedule:
         on_single_server: ~
     
     tasks:
-        -   command: send-sales-report --hourly
+        -   task: send-sales-report --hourly
             description: Send the hourly sales report
             frequency: '15 * * * 1-5' # hourly on weekdays
             without_overlapping: ~
             email_on_failure: admin@example.com
 
-        -   command: send-sales-report --daily
+        -   task: send-sales-report --daily
             description: Send the weekly sales report
             frequency: '0 1 * * 1-5' # 1am on weekdays
             ping_on_success: https://example.com/daily-sales-report

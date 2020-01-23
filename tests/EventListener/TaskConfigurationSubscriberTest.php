@@ -24,11 +24,11 @@ final class TaskConfigurationSubscriberTest extends TestCase
     {
         $schedule = $this->createSchedule([
             [
-                'command' => 'my:command',
+                'task' => 'my:command',
                 'frequency' => '0 * * * *',
             ],
             [
-                'command' => 'another:command',
+                'task' => 'another:command',
                 'frequency' => '@yearly',
             ],
         ]);
@@ -57,7 +57,7 @@ final class TaskConfigurationSubscriberTest extends TestCase
     {
         $schedule = $this->createSchedule([
             [
-                'command' => 'bash: /bin/script',
+                'task' => 'bash: /bin/script',
                 'frequency' => '0 * * * *',
             ],
         ]);
@@ -76,7 +76,7 @@ final class TaskConfigurationSubscriberTest extends TestCase
     {
         $schedule = $this->createSchedule([
             [
-                'command' => [
+                'task' => [
                     'my:command arg --option=foo',
                     'bash:/my-script',
                 ],
@@ -109,7 +109,7 @@ final class TaskConfigurationSubscriberTest extends TestCase
     {
         $schedule = $this->createSchedule([
             [
-                'command' => [
+                'task' => [
                     'my command' => 'my:command arg --option=foo',
                     'another command' => 'bash:/my-script',
                 ],
@@ -142,7 +142,7 @@ final class TaskConfigurationSubscriberTest extends TestCase
     {
         $schedule = $this->createSchedule([
             [
-                'command' => null,
+                'task' => null,
                 'frequency' => '0 * * * *',
                 'description' => 'my task',
             ],
@@ -161,24 +161,24 @@ final class TaskConfigurationSubscriberTest extends TestCase
     {
         $schedule = $this->createSchedule([
             [
-                'command' => 'my:command1',
+                'task' => 'my:command1',
                 'frequency' => '# * * * *',
             ],
             [
-                'command' => 'my:command1',
+                'task' => 'my:command1',
                 'frequency' => '# * * * *',
                 'description' => 'my description',
             ],
             [
-                'command' => 'my:command2',
+                'task' => 'my:command2',
                 'frequency' => '# #(9-17) * * *',
             ],
             [
-                'command' => 'my:command3',
+                'task' => 'my:command3',
                 'frequency' => '#daily',
             ],
             [
-                'command' => 'my:command4',
+                'task' => 'my:command4',
                 'frequency' => '#midnight',
             ],
         ]);
@@ -210,7 +210,7 @@ final class TaskConfigurationSubscriberTest extends TestCase
     {
         $schedule = $this->createSchedule([
             [
-                'command' => 'my:command --option',
+                'task' => 'my:command --option',
                 'frequency' => '0 0 * * *',
                 'description' => 'my description',
                 'timezone' => 'UTC',

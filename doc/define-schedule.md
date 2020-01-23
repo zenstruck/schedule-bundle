@@ -13,10 +13,10 @@ zenstruck_schedule:
     ping_on_success: https://example.com/schedule-success
     
     tasks:
-        -   command: app:send-weekly-report --detailed
+        -   task: app:send-weekly-report --detailed
             frequency: '0 1 * * 0' # sundays @ 1am
 
-        -   command: app:send-hourly-report
+        -   task: app:send-hourly-report
             frequency: '0 0 * * 1-5' # hourly on weekdays
             only_between: 9-17 # only run between 9am and 5pm
             unless_between: 11-13 # except at lunch

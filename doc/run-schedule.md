@@ -195,7 +195,7 @@ endpoint](define-tasks.md#ping-webhook) at a different frequency:
 ```yaml
 zenstruck_schedule:
     tasks:
-        -   command: ~
+        -   task: ~
             description: Health check
             frequency: '@hourly'
             ping_after: https://hc-ping.com/445f6ea7-16d8-4685-ae51-c7416ccb8eae
@@ -211,7 +211,7 @@ know the schedule is still running:
 ```yaml
 zenstruck_schedule:
     tasks:
-        -   command: ~
+        -   task: ~
             description: Email health check
             frequency: '0 7 * * *' # daily @ 7am
             email_after:

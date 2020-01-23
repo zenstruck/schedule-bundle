@@ -16,7 +16,7 @@ This task runs a Symfony console command.
 
 zenstruck_schedule:
     tasks:
-        -   command: my:command arg1 --option1 --option1=value
+        -   task: my:command arg1 --option1 --option1=value
             frequency: '0 * * * *'
 ```
 
@@ -61,7 +61,7 @@ This task executes shell commands.
 
 zenstruck_schedule:
     tasks:
-        -   command: bash:/bin/my-script # note the "bash:" prefix
+        -   task: bash:/bin/my-script # note the "bash:" prefix
             frequency: '0 * * * *'
 ```
 
@@ -113,7 +113,7 @@ $schedule->addProcess(
     
     zenstruck_schedule:
         tasks:
-            -   command: 'bash:cd %kernel.project_dir% && bin/my-script'
+            -   task: 'bash:cd %kernel.project_dir% && bin/my-script'
                 frequency: '0 * * * *'
     ```
 
@@ -130,14 +130,14 @@ they are defined.
 
 zenstruck_schedule:
     tasks:
-        -   command:
+        -   task:
                 - my:command arg --option
                 - bash:/bin/my-script
             frequency: '0 * * * *'
             timezone: UTC
             email_on_failure: ~
 
-        -   command: # optionally key by the desired task description
+        -   task: # optionally key by the desired task description
                 "run my command": my:command arg --option
                 "run my bash bash script": bash:/bin/my-script
 ```
@@ -176,7 +176,7 @@ This task type *requires* a description.
 
 zenstruck_schedule:
     tasks:
-        -   command: null
+        -   task: null
             frequency: '0 * * * *'
             description: my task # required for "null" tasks
 ```
@@ -213,7 +213,7 @@ description is required for this task type.
 
 zenstruck_schedule:
     tasks:
-        -   command: my:command
+        -   task: my:command
             frequency: '0 * * * *'
             description: this describes my task
 ```
@@ -245,10 +245,10 @@ help. The extended expression syntax may be used (`@hourly`, `@daily`, `@weekly`
 
 zenstruck_schedule:
     tasks:
-        -   command: my:command
+        -   task: my:command
             frequency: '0,30 9-17 * * 1-5' # every 30 minutes between 9am and 5pm on weekdays
 
-        -   command: my:command
+        -   task: my:command
             frequency: '@daily' # daily @ midnight
 ```
 
@@ -385,19 +385,19 @@ The following *hash* aliases are provided:
 
 zenstruck_schedule:
     tasks:
-        -   command: my:command
+        -   task: my:command
             description: my task
             frequency: '# # * * #' # converts to "56 20 * * 0" (every Sunday @ 8:56pm)
 
-        -   command: my:command
+        -   task: my:command
             description: another task
             frequency: '# #(1-4) 1,15 * *' # converts to "24 1 1,15 * *" (1:24am on the first and fifteenth days of each month)
 
-        -   command: my:command
+        -   task: my:command
             description: yet another task
             frequency: '#midnight' # converts to "52 1 * * *" (daily @ 1:52am)
 
-        -   command: my:command
+        -   task: my:command
             description: yet another task 2 # note the different description calculates a different frequency
             frequency: '#midnight' # converts to "32 2 * * *" (daily @ 2:32am)
 ```
@@ -454,7 +454,7 @@ Alternatively, you can define the [timezone for all tasks](define-schedule.md#ti
 
 zenstruck_schedule:
     tasks:
-        -   command: my:command
+        -   task: my:command
             frequency: '0 * * * *'
             timezone: UTC
 ```
@@ -541,7 +541,7 @@ This extension is useful for Cron health monitoring tools like
 
 zenstruck_schedule:
     tasks:
-        -   command: my:command
+        -   task: my:command
             frequency: '0 * * * *'
             ping_before: https://example.com/before-task-run
             ping_after:
@@ -598,12 +598,12 @@ regardless of the result (`email_after`).
 
 zenstruck_schedule:
     tasks:
-        -   command: my:command
+        -   task: my:command
             frequency: '0 * * * *'
             email_after: admin@example.com
             email_on_failure: ~ # default "to" address can be configured (see below)
 
-        -   command: my:command
+        -   task: my:command
             frequency: '0 * * * *'
             email_after:
                 to: admin@example.com
@@ -701,7 +701,7 @@ a previous instance. If it is still running, the task is skipped.
 
 zenstruck_schedule:
     tasks:
-        -   command: my:command
+        -   task: my:command
             frequency: '0 * * * *'
             without_overlapping: ~
 ```
@@ -776,21 +776,21 @@ skips the task if run inside the the given range.
 
 zenstruck_schedule:
     tasks:
-        -   command: my:command1
+        -   task: my:command1
             frequency: '0 * * * *'
             only_between: 9-17 # only runs between 9am and 5pm (skips otherwise)
 
-        -   command: my:command2
+        -   task: my:command2
             frequency: '0 * * * *'
             only_between: # only runs between 9:30pm and 6:15am (skips otherwise)
                 start: 21:30
                 end: 6:15
 
-        -   command: my:command3
+        -   task: my:command3
             frequency: '0 * * * *'
             unless_between: 9-17 # skips if between 9am and 5pm
 
-        -   command: my:command4
+        -   task: my:command4
             frequency: '0 * * * *'
             unless_between: # skips if between 9:30pm and 6:15am
                 start: 21:30

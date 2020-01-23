@@ -292,7 +292,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->load([
             'tasks' => [
                 [
-                    'command' => 'my:command',
+                    'task' => 'my:command',
                     'frequency' => '0 * * * *',
                 ],
             ],
@@ -300,7 +300,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
 
         $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
 
-        $this->assertSame(['my:command'], $config['command']);
+        $this->assertSame(['my:command'], $config['task']);
         $this->assertSame('0 * * * *', $config['frequency']);
         $this->assertNull($config['description']);
         $this->assertNull($config['timezone']);
@@ -323,7 +323,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->load([
             'tasks' => [
                 [
-                    'command' => ['my:command', 'bash:/my-script'],
+                    'task' => ['my:command', 'bash:/my-script'],
                     'frequency' => '0 * * * *',
                 ],
             ],
@@ -331,7 +331,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
 
         $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
 
-        $this->assertSame(['my:command', 'bash:/my-script'], $config['command']);
+        $this->assertSame(['my:command', 'bash:/my-script'], $config['task']);
     }
 
     /**
@@ -342,7 +342,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->load([
             'tasks' => [
                 [
-                    'command' => [
+                    'task' => [
                         'task1' => 'my:command',
                         'task2' => 'bash:/my-script',
                     ],
@@ -353,7 +353,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
 
         $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
 
-        $this->assertSame(['task1' => 'my:command', 'task2' => 'bash:/my-script'], $config['command']);
+        $this->assertSame(['task1' => 'my:command', 'task2' => 'bash:/my-script'], $config['task']);
     }
 
     /**
@@ -362,12 +362,12 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     public function compound_tasks_cannot_be_an_empty_array()
     {
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('The path "zenstruck_schedule.tasks.0.command" should have at least 1 element(s) defined.');
+        $this->expectExceptionMessage('The path "zenstruck_schedule.tasks.0.task" should have at least 1 element(s) defined.');
 
         $this->load([
             'tasks' => [
                 [
-                    'command' => [],
+                    'task' => [],
                     'frequency' => 'invalid',
                 ],
             ],
@@ -382,7 +382,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->load([
             'tasks' => [
                 [
-                    'command' => null,
+                    'task' => null,
                     'frequency' => '0 * * * *',
                     'description' => 'my task',
                 ],
@@ -391,7 +391,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
 
         $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
 
-        $this->assertSame([null], $config['command']);
+        $this->assertSame([null], $config['task']);
     }
 
     /**
@@ -405,7 +405,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->load([
             'tasks' => [
                 [
-                    'command' => null,
+                    'task' => null,
                     'frequency' => '0 * * * *',
                 ],
             ],
@@ -418,12 +418,12 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     public function compound_tasks_must_not_contain_null_tasks()
     {
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('Invalid configuration for path "zenstruck_schedule.tasks.0.command": "null" tasks cannot be added to compound tasks.');
+        $this->expectExceptionMessage('Invalid configuration for path "zenstruck_schedule.tasks.0.task": "null" tasks cannot be added to compound tasks.');
 
         $this->load([
             'tasks' => [
                 [
-                    'command' => ['my:command', null],
+                    'task' => ['my:command', null],
                     'frequency' => 'invalid',
                 ],
             ],
@@ -441,7 +441,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->load([
             'tasks' => [
                 [
-                    'command' => 'my:command',
+                    'task' => 'my:command',
                     'frequency' => 'invalid',
                 ],
             ],
@@ -456,7 +456,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->load([
             'tasks' => [
                 [
-                    'command' => 'my:command',
+                    'task' => 'my:command',
                     'frequency' => '@daily',
                 ],
             ],
@@ -475,7 +475,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->load([
             'tasks' => [
                 [
-                    'command' => 'my:command',
+                    'task' => 'my:command',
                     'frequency' => 'H H * * *',
                 ],
             ],
@@ -494,7 +494,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->load([
             'tasks' => [
                 [
-                    'command' => 'my:command',
+                    'task' => 'my:command',
                     'frequency' => '#midnight',
                 ],
             ],
@@ -513,7 +513,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->load([
             'tasks' => [
                 [
-                    'command' => [
+                    'task' => [
                         'my:command --option',
                         'another:command',
                     ],
@@ -553,7 +553,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
 
         $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
 
-        $this->assertSame(['my:command --option', 'another:command'], $config['command']);
+        $this->assertSame(['my:command --option', 'another:command'], $config['task']);
         $this->assertSame('0 0 * * *', $config['frequency']);
         $this->assertSame('my description', $config['description']);
         $this->assertSame('UTC', $config['timezone']);
@@ -593,7 +593,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->load([
             'tasks' => [
                 [
-                    'command' => 'my:command --option',
+                    'task' => 'my:command --option',
                     'frequency' => '0 0 * * *',
                     'ping_after' => 'https://example.com/after',
                     'email_after' => 'sales@example.com',
@@ -621,7 +621,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->load([
             'tasks' => [
                 [
-                    'command' => 'my:command --option',
+                    'task' => 'my:command --option',
                     'frequency' => '0 0 * * *',
                     'only_between' => '9-17',
                     'unless_between' => '11:30-13:15',
