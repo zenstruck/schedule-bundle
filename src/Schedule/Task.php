@@ -17,14 +17,13 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
  */
 abstract class Task
 {
+    use HasExtensions;
+
     private const DEFAULT_EXPRESSION = '* * * * *';
 
     private $description;
     private $expression = self::DEFAULT_EXPRESSION;
     private $timezone;
-
-    /** @var Extension[] */
-    private $extensions = [];
 
     public function __construct(string $description)
     {
@@ -69,21 +68,6 @@ abstract class Task
     final public function isDue(): bool
     {
         return $this->getExpression()->isDue($this->getTimezoneValue());
-    }
-
-    /**
-     * @return Extension[]
-     */
-    final public function getExtensions(): array
-    {
-        return $this->extensions;
-    }
-
-    final public function addExtension(Extension $extension): self
-    {
-        $this->extensions[] = $extension;
-
-        return $this;
     }
 
     /**

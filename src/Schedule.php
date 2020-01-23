@@ -4,12 +4,12 @@ namespace Zenstruck\ScheduleBundle;
 
 use Symfony\Component\Process\Process;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\CallbackExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EnvironmentExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
+use Zenstruck\ScheduleBundle\Schedule\HasExtensions;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\CallbackTask;
@@ -22,13 +22,12 @@ use Zenstruck\ScheduleBundle\Schedule\Task\ProcessTask;
  */
 final class Schedule
 {
+    use HasExtensions;
+
     private $tasks = [];
     private $allTasks;
     private $dueTasks;
     private $timezone;
-
-    /** @var Extension[] */
-    private $extensions = [];
 
     public function getId(): string
     {
@@ -76,13 +75,6 @@ final class Schedule
     public function addCompound(): CompoundTask
     {
         return $this->add(new CompoundTask());
-    }
-
-    public function addExtension(Extension $extension): self
-    {
-        $this->extensions[] = $extension;
-
-        return $this;
     }
 
     /**
@@ -285,14 +277,6 @@ final class Schedule
         $this->timezone = $value;
 
         return $this;
-    }
-
-    /**
-     * @return Extension[]
-     */
-    public function getExtensions(): array
-    {
-        return $this->extensions;
     }
 
     public function getTimezone(): ?\DateTimeZone
