@@ -62,7 +62,7 @@ final class CompoundTask extends Task implements \IteratorAggregate
             $task->cron($this->getExpression());
 
             if ($this->getTimezone()) {
-                $task->timezone($this->getTimezone()->getName());
+                $task->timezone($this->getTimezone());
             }
 
             foreach ($this->getExtensions() as $extension) {
