@@ -80,6 +80,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService(TaskConfigurationSubscriber::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(ScheduleBuilderSubscriber::class, 'kernel.event_subscriber');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(TaskConfigurationSubscriber::class, 0, []);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(TaskConfigurationSubscriber::class, 1, 'zenstruck_schedule.task_locator');
     }
 
     /**
@@ -638,6 +639,35 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertTrue($config['unless_between']['enabled']);
         $this->assertSame('11:30', $config['unless_between']['start']);
         $this->assertSame('13:15', $config['unless_between']['end']);
+    }
+
+    /**
+     * @test
+     */
+    public function can_configure_task_services()
+    {
+        $this->load([
+            'tasks' => [
+                [
+                    'task' => '@my_task1',
+                    'frequency' => '0 0 * * *',
+                ],
+                [
+                    'task' => ['@my_task1', 'my:command', '@my_task2'],
+                    'frequency' => '0 0 * * *',
+                ],
+            ],
+        ]);
+
+        $subscriberDefinition = $this->container->getDefinition(TaskConfigurationSubscriber::class);
+        $locatorDefinition = $this->container->getDefinition('zenstruck_schedule.task_locator');
+        $config = $subscriberDefinition->getArgument(0);
+
+        $this->assertSame(['@my_task1'], $config[0]['task']);
+        $this->assertSame(['@my_task1', 'my:command', '@my_task2'], $config[1]['task']);
+        $this->assertSame(['my_task1', 'my_task2'], \array_keys($locatorDefinition->getArgument(0)));
+        $this->assertSame('my_task1', (string) $locatorDefinition->getArgument(0)['my_task1']);
+        $this->assertSame('my_task2', (string) $locatorDefinition->getArgument(0)['my_task2']);
     }
 
     protected function getContainerExtensions(): array

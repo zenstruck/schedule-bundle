@@ -2,6 +2,7 @@
 
 namespace Zenstruck\ScheduleBundle\EventListener;
 
+use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Zenstruck\ScheduleBundle\Event\BuildScheduleEvent;
 use Zenstruck\ScheduleBundle\Schedule;
@@ -19,10 +20,12 @@ final class TaskConfigurationSubscriber implements EventSubscriberInterface
     private const PROCESS_TASK_PREFIX = 'bash:';
 
     private $config;
+    private $taskLocator;
 
-    public function __construct(array $config)
+    public function __construct(array $config, ContainerInterface $taskLocator)
     {
         $this->config = $config;
+        $this->taskLocator = $taskLocator;
     }
 
     public static function getSubscribedEvents(): array
@@ -39,7 +42,7 @@ final class TaskConfigurationSubscriber implements EventSubscriberInterface
 
     private function addTask(Schedule $schedule, array $config): void
     {
-        $task = $this->createTask($config['task']);
+        $task = $this->getTask($config['task']);
 
         $task->cron($config['frequency']);
 
@@ -90,16 +93,16 @@ final class TaskConfigurationSubscriber implements EventSubscriberInterface
         $schedule->add($task);
     }
 
-    private function createTask(array $commands): Task
+    private function getTask(array $commands): Task
     {
         if (1 === \count($commands)) {
-            return $this->createSingleTask(\array_values($commands)[0]);
+            return $this->getSingleTask(\array_values($commands)[0]);
         }
 
         $task = new CompoundTask();
 
         foreach ($commands as $description => $command) {
-            $subTask = $this->createSingleTask($command);
+            $subTask = $this->getSingleTask($command);
 
             if (!\is_numeric($description)) {
                 $subTask->description($description);
@@ -111,10 +114,14 @@ final class TaskConfigurationSubscriber implements EventSubscriberInterface
         return $task;
     }
 
-    private function createSingleTask(?string $command): Task
+    private function getSingleTask(?string $command): Task
     {
         if (null === $command) {
             return new NullTask('to be overridden');
+        }
+
+        if (0 === \mb_strpos($command, '@')) {
+            return clone $this->taskLocator->get(\mb_substr($command, 1));
         }
 
         if (0 !== \mb_strpos($command, self::PROCESS_TASK_PREFIX)) {

@@ -33,14 +33,15 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
         3. [ProcessTask](define-tasks.md#processtask)
         4. [CompoundTask](define-tasks.md#compoundtask)
         5. [NullTask](define-tasks.md#nulltask)
-    2. [Task Description](define-tasks.md#task-description)
-    3. [Frequency](define-tasks.md#frequency)
+    2. [Task Services](define-tasks.md#task-services)
+    3. [Task Description](define-tasks.md#task-description)
+    4. [Frequency](define-tasks.md#frequency)
         1. [Cron Expression](define-tasks.md#cron-expression)
         2. [Fluent Expression Builder](define-tasks.md#fluent-expression-builder)
         3. [Hashed Cron Expression](define-tasks.md#hashed-cron-expression)
-    4. [Task ID](define-tasks.md#task-id)
-    5. [Timezone](define-tasks.md#timezone)
-    6. [Task Extensions](define-tasks.md#task-extensions)
+    5. [Task ID](define-tasks.md#task-id)
+    6. [Timezone](define-tasks.md#timezone)
+    7. [Task Extensions](define-tasks.md#task-extensions)
         1. [Filters](define-tasks.md#filters)
         2. [Callbacks](define-tasks.md#callbacks)
         3. [Ping Webhook](define-tasks.md#ping-webhook)
@@ -254,7 +255,7 @@ zenstruck_schedule:
         # Prototype
         -
 
-            # Defaults to CommandTask, prefix with "bash:" to create ProcessTask, pass (null) to create NullTask, pass array of commands to create CompoundTask (optionally keyed by description)
+            # Defaults to CommandTask, prefix with "bash:" to create ProcessTask, prefix with "@" for service, pass (null) to create NullTask, pass array of commands to create CompoundTask (optionally keyed by description)
             task:                 ~ # Required, Example: "my:command arg1 --option1=value" or "bash:/bin/my-script"
 
             # Cron expression

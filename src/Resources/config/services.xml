@@ -28,8 +28,13 @@
             <tag name="kernel.event_subscriber" />
         </service>
 
+        <service id="zenstruck_schedule.task_locator" class="Symfony\Component\DependencyInjection\ServiceLocator">
+            <tag name="container.service_locator" />
+        </service>
+
         <service id="Zenstruck\ScheduleBundle\EventListener\TaskConfigurationSubscriber">
             <argument /> <!-- task config -->
+            <argument type="service" id="zenstruck_schedule.task_locator" />
             <tag name="kernel.event_subscriber" />
         </service>
 

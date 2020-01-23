@@ -96,6 +96,23 @@ $schedule->add(new MessageTask(new DoSomething()))
 ;
 ```
 
+If applicable, you can alternatively configure the task as a service and add via
+the [bundle configuration](define-schedule.md#bundle-configuration):
+
+```yaml
+# config/services.yaml
+
+services:
+    message_task: App\Schedule\MessageTask
+
+# config/packages/zenstruck_schedule.yaml
+
+zenstruck_schedule:
+    tasks:
+        -   task: '@message_task'
+            frequency: '30 13 * * *'
+```
+
 ## Custom Extensions
 
 The primary way of hooking into schedule/task events is with extensions. Extensions

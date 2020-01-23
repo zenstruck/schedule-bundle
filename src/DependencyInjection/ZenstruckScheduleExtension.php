@@ -49,11 +49,6 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
 
-        $container
-            ->getDefinition(TaskConfigurationSubscriber::class)
-            ->setArgument(0, $mergedConfig['tasks'])
-        ;
-
         if ($mergedConfig['without_overlapping_handler']) {
             $loader->load('without_overlapping.xml');
 
@@ -103,7 +98,32 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
             ;
         }
 
+        $this->registerTaskConfiguration($mergedConfig['tasks'], $container);
         $this->registerScheduleExtensions($mergedConfig, $container);
+    }
+
+    private function registerTaskConfiguration(array $config, ContainerBuilder $container): void
+    {
+        $container
+            ->getDefinition(TaskConfigurationSubscriber::class)
+            ->setArgument(0, $config)
+        ;
+
+        $taskServices = [];
+
+        foreach ($config as $taskConfig) {
+            foreach ($taskConfig['task'] as $value) {
+                if (0 === \mb_strpos($value, '@')) {
+                    $id = \mb_substr($value, 1);
+                    $taskServices[$id] = new Reference($id);
+                }
+            }
+        }
+
+        $container
+            ->getDefinition('zenstruck_schedule.task_locator')
+            ->setArgument(0, $taskServices)
+        ;
     }
 
     private function registerScheduleExtensions(array $config, ContainerBuilder $container): void

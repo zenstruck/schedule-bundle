@@ -3,7 +3,9 @@
 namespace Zenstruck\ScheduleBundle\Tests\EventListener;
 
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Zenstruck\ScheduleBundle\DependencyInjection\Configuration;
 use Zenstruck\ScheduleBundle\EventListener\TaskConfigurationSubscriber;
 use Zenstruck\ScheduleBundle\Schedule;
@@ -11,6 +13,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\NullTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\ProcessTask;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
+use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -261,13 +264,52 @@ final class TaskConfigurationSubscriberTest extends TestCase
         $this->assertSame('On Task Failure, email output to "sales@example.com"', (string) $extensions[8]);
     }
 
-    private function createSchedule(array $taskConfig): Schedule
+    /**
+     * @test
+     */
+    public function can_configure_task_services()
+    {
+        $serviceTask = new MockTask();
+        $schedule = $this->createSchedule([
+            [
+                'task' => '@my_task1',
+                'frequency' => '0 0 * * *',
+                'description' => 'task1',
+            ],
+            [
+                'task' => [
+                    'task2' => '@my_task1',
+                    'task3' => 'my:command',
+                    'task4' => '@my_task2',
+                ],
+                'frequency' => '0 0 * * *',
+            ],
+        ], new ServiceLocator([
+            'my_task1' => function () use ($serviceTask) {
+                return $serviceTask;
+            },
+            'my_task2' => function () use ($serviceTask) {
+                return $serviceTask;
+            },
+        ]));
+
+        $this->assertCount(4, $schedule->all());
+        $this->assertSame('MockTask: task1', (string) $schedule->all()[0]);
+        $this->assertSame('MockTask: task2', (string) $schedule->all()[1]);
+        $this->assertSame('CommandTask: task3', (string) $schedule->all()[2]);
+        $this->assertSame('MockTask: task4', (string) $schedule->all()[3]);
+    }
+
+    private function createSchedule(array $taskConfig, ContainerInterface $taskLocator = null): Schedule
     {
         $processor = new Processor();
         $config = $processor->processConfiguration(new Configuration(), [['tasks' => $taskConfig]]);
 
         return (new MockScheduleBuilder())
-            ->addSubscriber(new TaskConfigurationSubscriber($config['tasks']))
+            ->addSubscriber(new TaskConfigurationSubscriber(
+                $config['tasks'],
+                $taskLocator ?: new ServiceLocator([])
+            ))
             ->getRunner()
             ->buildSchedule()
         ;

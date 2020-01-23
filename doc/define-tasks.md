@@ -200,6 +200,25 @@ $schedule->add(new NullTask('daily email'))
 ;
 ```
 
+## Task Services
+
+If you have a [custom task](extending.md#custom-tasks), you can define it as a service
+and add via the [bundle configuration](define-schedule.md#bundle-configuration):
+
+```yaml
+# config/services.yaml
+
+services:
+    my_task: App\Schedule\Task\MyTask
+
+# config/packages/zenstruck_schedule.yaml
+
+zenstruck_schedule:
+    tasks:
+        -   task: '@my_task'
+            frequency: '0 * * * *'
+```
+
 ## Task Description
 
 Optionally add a unique description to your task. If none is provided, tasks define a
