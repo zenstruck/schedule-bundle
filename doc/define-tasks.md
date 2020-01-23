@@ -68,23 +68,54 @@ zenstruck_schedule:
 **Define in [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
+use Symfony\Component\Process\Process;
+
 /* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
 
 $schedule->addProcess('/bin/my-script');
 
 // alternatively, add your own Process instance
-$process = new \Symfony\Component\Process\Process(['/bin/my-script']);
-$process->setWorkingDirectory('/home/user');
-$process->setTimeout(10);
-
-$schedule->addProcess($process);
+$schedule->addProcess(
+    Process::fromShellCommandline('/bin/my-script')
+        ->setTimeout(10)
+);
 ```
 
-**Note:** this task requires `symfony/process`:
+**Notes**:
 
-```console
-$ composer require symfony/process
-```
+1. This task requires `symfony/process`:
+
+    ```console
+    $ composer require symfony/process
+    ```
+
+2. The default *working directory* is the working directory of the current
+   PHP process. If the task requires a specific working directory, it is
+   best to set it explicitly.
+
+   In PHP:
+
+    ```php
+    use Symfony\Component\Process\Process;
+
+    /* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
+
+    $schedule->addProcess(
+        Process::fromShellCommandline('bin/my-script')
+            ->setWorkingDirectory('/www/my-project')
+    );
+    ```
+
+   In Configuration:
+
+    ```yaml
+    # config/packages/zenstruck_schedule.yaml
+    
+    zenstruck_schedule:
+        tasks:
+            -   command: 'bash:cd %kernel.project_dir% && bin/my-script'
+                frequency: '0 * * * *'
+    ```
 
 ### CompoundTask
 
