@@ -63,7 +63,7 @@ EOF
 
         $this->renderExtenstions($io, 'Schedule', $schedule->getExtensions());
 
-        $scheduleIssues = \iterator_to_array($this->getScheduleIssues($schedule));
+        $scheduleIssues = \iterator_to_array($this->getScheduleIssues($schedule), false);
 
         if ($issueCount = \count($scheduleIssues)) {
             $io->warning(\sprintf('%d issue%s with schedule:', $issueCount, $issueCount > 1 ? 's' : ''));
@@ -107,7 +107,7 @@ EOF
             $this->renderDefinitionList($io, $details);
             $this->renderExtenstions($io, 'Task', $task->getExtensions());
 
-            $issues = \iterator_to_array($this->getTaskIssues($task));
+            $issues = \iterator_to_array($this->getTaskIssues($task), false);
 
             if ($issueCount = \count($issues)) {
                 $io->warning(\sprintf('%d issue%s with this task:', $issueCount, $issueCount > 1 ? 's' : ''));
@@ -149,7 +149,7 @@ EOF
         $rows = [];
 
         foreach ($schedule->all() as $task) {
-            $issues = \iterator_to_array($this->getTaskIssues($task));
+            $issues = \iterator_to_array($this->getTaskIssues($task), false);
             $taskIssues[] = $issues;
 
             $rows[] = [
