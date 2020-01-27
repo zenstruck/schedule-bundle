@@ -200,7 +200,7 @@ EOF
     /**
      * @return \Throwable[]
      */
-    private function getScheduleIssues(Schedule $schedule): \Generator
+    private function getScheduleIssues(Schedule $schedule): iterable
     {
         foreach ($schedule->getExtensions() as $extension) {
             try {
@@ -243,7 +243,7 @@ EOF
     /**
      * @return \Throwable[]
      */
-    private function getTaskIssues(Task $task): \Generator
+    private function getTaskIssues(Task $task): iterable
     {
         try {
             $this->scheduleRunner->runnerFor($task);

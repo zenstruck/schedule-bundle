@@ -349,7 +349,7 @@ final class Schedule
     /**
      * @return Task[]
      */
-    private function taskIterator(): \Generator
+    private function taskIterator(): iterable
     {
         foreach ($this->tasks as $task) {
             if ($task instanceof CompoundTask) {
