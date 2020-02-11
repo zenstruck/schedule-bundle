@@ -5,6 +5,7 @@ namespace Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Task\Result;
+use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -15,9 +16,10 @@ final class ScheduleRunContext extends RunContext
     private $dueTasks;
     private $force;
 
-    private $results;
+    private $taskRunContexts;
     private $skipReason;
 
+    private $results;
     private $successful;
     private $failures;
     private $skipped;
@@ -55,18 +57,18 @@ final class ScheduleRunContext extends RunContext
         return $this->force;
     }
 
-    public function setResults(Result ...$results): void
+    public function setTaskRunContexts(TaskRunContext ...$contexts): void
     {
-        $resultCount = \count($results);
+        $contextCount = \count($contexts);
         $dueCount = \count($this->dueTasks());
 
-        if ($resultCount !== $dueCount) {
-            throw new \LogicException(\sprintf('The number of results (%d) does not match the number of due tasks (%d).', $resultCount, $dueCount));
+        if ($contextCount !== $dueCount) {
+            throw new \LogicException("The number of results ({$contextCount}) does not match the number of due tasks ({$dueCount}).");
         }
 
         $this->markAsRun(\memory_get_peak_usage(true));
 
-        $this->results = $results;
+        $this->taskRunContexts = $contexts;
     }
 
     public function skip(SkipSchedule $exception): void
@@ -80,13 +82,33 @@ final class ScheduleRunContext extends RunContext
     }
 
     /**
+     * @return TaskRunContext[]
+     *
+     * @throws \LogicException if has not yet run
+     */
+    public function getTaskRunContexts(): array
+    {
+        $this->ensureHasRun();
+
+        return $this->taskRunContexts;
+    }
+
+    /**
      * @return Result[]
      *
      * @throws \LogicException if has not yet run
      */
     public function getResults(): array
     {
-        $this->ensureHasRun();
+        if (null !== $this->results) {
+            return $this->results;
+        }
+
+        $this->results = [];
+
+        foreach ($this->getTaskRunContexts() as $context) {
+            $this->results[] = $context->getResult();
+        }
 
         return $this->results;
     }

@@ -50,7 +50,7 @@ final class ScheduleRunner
             return $scheduleRunContext;
         }
 
-        $results = [];
+        $taskRunContexts = [];
 
         foreach ($scheduleRunContext->dueTasks() as $task) {
             $taskRunContext = new TaskRunContext($scheduleRunContext, $task);
@@ -63,10 +63,10 @@ final class ScheduleRunner
 
             $this->dispatcher->dispatch(new AfterTaskEvent($taskRunContext));
 
-            $results[] = $taskRunContext->getResult();
+            $taskRunContexts[] = $taskRunContext;
         }
 
-        $scheduleRunContext->setResults(...$results);
+        $scheduleRunContext->setTaskRunContexts(...$taskRunContexts);
 
         $this->extensions->afterSchedule($scheduleRunContext);
         $this->dispatcher->dispatch(new AfterScheduleEvent($scheduleRunContext));
