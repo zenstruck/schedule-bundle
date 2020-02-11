@@ -114,13 +114,13 @@ class ScheduleTest extends TestCase
         }
 
         $this->assertCount(2, $schedule->all());
-        $this->assertCount(1, $schedule->due());
-        $this->assertCount(1, $schedule->due(), 'Due tasks are cached');
-        $this->assertSame('task1', $schedule->due()[0]->getDescription());
+        $this->assertCount(1, $schedule->due(new \DateTime()));
+        $this->assertCount(1, $schedule->due(new \DateTime()), 'Due tasks are cached');
+        $this->assertSame('task1', $schedule->due(new \DateTime())[0]->getDescription());
 
         $schedule->addCommand('my:command')->description('task3');
 
-        $this->assertCount(2, $schedule->due(), 'Resets the due task cache');
+        $this->assertCount(2, $schedule->due(new \DateTime()), 'Resets the due task cache');
     }
 
     /**
@@ -150,7 +150,7 @@ class ScheduleTest extends TestCase
                 'task6',
             ], \array_map(function (Task $task) {
                 return $task->getDescription();
-            }, $schedule->due())
+            }, $schedule->due(new \DateTime()))
         );
     }
 
@@ -402,25 +402,25 @@ class ScheduleTest extends TestCase
 
         $this->assertNull($schedule->getTimezone());
         $this->assertNull($schedule->all()[0]->getTimezone());
-        $this->assertNull($schedule->due()[0]->getTimezone());
+        $this->assertNull($schedule->due(new \DateTime())[0]->getTimezone());
         $this->assertSame('America/Toronto', $schedule->all()[1]->getTimezone()->getName());
-        $this->assertSame('America/Toronto', $schedule->due()[1]->getTimezone()->getName());
+        $this->assertSame('America/Toronto', $schedule->due(new \DateTime())[1]->getTimezone()->getName());
 
         $schedule->timezone('UTC');
 
         $this->assertSame('UTC', $schedule->getTimezone()->getName());
         $this->assertSame('UTC', $schedule->all()[0]->getTimezone()->getName());
-        $this->assertSame('UTC', $schedule->due()[0]->getTimezone()->getName());
+        $this->assertSame('UTC', $schedule->due(new \DateTime())[0]->getTimezone()->getName());
         $this->assertSame('America/Toronto', $schedule->all()[1]->getTimezone()->getName());
-        $this->assertSame('America/Toronto', $schedule->due()[1]->getTimezone()->getName());
+        $this->assertSame('America/Toronto', $schedule->due(new \DateTime())[1]->getTimezone()->getName());
 
         $schedule->timezone(new \DateTimeZone('America/Los_Angeles'));
 
         $this->assertSame('America/Los_Angeles', $schedule->getTimezone()->getName());
         $this->assertSame('UTC', $schedule->all()[0]->getTimezone()->getName());
-        $this->assertSame('UTC', $schedule->due()[0]->getTimezone()->getName());
+        $this->assertSame('UTC', $schedule->due(new \DateTime())[0]->getTimezone()->getName());
         $this->assertSame('America/Toronto', $schedule->all()[1]->getTimezone()->getName());
-        $this->assertSame('America/Toronto', $schedule->due()[1]->getTimezone()->getName());
+        $this->assertSame('America/Toronto', $schedule->due(new \DateTime())[1]->getTimezone()->getName());
     }
 
     private static function runContext(Schedule $schedule = null): ScheduleRunContext

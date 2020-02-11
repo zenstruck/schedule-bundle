@@ -73,7 +73,7 @@ final class TaskTest extends TestCase
      */
     public function can_determine_if_due()
     {
-        $this->assertTrue(self::task()->everyMinute()->isDue());
+        $this->assertTrue(self::task()->everyMinute()->isDue(new \DateTime()));
     }
 
     /**

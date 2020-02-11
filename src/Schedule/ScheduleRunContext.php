@@ -27,11 +27,11 @@ final class ScheduleRunContext extends RunContext
 
     public function __construct(Schedule $schedule, Task ...$forcedTasks)
     {
-        $this->schedule = $schedule;
-        $this->dueTasks = empty($forcedTasks) ? $schedule->due() : $forcedTasks;
-        $this->force = !empty($forcedTasks);
-
         parent::__construct();
+
+        $this->schedule = $schedule;
+        $this->dueTasks = empty($forcedTasks) ? $schedule->due(\DateTime::createFromFormat('U', $this->getStartTime())) : $forcedTasks;
+        $this->force = !empty($forcedTasks);
     }
 
     public function __toString(): string

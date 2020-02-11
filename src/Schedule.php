@@ -329,7 +329,7 @@ final class Schedule
     /**
      * @return Task[]
      */
-    public function due(): array
+    public function due(\DateTimeInterface $time): array
     {
         if (null !== $this->dueTasks) {
             return $this->dueTasks;
@@ -338,7 +338,7 @@ final class Schedule
         $this->dueTasks = [];
 
         foreach ($this->all() as $task) {
-            if ($task->isDue()) {
+            if ($task->isDue($time)) {
                 $this->dueTasks[] = $task;
             }
         }

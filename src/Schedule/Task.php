@@ -65,9 +65,9 @@ abstract class Task
         return $this->getExpression()->getNextRun($this->getTimezoneValue());
     }
 
-    final public function isDue(): bool
+    final public function isDue(\DateTimeInterface $time): bool
     {
-        return $this->getExpression()->isDue($this->getTimezoneValue());
+        return $this->getExpression()->isDue($time, $this->getTimezoneValue());
     }
 
     /**
