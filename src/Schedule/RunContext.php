@@ -15,12 +15,12 @@ abstract class RunContext
 
     public function __construct()
     {
-        $this->startTime = \time();
+        $this->startTime = new \DateTimeImmutable('now');
     }
 
     abstract public function __toString(): string;
 
-    final public function getStartTime(): int
+    final public function getStartTime(): \DateTimeImmutable
     {
         return $this->startTime;
     }
@@ -56,7 +56,7 @@ abstract class RunContext
 
     final protected function markAsRun(int $memory): void
     {
-        $this->duration = \time() - $this->getStartTime();
+        $this->duration = \time() - $this->getStartTime()->getTimestamp();
         $this->memory = $memory;
     }
 

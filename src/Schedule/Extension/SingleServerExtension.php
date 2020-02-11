@@ -29,9 +29,9 @@ final class SingleServerExtension implements Extension, HasMissingHandlerMessage
         return 'Run on single server';
     }
 
-    public function aquireLock(LockFactory $lockFactory, string $mutex, int $timestamp): bool
+    public function aquireLock(LockFactory $lockFactory, string $mutex, \DateTimeInterface $timestamp): bool
     {
-        $mutex .= \date('Hi', $timestamp);
+        $mutex .= $timestamp->format('Hi');
 
         return $this->lock->aquire($lockFactory, $mutex, $this->ttl);
     }

@@ -101,9 +101,9 @@ final class CronExpression
         return CronSchedule::factory($this->getParsedValue())->getNextRunDate('now', 0, false, $timezone);
     }
 
-    public function isDue(\DateTimeInterface $time, string $timezone = null): bool
+    public function isDue(\DateTimeInterface $timestamp, string $timezone = null): bool
     {
-        return CronSchedule::factory($this->getParsedValue())->isDue($time, $timezone);
+        return CronSchedule::factory($this->getParsedValue())->isDue($timestamp, $timezone);
     }
 
     private function parsePart(int $position): string

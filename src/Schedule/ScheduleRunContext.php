@@ -30,7 +30,7 @@ final class ScheduleRunContext extends RunContext
         parent::__construct();
 
         $this->schedule = $schedule;
-        $this->dueTasks = empty($forcedTasks) ? $schedule->due(\DateTime::createFromFormat('U', $this->getStartTime())) : $forcedTasks;
+        $this->dueTasks = empty($forcedTasks) ? $schedule->due($this->getStartTime()) : $forcedTasks;
         $this->force = !empty($forcedTasks);
     }
 
