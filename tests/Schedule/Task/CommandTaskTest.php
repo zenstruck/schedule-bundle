@@ -48,6 +48,18 @@ final class CommandTaskTest extends TestCase
 
     /**
      * @test
+     */
+    public function task_has_context()
+    {
+        $task = new CommandTask('my:command');
+        $this->assertSame(['Command Name' => 'my:command', 'Command Arguments' => '(none)'], $task->getContext());
+
+        $task = new CommandTask('my:command --foo bar');
+        $this->assertSame(['Command Name' => 'my:command', 'Command Arguments' => '--foo bar'], $task->getContext());
+    }
+
+    /**
+     * @test
      * @dataProvider commandNameProvider
      */
     public function can_create_input($commandName)

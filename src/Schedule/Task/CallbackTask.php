@@ -29,6 +29,11 @@ final class CallbackTask extends Task implements SelfRunningTask
         return Result::successful($this, self::stringify($output));
     }
 
+    public function getContext(): array
+    {
+        return ['Callable' => CallbackExtension::createDescriptionFromCallback($this->callback)];
+    }
+
     /**
      * @param mixed $value
      */

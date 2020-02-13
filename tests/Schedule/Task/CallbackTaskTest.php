@@ -25,6 +25,14 @@ final class CallbackTaskTest extends TestCase
     /**
      * @test
      */
+    public function task_has_context()
+    {
+        $this->assertRegExp('#Zenstruck\\\\ScheduleBundle\\\\Tests\\\\Schedule\\\\Task\\\\CallbackTaskTest\:\d+$#', (new CallbackTask(function () {}))->getContext()['Callable']);
+    }
+
+    /**
+     * @test
+     */
     public function can_create_successful_result()
     {
         $result = (new CallbackTask(function () {}))();

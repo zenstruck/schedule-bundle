@@ -44,4 +44,12 @@ final class ProcessTask extends Task implements SelfRunningTask
             $this->process->getErrorOutput()
         );
     }
+
+    public function getContext(): array
+    {
+        return [
+            'Command Line' => $this->process->getCommandLine(),
+            'Command Timeout' => $this->process->getTimeout(),
+        ];
+    }
 }

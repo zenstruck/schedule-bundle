@@ -87,14 +87,14 @@ EOF
         foreach ($schedule->all() as $i => $task) {
             $io->section(\sprintf('(%d/%d) %s', $i + 1, \count($schedule->all()), $task));
 
-            $details = [
-                ['ID' => $task->getId()],
-                ['Class' => \get_class($task)],
-            ];
+            $details = [];
 
-            if ($task instanceof CommandTask && $arguments = $task->getArguments()) {
-                $details[] = ['Command Arguments' => $task->getArguments()];
+            foreach ($task->getContext() as $key => $value) {
+                $details[] = [$key => $value];
             }
+
+            $details[] = ['Task ID' => $task->getId()];
+            $details[] = ['Task Class' => \get_class($task)];
 
             $details[] = [$task->getExpression()->isHashed() ? 'Calculated Frequency' : 'Frequency' => $this->renderFrequency($task)];
 

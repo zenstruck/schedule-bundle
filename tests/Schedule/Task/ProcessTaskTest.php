@@ -55,4 +55,16 @@ final class ProcessTaskTest extends TestCase
         $this->assertStringContainsString('PHP', $result->getOutput());
         $this->assertStringContainsString(PHP_VERSION, $result->getOutput());
     }
+
+    /**
+     * @test
+     */
+    public function task_has_context()
+    {
+        $task = new ProcessTask('/foo/bar');
+        $this->assertSame(['Command Line' => '/foo/bar', 'Command Timeout' => 60.0], $task->getContext());
+
+        $task = new ProcessTask(Process::fromShellCommandline('/foo/bar')->setTimeout(30));
+        $this->assertSame(['Command Line' => '/foo/bar', 'Command Timeout' => 30.0], $task->getContext());
+    }
 }

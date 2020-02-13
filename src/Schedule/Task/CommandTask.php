@@ -47,6 +47,14 @@ final class CommandTask extends Task
         return (string) $this->arguments;
     }
 
+    public function getContext(): array
+    {
+        return [
+            'Command Name' => $this->name,
+            'Command Arguments' => $this->getArguments() ?: '(none)',
+        ];
+    }
+
     public function createCommandInput(Application $application): InputInterface
     {
         return new StringInput(\implode(' ', \array_filter([

@@ -50,6 +50,11 @@ abstract class Task
         return $this->description;
     }
 
+    public function getContext(): array
+    {
+        return [];
+    }
+
     final public function getExpression(): CronExpression
     {
         return new CronExpression($this->expression, $this->getDescription());
