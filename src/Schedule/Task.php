@@ -42,7 +42,7 @@ abstract class Task
 
     final public function getId(): string
     {
-        return \sha1(\get_class($this).$this->getExpression().$this->getDescription());
+        return \sha1(static::class.$this->getExpression().$this->getDescription());
     }
 
     final public function getDescription(): string
