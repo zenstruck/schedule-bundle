@@ -179,4 +179,4 @@ jobs:
         run: wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O php-cs-fixer.phar
 
       - name: Check CS
-        run: php php-cs-fixer.phar fix --dry-run --diff
+        run: php php-cs-fixer.phar fix -v --dry-run --diff-format=udiff
