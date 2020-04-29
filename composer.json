@@ -1,7 +1,7 @@
 {
     "name": "zenstruck/schedule-bundle",
     "description": "Schedule Cron jobs (commands/callbacks/bash scripts) within your Symfony application.",
-    "homepage": "https://github.com/kbond/schedule-bundle",
+    "homepage": "https://github.com/zenstruck/schedule-bundle",
     "type": "symfony-bundle",
     "license": "MIT",
     "keywords": ["schedule", "cron"],

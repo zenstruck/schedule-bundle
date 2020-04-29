@@ -1,9 +1,9 @@
 # The ScheduleBundle
 
-[![Test Status](https://github.com/kbond/schedule-bundle/workflows/Tests/badge.svg?branch=master)](https://github.com/kbond/schedule-bundle/actions?query=workflow%3ATests+branch%3Amaster)
-[![Standards](https://github.com/kbond/schedule-bundle/workflows/Standards/badge.svg?branch=master)](https://github.com/kbond/schedule-bundle/actions?query=workflow%3AStandards+branch%3Amaster)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/kbond/schedule-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/kbond/schedule-bundle/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/kbond/schedule-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/kbond/schedule-bundle/?branch=master)
+[![Test Status](https://github.com/zenstruck/schedule-bundle/workflows/Tests/badge.svg?branch=master)](https://github.com/zenstruck/schedule-bundle/actions?query=workflow%3ATests+branch%3Amaster)
+[![Standards](https://github.com/zenstruck/schedule-bundle/workflows/Standards/badge.svg?branch=master)](https://github.com/zenstruck/schedule-bundle/actions?query=workflow%3AStandards+branch%3Amaster)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/zenstruck/schedule-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/zenstruck/schedule-bundle/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/zenstruck/schedule-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/zenstruck/schedule-bundle/?branch=master)
 
 Schedule Cron jobs (commands/callbacks/bash scripts) within your Symfony
 application. Most applications have jobs that need to run at specific intervals.
