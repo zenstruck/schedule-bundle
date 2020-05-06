@@ -41,7 +41,6 @@ final class ScheduleRunCommandTest extends TestCase
         $dispatcher = new EventDispatcher();
         $runner = (new MockScheduleBuilder())
             ->addTask(MockTask::success('my task 1'))
-            ->addHandler(new CallbackHandler())
             ->addBuilder(new class() implements ScheduleBuilder {
                 public function buildSchedule(Schedule $schedule): void
                 {

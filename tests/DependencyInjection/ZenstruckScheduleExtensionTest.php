@@ -81,12 +81,6 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
 
         $this->assertContainerBuilderHasService(ExtensionHandlerRegistry::class);
 
-        $this->assertContainerBuilderHasService(CallbackHandler::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithTag(CallbackHandler::class, 'schedule.extension_handler');
-
-        $this->assertContainerBuilderHasService(BetweenTimeHandler::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithTag(BetweenTimeHandler::class, 'schedule.extension_handler');
-
         $this->assertContainerBuilderHasService(SelfHandlingHandler::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(SelfHandlingHandler::class, 'schedule.extension_handler', ['priority' => -100]);
 

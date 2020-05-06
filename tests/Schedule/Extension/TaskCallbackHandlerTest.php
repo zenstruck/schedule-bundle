@@ -210,7 +210,6 @@ final class TaskCallbackHandlerTest extends TestCase
     private static function createRunContext(Task $task): ScheduleRunContext
     {
         return (new MockScheduleBuilder())
-            ->addHandler(new CallbackHandler())
             ->addTask($task)
             ->run()
         ;

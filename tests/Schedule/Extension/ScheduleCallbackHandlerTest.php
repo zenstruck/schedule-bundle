@@ -200,7 +200,6 @@ final class ScheduleCallbackHandlerTest extends TestCase
     private static function createBuilder(callable $builder): MockScheduleBuilder
     {
         return (new MockScheduleBuilder())
-            ->addHandler(new CallbackHandler())
             ->addBuilder(new class($builder) implements ScheduleBuilder {
                 private $builder;
 

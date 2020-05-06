@@ -22,7 +22,7 @@ final class BetweenTimeExtensionTest extends TestCase
         $end = (new \DateTime($end))->format('H:i');
         $task = (new MockTask())->onlyBetween($start, $end, $inclusive);
 
-        $context = self::createBuilder()->addTask($task)->run();
+        $context = (new MockScheduleBuilder())->addTask($task)->run();
 
         $this->assertCount(0, $context->getRun());
         $this->assertCount(1, $skipped = $context->getSkipped());
@@ -48,7 +48,7 @@ final class BetweenTimeExtensionTest extends TestCase
         $end = (new \DateTime($end))->format('H:i');
         $task = (new MockTask())->onlyBetween($start, $end, $inclusive);
 
-        $context = self::createBuilder()->addTask($task)->run();
+        $context = (new MockScheduleBuilder())->addTask($task)->run();
 
         $this->assertCount(1, $context->getRun());
         $this->assertCount(0, $context->getSkipped());
@@ -73,7 +73,7 @@ final class BetweenTimeExtensionTest extends TestCase
         $end = (new \DateTime($end))->format('H:i');
         $task = (new MockTask())->unlessBetween($start, $end, $inclusive);
 
-        $context = self::createBuilder()->addTask($task)->run();
+        $context = (new MockScheduleBuilder())->addTask($task)->run();
 
         $this->assertCount(0, $context->getRun());
         $this->assertCount(1, $skipped = $context->getSkipped());
@@ -99,7 +99,7 @@ final class BetweenTimeExtensionTest extends TestCase
         $end = (new \DateTime($end))->format('H:i');
         $task = (new MockTask())->unlessBetween($start, $end, $inclusive);
 
-        $context = self::createBuilder()->addTask($task)->run();
+        $context = (new MockScheduleBuilder())->addTask($task)->run();
 
         $this->assertCount(1, $context->getRun());
         $this->assertCount(0, $context->getSkipped());
@@ -112,12 +112,5 @@ final class BetweenTimeExtensionTest extends TestCase
             ['+1 minute', '+3 minutes', true],
             ['+5 minutes', '+23 hours', true],
         ];
-    }
-
-    private static function createBuilder(): MockScheduleBuilder
-    {
-        return (new MockScheduleBuilder())
-            ->addHandler(new BetweenTimeHandler())
-        ;
     }
 }

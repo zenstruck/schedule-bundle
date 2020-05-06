@@ -95,7 +95,6 @@ final class ScheduleLoggerSubscriberTest extends TestCase
     {
         $this->createRunnerBuilder()
             ->addTask(MockTask::success()->skip('skip reason', true))
-            ->addHandler(new CallbackHandler())
             ->run()
         ;
 
@@ -113,7 +112,6 @@ final class ScheduleLoggerSubscriberTest extends TestCase
     {
         $context = $this->createRunnerBuilder()
             ->addTask(new MockTask())
-            ->addHandler(new CallbackHandler())
             ->addExtension(CallbackExtension::scheduleFilter(function () {
                 throw new SkipSchedule('the schedule has skipped');
             }))
