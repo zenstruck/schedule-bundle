@@ -24,21 +24,21 @@ final class SingleServerHandler extends ExtensionHandler
     }
 
     /**
-     * @param SingleServerExtension $extension
+     * @param SingleServerExtension|Extension $extension
      */
     public function filterSchedule(ScheduleRunContext $context, Extension $extension): void
     {
-        if (!$extension->aquireLock($this->lockFactory, $context->getSchedule()->getId(), $context->getStartTime())) {
+        if (!$extension->acquireLock($this->lockFactory, self::createMutex($context->getSchedule()->getId(), $context->getStartTime()))) {
             throw new SkipSchedule('Schedule running on another server.');
         }
     }
 
     /**
-     * @param SingleServerExtension $extension
+     * @param SingleServerExtension|Extension $extension
      */
     public function filterTask(TaskRunContext $context, Extension $extension): void
     {
-        if (!$extension->aquireLock($this->lockFactory, $context->getTask()->getId(), $context->getScheduleRunContext()->getStartTime())) {
+        if (!$extension->acquireLock($this->lockFactory, self::createMutex($context->getTask()->getId(), $context->getScheduleRunContext()->getStartTime()))) {
             throw new SkipTask('Task running on another server.');
         }
     }
@@ -46,5 +46,10 @@ final class SingleServerHandler extends ExtensionHandler
     public function supports(Extension $extension): bool
     {
         return $extension instanceof SingleServerExtension;
+    }
+
+    private static function createMutex(string $id, \DateTimeInterface $timestamp): string
+    {
+        return $id.$timestamp->format('Hi');
     }
 }

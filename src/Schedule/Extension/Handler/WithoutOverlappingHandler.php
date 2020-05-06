@@ -6,6 +6,7 @@ use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\PersistingStoreInterface;
 use Symfony\Component\Lock\Store\FlockStore;
 use Symfony\Component\Lock\Store\SemaphoreStore;
+use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\WithoutOverlappingExtension;
@@ -32,7 +33,9 @@ final class WithoutOverlappingHandler extends ExtensionHandler
      */
     public function filterTask(TaskRunContext $context, Extension $extension): void
     {
-        $extension->aquireLock($this->lockFactory, $context->getTask()->getId());
+        if (!$extension->acquireLock($this->lockFactory, $context->getTask()->getId())) {
+            throw new SkipTask('Task running in another process.');
+        }
     }
 
     /**
