@@ -74,6 +74,10 @@
             <argument type="tagged_iterator" tag="schedule.extension_handler" />
         </service>
 
+        <service id="Zenstruck\ScheduleBundle\Schedule\Extension\Handler\BetweenTimeHandler">
+            <tag name="schedule.extension_handler" />
+        </service>
+
         <service id="Zenstruck\ScheduleBundle\Schedule\Extension\Handler\SelfHandlingHandler">
             <tag name="schedule.extension_handler" priority="-100" />
         </service>
