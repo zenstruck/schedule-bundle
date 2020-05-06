@@ -6,7 +6,6 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
@@ -35,7 +34,7 @@ final class EmailHandler extends ExtensionHandler
     /**
      * @param EmailExtension $extension
      */
-    public function onScheduleFailure(ScheduleRunContext $context, Extension $extension): void
+    public function onScheduleFailure(ScheduleRunContext $context, object $extension): void
     {
         if ($extension->isHook(Schedule::FAILURE)) {
             $this->sendScheduleEmail($context, $extension);
@@ -45,7 +44,7 @@ final class EmailHandler extends ExtensionHandler
     /**
      * @param EmailExtension $extension
      */
-    public function afterTask(TaskRunContext $context, Extension $extension): void
+    public function afterTask(TaskRunContext $context, object $extension): void
     {
         if ($extension->isHook(Task::AFTER)) {
             $this->sendTaskEmail($extension, $context->getResult(), $context->getScheduleRunContext());
@@ -55,14 +54,14 @@ final class EmailHandler extends ExtensionHandler
     /**
      * @param EmailExtension $extension
      */
-    public function onTaskFailure(TaskRunContext $context, Extension $extension): void
+    public function onTaskFailure(TaskRunContext $context, object $extension): void
     {
         if ($extension->isHook(Task::FAILURE)) {
             $this->sendTaskEmail($extension, $context->getResult(), $context->getScheduleRunContext());
         }
     }
 
-    public function supports(Extension $extension): bool
+    public function supports(object $extension): bool
     {
         return $extension instanceof EmailExtension;
     }

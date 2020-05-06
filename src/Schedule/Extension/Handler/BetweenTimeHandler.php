@@ -2,7 +2,6 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension\Handler;
 
-use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\BetweenTimeExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
@@ -13,14 +12,14 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 final class BetweenTimeHandler extends ExtensionHandler
 {
     /**
-     * @param BetweenTimeExtension|Extension $extension
+     * @param BetweenTimeExtension $extension
      */
-    public function filterTask(TaskRunContext $context, Extension $extension): void
+    public function filterTask(TaskRunContext $context, object $extension): void
     {
         $extension->filter($context->getTask()->getTimezone());
     }
 
-    public function supports(Extension $extension): bool
+    public function supports(object $extension): bool
     {
         return $extension instanceof BetweenTimeExtension;
     }

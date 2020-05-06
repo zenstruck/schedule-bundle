@@ -2,12 +2,10 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
-use Zenstruck\ScheduleBundle\Schedule\Extension;
-
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class SingleServerExtension extends LockingExtension implements Extension, HasMissingHandlerMessage
+final class SingleServerExtension extends LockingExtension implements HasMissingHandlerMessage
 {
     public const DEFAULT_TTL = 3600;
 

@@ -93,8 +93,8 @@ $schedule->add(new MessageTask(new DoSomething()))
 ## Custom Extensions
 
 The primary way of hooking into schedule/task events is with extensions. Extensions
-can be added to both tasks and the schedule as a whole. Extensions must implement
-[`Extension`](../src/Schedule/Extension.php) and require a *handler* than extends
+can be added to both tasks and the schedule as a whole. Extensions are plain objects
+and require a *handler* that extends
 [`ExtensionHandler`](../src/Schedule/Extension/ExtensionHandler.php).
 
 The handler must be a service with the `schedule.extension_handler` tag (this is
@@ -104,6 +104,9 @@ should return true when passed the extension it handles.
 If your extension is applicable to the schedule, you can auto-add it by registering
 it as a service and adding the `schedule.extension` tag (*autoconfiguration* is **not**
 available).
+
+Making your extension stringable by implementing `__toString` shows this value in the
+[`schedule:list`](cli-commands.md#schedulelist) command.
 
 Below are some examples of custom extensions:
 
@@ -119,9 +122,7 @@ The *extension*:
 ```php
 // src/Schedule/Extension/NotInMaintenanceMode.php
 
-use Zenstruck\ScheduleBundle\Schedule\Extension;
-
-class NotInMaintenanceMode implements Extension
+class NotInMaintenanceMode
 {
     public function __toString(): string
     {
@@ -138,7 +139,6 @@ The *handler* service:
 use App\Kernel;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 
 class NotInMaintenanceModeHandler extends ExtensionHandler
@@ -150,7 +150,7 @@ class NotInMaintenanceModeHandler extends ExtensionHandler
         $this->kernel = $kernel;
     }
 
-    public function supports(Extension $extension) : bool
+    public function supports(object $extension) : bool
     {
         return $extension instanceof NotInMaintenanceMode;
     }
@@ -158,7 +158,7 @@ class NotInMaintenanceModeHandler extends ExtensionHandler
     /**
      * @param NotInMaintenanceMode $extension
      */
-    public function filterSchedule(ScheduleRunContext $context, Extension $extension): void
+    public function filterSchedule(ScheduleRunContext $context, object $extension): void
     {
         if ($this->kernel->isInMaintenanceMode()) {
             throw new SkipSchedule('Does not run in maintenance mode.');

@@ -2,7 +2,6 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
-use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\BetweenTimeHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\CallbackHandler;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
@@ -28,7 +27,7 @@ final class ExtensionHandlerRegistry
         ];
     }
 
-    public function handlerFor(Extension $extension): ExtensionHandler
+    public function handlerFor(object $extension): ExtensionHandler
     {
         $class = \get_class($extension);
 
@@ -42,13 +41,15 @@ final class ExtensionHandlerRegistry
             }
         }
 
-        $message = \sprintf('No extension handler registered for "%s: %s".', \get_class($extension), $extension);
-
         if ($extension instanceof HasMissingHandlerMessage) {
-            $message = $extension->getMissingHandlerMessage();
+            throw new \LogicException($extension->getMissingHandlerMessage());
         }
 
-        throw new \LogicException($message);
+        if (\method_exists($extension, '__toString')) {
+            throw new \LogicException(\sprintf('No extension handler registered for "%s: %s".', \get_class($extension), $extension));
+        }
+
+        throw new \LogicException(\sprintf('No extension handler registered for "%s".', \get_class($extension)));
     }
 
     public function beforeSchedule(ScheduleRunContext $context): void

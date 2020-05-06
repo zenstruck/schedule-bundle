@@ -7,7 +7,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleBuilderSubscriber;
 use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
@@ -35,7 +34,7 @@ final class MockScheduleBuilder implements ScheduleBuilder
         return $this;
     }
 
-    public function addExtension(Extension $extension): self
+    public function addExtension(object $extension): self
     {
         $this->extensions[] = $extension;
 

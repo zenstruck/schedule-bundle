@@ -6,13 +6,12 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class EmailExtension implements Extension, HasMissingHandlerMessage
+final class EmailExtension implements HasMissingHandlerMessage
 {
     private $hook;
     private $email;

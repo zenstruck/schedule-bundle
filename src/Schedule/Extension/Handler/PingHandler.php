@@ -5,7 +5,6 @@ namespace Zenstruck\ScheduleBundle\Schedule\Extension\Handler;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
@@ -29,70 +28,70 @@ final class PingHandler extends ExtensionHandler
     }
 
     /**
-     * @param PingExtension|Extension $extension
+     * @param PingExtension $extension
      */
-    public function beforeSchedule(ScheduleRunContext $context, Extension $extension): void
+    public function beforeSchedule(ScheduleRunContext $context, object $extension): void
     {
         $this->pingIf($extension, Schedule::BEFORE);
     }
 
     /**
-     * @param PingExtension|Extension $extension
+     * @param PingExtension $extension
      */
-    public function afterSchedule(ScheduleRunContext $context, Extension $extension): void
+    public function afterSchedule(ScheduleRunContext $context, object $extension): void
     {
         $this->pingIf($extension, Schedule::AFTER);
     }
 
     /**
-     * @param PingExtension|Extension $extension
+     * @param PingExtension $extension
      */
-    public function onScheduleSuccess(ScheduleRunContext $context, Extension $extension): void
+    public function onScheduleSuccess(ScheduleRunContext $context, object $extension): void
     {
         $this->pingIf($extension, Schedule::SUCCESS);
     }
 
     /**
-     * @param PingExtension|Extension $extension
+     * @param PingExtension $extension
      */
-    public function onScheduleFailure(ScheduleRunContext $context, Extension $extension): void
+    public function onScheduleFailure(ScheduleRunContext $context, object $extension): void
     {
         $this->pingIf($extension, Schedule::FAILURE);
     }
 
     /**
-     * @param PingExtension|Extension $extension
+     * @param PingExtension $extension
      */
-    public function beforeTask(TaskRunContext $context, Extension $extension): void
+    public function beforeTask(TaskRunContext $context, object $extension): void
     {
         $this->pingIf($extension, Task::BEFORE);
     }
 
     /**
-     * @param PingExtension|Extension $extension
+     * @param PingExtension $extension
      */
-    public function afterTask(TaskRunContext $context, Extension $extension): void
+    public function afterTask(TaskRunContext $context, object $extension): void
     {
         $this->pingIf($extension, Task::AFTER);
     }
 
     /**
-     * @param PingExtension|Extension $extension
+     * @param PingExtension $extension
      */
-    public function onTaskSuccess(TaskRunContext $context, Extension $extension): void
+    public function onTaskSuccess(TaskRunContext $context, object $extension): void
     {
         $this->pingIf($extension, Task::SUCCESS);
     }
 
     /**
-     * @param PingExtension|Extension $extension
+     * @param PingExtension $extension
      */
-    public function onTaskFailure(TaskRunContext $context, Extension $extension): void
+    public function onTaskFailure(TaskRunContext $context, object $extension): void
     {
         $this->pingIf($extension, Task::FAILURE);
     }
 
-    public function supports(Extension $extension): bool
+    public function supports(object $extension): bool
     {
         return $extension instanceof PingExtension;
     }

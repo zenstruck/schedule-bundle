@@ -3,13 +3,12 @@
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
 use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class PingExtension implements Extension, HasMissingHandlerMessage
+final class PingExtension implements HasMissingHandlerMessage
 {
     private $hook;
     private $url;

@@ -3,12 +3,11 @@
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class BetweenTimeExtension implements Extension
+final class BetweenTimeExtension
 {
     private $startTime;
     private $endTime;

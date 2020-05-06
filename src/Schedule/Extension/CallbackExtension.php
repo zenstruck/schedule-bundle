@@ -3,13 +3,12 @@
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
 use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class CallbackExtension implements Extension
+final class CallbackExtension
 {
     private $hook;
     private $callback;
