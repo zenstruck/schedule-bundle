@@ -5,11 +5,9 @@ namespace Zenstruck\ScheduleBundle\Tests;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Process\Process;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
-use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\CallbackTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
@@ -189,35 +187,6 @@ class ScheduleTest extends TestCase
     /**
      * @test
      */
-    public function can_add_ping_extensions()
-    {
-        $schedule = new Schedule();
-
-        $schedule->pingBefore('http://before.com');
-        $schedule->pingAfter('http://after.com', 'POST');
-        $schedule->thenPing('http://then.com');
-        $schedule->pingOnSuccess('http://success.com');
-        $schedule->pingOnFailure('http://failure.com');
-
-        $client = $this->createMock(HttpClientInterface::class);
-        $client->expects($this->exactly(5))->method('request')->withConsecutive(
-            [$this->equalTo('GET'), $this->equalTo('http://before.com'), $this->isType('array')],
-            [$this->equalTo('POST'), $this->equalTo('http://after.com'), $this->isType('array')],
-            [$this->equalTo('GET'), $this->equalTo('http://then.com'), $this->isType('array')],
-            [$this->equalTo('GET'), $this->equalTo('http://success.com'), $this->isType('array')],
-            [$this->equalTo('GET'), $this->equalTo('http://failure.com'), $this->isType('array')]
-        );
-
-        $schedule->getExtensions()[0]->setHttpClient($client)->beforeSchedule(self::runContext($schedule));
-        $schedule->getExtensions()[1]->setHttpClient($client)->afterSchedule(self::runContext($schedule));
-        $schedule->getExtensions()[2]->setHttpClient($client)->afterSchedule(self::runContext($schedule));
-        $schedule->getExtensions()[3]->setHttpClient($client)->onScheduleSuccess(self::runContext($schedule));
-        $schedule->getExtensions()[4]->setHttpClient($client)->onScheduleFailure(self::runContext($schedule));
-    }
-
-    /**
-     * @test
-     */
     public function can_add_email_on_failure_extension()
     {
         $schedule = new Schedule();
@@ -272,10 +241,5 @@ class ScheduleTest extends TestCase
         $this->assertSame('UTC', $schedule->due(new \DateTime())[0]->getTimezone()->getName());
         $this->assertSame('America/Toronto', $schedule->all()[1]->getTimezone()->getName());
         $this->assertSame('America/Toronto', $schedule->due(new \DateTime())[1]->getTimezone()->getName());
-    }
-
-    private static function runContext(Schedule $schedule = null): ScheduleRunContext
-    {
-        return new ScheduleRunContext($schedule ?: new Schedule());
     }
 }

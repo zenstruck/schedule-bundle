@@ -17,8 +17,6 @@ use Zenstruck\ScheduleBundle\EventListener\TaskConfigurationSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EnvironmentExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry;
-use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\BetweenTimeHandler;
-use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\CallbackHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\EmailHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\EnvironmentHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\PingHandler;
@@ -90,6 +88,9 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService(TaskConfigurationSubscriber::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(ScheduleBuilderSubscriber::class, 'kernel.event_subscriber');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(TaskConfigurationSubscriber::class, 0, []);
+
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(PingHandler::class, 'schedule.extension_handler');
+        $this->assertEmpty($this->container->findDefinition(PingHandler::class)->getArguments());
     }
 
     /**

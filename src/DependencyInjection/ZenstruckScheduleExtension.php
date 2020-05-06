@@ -7,6 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleTimezoneSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\TaskConfigurationSubscriber;
@@ -72,9 +73,11 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
             ;
         }
 
-        if ($mergedConfig['ping_handler']) {
+        if ($mergedConfig['ping_handler'] || \class_exists(HttpClient::class)) {
             $loader->load('ping.xml');
+        }
 
+        if ($mergedConfig['ping_handler']) {
             $container
                 ->getDefinition(PingHandler::class)
                 ->setArgument(0, new Reference($mergedConfig['ping_handler']))

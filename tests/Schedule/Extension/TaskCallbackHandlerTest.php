@@ -3,7 +3,6 @@
 namespace Zenstruck\ScheduleBundle\Tests\Schedule\Extension;
 
 use PHPUnit\Framework\TestCase;
-use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\CallbackHandler;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;

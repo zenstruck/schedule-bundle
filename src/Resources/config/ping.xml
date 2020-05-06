@@ -6,7 +6,6 @@
 
     <services>
         <service id="Zenstruck\ScheduleBundle\Schedule\Extension\Handler\PingHandler">
-            <argument /> <!-- HttpClientInterface -->
             <tag name="schedule.extension_handler" />
         </service>
     </services>

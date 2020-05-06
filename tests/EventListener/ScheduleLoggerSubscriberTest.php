@@ -7,7 +7,6 @@ use Psr\Log\Test\TestLogger;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleLoggerSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension\CallbackExtension;
-use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\CallbackHandler;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 

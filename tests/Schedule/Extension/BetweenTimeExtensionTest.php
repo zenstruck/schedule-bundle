@@ -3,7 +3,6 @@
 namespace Zenstruck\ScheduleBundle\Tests\Schedule\Extension;
 
 use PHPUnit\Framework\TestCase;
-use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\BetweenTimeHandler;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 

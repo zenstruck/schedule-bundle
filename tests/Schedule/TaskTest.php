@@ -4,7 +4,6 @@ namespace Zenstruck\ScheduleBundle\Tests\Schedule;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Email;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
@@ -160,35 +159,6 @@ final class TaskTest extends TestCase
         $this->assertNotSame(self::task('task1')->getId(), self::task('task2')->getId());
         $this->assertNotSame((new class('task') extends Task {
         })->getId(), self::task('task')->getId());
-    }
-
-    /**
-     * @test
-     */
-    public function can_add_ping_extensions()
-    {
-        $task = self::task();
-
-        $task->pingBefore('http://before.com');
-        $task->pingAfter('http://after.com', 'POST');
-        $task->thenPing('http://then.com');
-        $task->pingOnSuccess('http://success.com');
-        $task->pingOnFailure('http://failure.com');
-
-        $client = $this->createMock(HttpClientInterface::class);
-        $client->expects($this->exactly(5))->method('request')->withConsecutive(
-            [$this->equalTo('GET'), $this->equalTo('http://before.com'), $this->isType('array')],
-            [$this->equalTo('POST'), $this->equalTo('http://after.com'), $this->isType('array')],
-            [$this->equalTo('GET'), $this->equalTo('http://then.com'), $this->isType('array')],
-            [$this->equalTo('GET'), $this->equalTo('http://success.com'), $this->isType('array')],
-            [$this->equalTo('GET'), $this->equalTo('http://failure.com'), $this->isType('array')]
-        );
-
-        $task->getExtensions()[0]->setHttpClient($client)->beforeTask(self::taskRunContext());
-        $task->getExtensions()[1]->setHttpClient($client)->afterTask(self::taskRunContext());
-        $task->getExtensions()[2]->setHttpClient($client)->afterTask(self::taskRunContext());
-        $task->getExtensions()[3]->setHttpClient($client)->onTaskSuccess(self::taskRunContext());
-        $task->getExtensions()[4]->setHttpClient($client)->onTaskFailure(self::taskRunContext());
     }
 
     /**

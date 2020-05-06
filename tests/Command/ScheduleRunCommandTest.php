@@ -8,7 +8,6 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Zenstruck\ScheduleBundle\Command\ScheduleRunCommand;
 use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\CallbackHandler;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;

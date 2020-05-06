@@ -2,6 +2,7 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension\Handler;
 
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
@@ -16,77 +17,88 @@ final class PingHandler extends ExtensionHandler
 {
     private $httpClient;
 
-    public function __construct(HttpClientInterface $httpClient)
+    public function __construct(HttpClientInterface $httpClient = null)
     {
-        $this->httpClient = $httpClient;
+        if (null === $httpClient && !\class_exists(HttpClient::class)) {
+            throw new \LogicException(\sprintf('Symfony HttpClient is required to use the "%s" extension. Install with "composer require symfony/http-client".', PingExtension::class));
+        }
+
+        $this->httpClient = $httpClient ?: HttpClient::create();
     }
 
     /**
-     * @param PingExtension $extension
+     * @param PingExtension|Extension $extension
      */
     public function beforeSchedule(ScheduleRunContext $context, Extension $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->beforeSchedule($context);
+        $this->pingIf($extension, Extension::SCHEDULE_BEFORE);
     }
 
     /**
-     * @param PingExtension $extension
+     * @param PingExtension|Extension $extension
      */
     public function afterSchedule(ScheduleRunContext $context, Extension $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->afterSchedule($context);
+        $this->pingIf($extension, Extension::SCHEDULE_AFTER);
     }
 
     /**
-     * @param PingExtension $extension
+     * @param PingExtension|Extension $extension
      */
     public function onScheduleSuccess(ScheduleRunContext $context, Extension $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->onScheduleSuccess($context);
+        $this->pingIf($extension, Extension::SCHEDULE_SUCCESS);
     }
 
     /**
-     * @param PingExtension $extension
+     * @param PingExtension|Extension $extension
      */
     public function onScheduleFailure(ScheduleRunContext $context, Extension $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->onScheduleFailure($context);
+        $this->pingIf($extension, Extension::SCHEDULE_FAILURE);
     }
 
     /**
-     * @param PingExtension $extension
+     * @param PingExtension|Extension $extension
      */
     public function beforeTask(TaskRunContext $context, Extension $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->beforeTask($context);
+        $this->pingIf($extension, Extension::TASK_BEFORE);
     }
 
     /**
-     * @param PingExtension $extension
+     * @param PingExtension|Extension $extension
      */
     public function afterTask(TaskRunContext $context, Extension $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->afterTask($context);
+        $this->pingIf($extension, Extension::TASK_AFTER);
     }
 
     /**
-     * @param PingExtension $extension
+     * @param PingExtension|Extension $extension
      */
     public function onTaskSuccess(TaskRunContext $context, Extension $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->onTaskSuccess($context);
+        $this->pingIf($extension, Extension::TASK_SUCCESS);
     }
 
     /**
-     * @param PingExtension $extension
+     * @param PingExtension|Extension $extension
      */
     public function onTaskFailure(TaskRunContext $context, Extension $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->onTaskFailure($context);
+        $this->pingIf($extension, Extension::TASK_FAILURE);
     }
 
     public function supports(Extension $extension): bool
     {
         return $extension instanceof PingExtension;
+    }
+
+    private function pingIf(PingExtension $extension, string $expectedHook): void
+    {
+        if ($expectedHook === $extension->getHook()) {
+            $this->httpClient->request($extension->getMethod(), $extension->getUrl(), $extension->getOptions())->getStatusCode();
+        }
     }
 }
