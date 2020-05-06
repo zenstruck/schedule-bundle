@@ -5,7 +5,9 @@ namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
+use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
+use Zenstruck\ScheduleBundle\Schedule\Task;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -59,17 +61,17 @@ final class EmailExtension implements Extension, HasMissingHandlerMessage
 
     public static function taskAfter($to = null, string $subject = null, callable $callback = null): self
     {
-        return new self(Extension::TASK_AFTER, $to, $subject, $callback);
+        return new self(Task::AFTER, $to, $subject, $callback);
     }
 
     public static function taskFailure($to = null, string $subject = null, callable $callback = null): self
     {
-        return new self(Extension::TASK_FAILURE, $to, $subject, $callback);
+        return new self(Task::FAILURE, $to, $subject, $callback);
     }
 
     public static function scheduleFailure($to = null, string $subject = null, callable $callback = null): self
     {
-        return new self(Extension::SCHEDULE_FAILURE, $to, $subject, $callback);
+        return new self(Schedule::FAILURE, $to, $subject, $callback);
     }
 
     public function getEmail(): Email

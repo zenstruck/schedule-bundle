@@ -2,11 +2,13 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension\Handler;
 
+use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\CallbackExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\RunContext;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
+use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
@@ -19,7 +21,7 @@ final class CallbackHandler extends ExtensionHandler
      */
     public function filterSchedule(ScheduleRunContext $context, Extension $extension): void
     {
-        $this->runIf($extension, Extension::SCHEDULE_FILTER, $context);
+        $this->runIf($extension, Schedule::FILTER, $context);
     }
 
     /**
@@ -27,7 +29,7 @@ final class CallbackHandler extends ExtensionHandler
      */
     public function beforeSchedule(ScheduleRunContext $context, Extension $extension): void
     {
-        $this->runIf($extension, Extension::SCHEDULE_BEFORE, $context);
+        $this->runIf($extension, Schedule::BEFORE, $context);
     }
 
     /**
@@ -35,7 +37,7 @@ final class CallbackHandler extends ExtensionHandler
      */
     public function afterSchedule(ScheduleRunContext $context, Extension $extension): void
     {
-        $this->runIf($extension, Extension::SCHEDULE_AFTER, $context);
+        $this->runIf($extension, Schedule::AFTER, $context);
     }
 
     /**
@@ -43,7 +45,7 @@ final class CallbackHandler extends ExtensionHandler
      */
     public function onScheduleSuccess(ScheduleRunContext $context, Extension $extension): void
     {
-        $this->runIf($extension, Extension::SCHEDULE_SUCCESS, $context);
+        $this->runIf($extension, Schedule::SUCCESS, $context);
     }
 
     /**
@@ -51,7 +53,7 @@ final class CallbackHandler extends ExtensionHandler
      */
     public function onScheduleFailure(ScheduleRunContext $context, Extension $extension): void
     {
-        $this->runIf($extension, Extension::SCHEDULE_FAILURE, $context);
+        $this->runIf($extension, Schedule::FAILURE, $context);
     }
 
     /**
@@ -59,7 +61,7 @@ final class CallbackHandler extends ExtensionHandler
      */
     public function filterTask(TaskRunContext $context, Extension $extension): void
     {
-        $this->runIf($extension, Extension::TASK_FILTER, $context);
+        $this->runIf($extension, Task::FILTER, $context);
     }
 
     /**
@@ -67,7 +69,7 @@ final class CallbackHandler extends ExtensionHandler
      */
     public function beforeTask(TaskRunContext $context, Extension $extension): void
     {
-        $this->runIf($extension, Extension::TASK_BEFORE, $context);
+        $this->runIf($extension, Task::BEFORE, $context);
     }
 
     /**
@@ -75,7 +77,7 @@ final class CallbackHandler extends ExtensionHandler
      */
     public function afterTask(TaskRunContext $context, Extension $extension): void
     {
-        $this->runIf($extension, Extension::TASK_AFTER, $context);
+        $this->runIf($extension, Task::AFTER, $context);
     }
 
     /**
@@ -83,7 +85,7 @@ final class CallbackHandler extends ExtensionHandler
      */
     public function onTaskSuccess(TaskRunContext $context, Extension $extension): void
     {
-        $this->runIf($extension, Extension::TASK_SUCCESS, $context);
+        $this->runIf($extension, Task::SUCCESS, $context);
     }
 
     /**
@@ -91,7 +93,7 @@ final class CallbackHandler extends ExtensionHandler
      */
     public function onTaskFailure(TaskRunContext $context, Extension $extension): void
     {
-        $this->runIf($extension, Extension::TASK_FAILURE, $context);
+        $this->runIf($extension, Task::FAILURE, $context);
     }
 
     public function supports(Extension $extension): bool

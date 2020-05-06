@@ -24,6 +24,12 @@ final class Schedule
 {
     use HasExtensions;
 
+    public const FILTER = 'Filter Schedule';
+    public const BEFORE = 'Before Schedule';
+    public const AFTER = 'After Schedule';
+    public const SUCCESS = 'On Schedule Success';
+    public const FAILURE = 'On Schedule Failure';
+
     private $tasks = [];
     private $allTasks;
     private $dueTasks;

@@ -233,10 +233,10 @@ EOF
     private static function extensionHighlightMap(): array
     {
         return [
-            Extension::TASK_SUCCESS => \sprintf('<info>%s</info>', Extension::TASK_SUCCESS),
-            Extension::SCHEDULE_SUCCESS => \sprintf('<info>%s</info>', Extension::SCHEDULE_SUCCESS),
-            Extension::TASK_FAILURE => \sprintf('<error>%s</error>', Extension::TASK_FAILURE),
-            Extension::SCHEDULE_FAILURE => \sprintf('<error>%s</error>', Extension::SCHEDULE_FAILURE),
+            Task::SUCCESS => \sprintf('<info>%s</info>', Task::SUCCESS),
+            Schedule::SUCCESS => \sprintf('<info>%s</info>', Schedule::SUCCESS),
+            Task::FAILURE => \sprintf('<error>%s</error>', Task::FAILURE),
+            Schedule::FAILURE => \sprintf('<error>%s</error>', Schedule::FAILURE),
         ];
     }
 

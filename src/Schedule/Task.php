@@ -19,6 +19,12 @@ abstract class Task
 {
     use HasExtensions;
 
+    public const FILTER = 'Filter Task';
+    public const BEFORE = 'Before Task';
+    public const AFTER = 'After Task';
+    public const SUCCESS = 'On Task Success';
+    public const FAILURE = 'On Task Failure';
+
     private const DEFAULT_EXPRESSION = '* * * * *';
 
     private $description;

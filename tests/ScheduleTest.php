@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Process\Process;
 use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\CallbackTask;
@@ -194,7 +193,7 @@ class ScheduleTest extends TestCase
             $email->cc('emily@example.com');
         });
 
-        $this->assertTrue($schedule->getExtensions()[0]->isHook(Extension::SCHEDULE_FAILURE));
+        $this->assertTrue($schedule->getExtensions()[0]->isHook(Schedule::FAILURE));
         $this->assertSame('kevin@example.com', $schedule->getExtensions()[0]->getEmail()->getTo()[0]->toString());
         $this->assertSame('emily@example.com', $schedule->getExtensions()[0]->getEmail()->getCc()[0]->toString());
         $this->assertSame('my subject', $schedule->getExtensions()[0]->getEmail()->getSubject());

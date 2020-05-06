@@ -4,7 +4,6 @@ namespace Zenstruck\ScheduleBundle\Tests\Schedule;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Email;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
@@ -168,7 +167,7 @@ final class TaskTest extends TestCase
             $email->cc('emily@example.com');
         });
 
-        $this->assertTrue($task->getExtensions()[0]->isHook(Extension::TASK_AFTER));
+        $this->assertTrue($task->getExtensions()[0]->isHook(Task::AFTER));
         $this->assertSame('kevin@example.com', $task->getExtensions()[0]->getEmail()->getTo()[0]->toString());
         $this->assertSame('emily@example.com', $task->getExtensions()[0]->getEmail()->getCc()[0]->toString());
         $this->assertSame('my subject', $task->getExtensions()[0]->getEmail()->getSubject());
@@ -192,7 +191,7 @@ final class TaskTest extends TestCase
             $email->cc('emily@example.com');
         });
 
-        $this->assertTrue($task->getExtensions()[0]->isHook(Extension::TASK_FAILURE));
+        $this->assertTrue($task->getExtensions()[0]->isHook(Task::FAILURE));
         $this->assertSame('kevin@example.com', $task->getExtensions()[0]->getEmail()->getTo()[0]->toString());
         $this->assertSame('emily@example.com', $task->getExtensions()[0]->getEmail()->getCc()[0]->toString());
         $this->assertSame('my subject', $task->getExtensions()[0]->getEmail()->getSubject());

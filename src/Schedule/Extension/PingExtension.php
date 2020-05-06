@@ -2,7 +2,9 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
+use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
+use Zenstruck\ScheduleBundle\Schedule\Task;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -57,41 +59,41 @@ final class PingExtension implements Extension, HasMissingHandlerMessage
 
     public static function taskBefore(string $url, string $method = 'GET', array $options = []): self
     {
-        return new self(Extension::TASK_BEFORE, $url, $method, $options);
+        return new self(Task::BEFORE, $url, $method, $options);
     }
 
     public static function taskAfter(string $url, string $method = 'GET', array $options = []): self
     {
-        return new self(Extension::TASK_AFTER, $url, $method, $options);
+        return new self(Task::AFTER, $url, $method, $options);
     }
 
     public static function taskSuccess(string $url, string $method = 'GET', array $options = []): self
     {
-        return new self(Extension::TASK_SUCCESS, $url, $method, $options);
+        return new self(Task::SUCCESS, $url, $method, $options);
     }
 
     public static function taskFailure(string $url, string $method = 'GET', array $options = []): self
     {
-        return new self(Extension::TASK_FAILURE, $url, $method, $options);
+        return new self(Task::FAILURE, $url, $method, $options);
     }
 
     public static function scheduleBefore(string $url, string $method = 'GET', array $options = []): self
     {
-        return new self(Extension::SCHEDULE_BEFORE, $url, $method, $options);
+        return new self(Schedule::BEFORE, $url, $method, $options);
     }
 
     public static function scheduleAfter(string $url, string $method = 'GET', array $options = []): self
     {
-        return new self(Extension::SCHEDULE_AFTER, $url, $method, $options);
+        return new self(Schedule::AFTER, $url, $method, $options);
     }
 
     public static function scheduleSuccess(string $url, string $method = 'GET', array $options = []): self
     {
-        return new self(Extension::SCHEDULE_SUCCESS, $url, $method, $options);
+        return new self(Schedule::SUCCESS, $url, $method, $options);
     }
 
     public static function scheduleFailure(string $url, string $method = 'GET', array $options = []): self
     {
-        return new self(Extension::SCHEDULE_FAILURE, $url, $method, $options);
+        return new self(Schedule::FAILURE, $url, $method, $options);
     }
 }
