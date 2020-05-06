@@ -7,7 +7,7 @@ use Zenstruck\ScheduleBundle\Schedule\Extension;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class PingExtension implements Extension
+final class PingExtension implements Extension, HasMissingHandlerMessage
 {
     private $hook;
     private $url;
@@ -48,6 +48,11 @@ final class PingExtension implements Extension
     public function getOptions(): array
     {
         return $this->options;
+    }
+
+    public function getMissingHandlerMessage(): string
+    {
+        return 'Symfony HttpClient is required to use the ping extension. Install with "composer require symfony/http-client".';
     }
 
     public static function taskBefore(string $url, string $method = 'GET', array $options = []): self

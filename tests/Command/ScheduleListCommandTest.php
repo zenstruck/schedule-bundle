@@ -69,9 +69,8 @@ final class ScheduleListCommandTest extends TestCase
         $this->assertStringContainsString('[WARNING] 4 task issues:', $output);
         $this->assertStringContainsString('[ERROR] No task runner registered to handle "Zenstruck\ScheduleBundle\Schedule\Task\CommandTask".', $output);
         $this->assertStringContainsString('[ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").', $output);
-        $this->assertStringContainsString('[ERROR] No extension handler registered for "Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension: On Task', $output);
+        $this->assertStringContainsString('[ERROR] Symfony HttpClient is required to use the ping extension. Install with "composer require symfony/http-client".', $output);
         $this->assertStringContainsString('[ERROR] Command "my:command" not registered.', $output);
-        $this->assertStringContainsString('Failure, ping "https://example.com/my-command-failed"".', $output);
         $this->assertStringContainsString('1 Schedule Extension:', $output);
         $this->assertStringContainsString('On Schedule Failure, email output to "admin@example.com"', $output);
         $this->assertStringContainsString('[WARNING] 1 issue with schedule:', $output);
@@ -159,9 +158,8 @@ final class ScheduleListCommandTest extends TestCase
         $this->assertStringContainsString('[WARNING] 4 issues with this task:', $output);
         $this->assertStringContainsString('[ERROR] No task runner registered to handle "Zenstruck\ScheduleBundle\Schedule\Task\CommandTask".', $output);
         $this->assertStringContainsString('[ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").', $output);
-        $this->assertStringContainsString('[ERROR] No extension handler registered for "Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension: On Task', $output);
+        $this->assertStringContainsString('[ERROR] Symfony HttpClient is required to use the ping extension. Install with "composer require symfony/http-client".', $output);
         $this->assertStringContainsString('[ERROR] Command "my:command" not registered.', $output);
-        $this->assertStringContainsString('Failure, ping "https://example.com/my-command-failed"".', $output);
         $this->assertStringContainsString('1 Schedule Extension:', $output);
         $this->assertStringContainsString('On Schedule Failure, email output to "admin@example.com"', $output);
         $this->assertStringContainsString('[WARNING] 1 issue with schedule:', $output);
