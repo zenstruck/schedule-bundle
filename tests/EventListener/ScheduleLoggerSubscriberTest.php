@@ -7,6 +7,7 @@ use Psr\Log\Test\TestLogger;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleLoggerSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension\CallbackExtension;
+use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\CallbackHandler;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 
@@ -94,6 +95,7 @@ final class ScheduleLoggerSubscriberTest extends TestCase
     {
         $this->createRunnerBuilder()
             ->addTask(MockTask::success()->skip('skip reason', true))
+            ->addHandler(new CallbackHandler())
             ->run()
         ;
 
@@ -111,6 +113,7 @@ final class ScheduleLoggerSubscriberTest extends TestCase
     {
         $context = $this->createRunnerBuilder()
             ->addTask(new MockTask())
+            ->addHandler(new CallbackHandler())
             ->addExtension(CallbackExtension::scheduleFilter(function () {
                 throw new SkipSchedule('the schedule has skipped');
             }))

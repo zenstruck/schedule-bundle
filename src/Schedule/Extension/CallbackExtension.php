@@ -3,14 +3,11 @@
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
 use Zenstruck\ScheduleBundle\Schedule\Extension;
-use Zenstruck\ScheduleBundle\Schedule\RunContext;
-use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
-use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class CallbackExtension extends SelfHandlingExtension
+final class CallbackExtension implements Extension
 {
     private $hook;
     private $callback;
@@ -26,54 +23,14 @@ final class CallbackExtension extends SelfHandlingExtension
         return \sprintf('%s callback: %s', $this->hook, self::createDescriptionFromCallback($this->callback));
     }
 
-    public function filterSchedule(ScheduleRunContext $context): void
+    public function getHook(): string
     {
-        $this->runIf(Extension::SCHEDULE_FILTER, $context);
+        return $this->hook;
     }
 
-    public function beforeSchedule(ScheduleRunContext $context): void
+    public function getCallback(): callable
     {
-        $this->runIf(Extension::SCHEDULE_BEFORE, $context);
-    }
-
-    public function afterSchedule(ScheduleRunContext $context): void
-    {
-        $this->runIf(Extension::SCHEDULE_AFTER, $context);
-    }
-
-    public function onScheduleSuccess(ScheduleRunContext $context): void
-    {
-        $this->runIf(Extension::SCHEDULE_SUCCESS, $context);
-    }
-
-    public function onScheduleFailure(ScheduleRunContext $context): void
-    {
-        $this->runIf(Extension::SCHEDULE_FAILURE, $context);
-    }
-
-    public function filterTask(TaskRunContext $context): void
-    {
-        $this->runIf(Extension::TASK_FILTER, $context);
-    }
-
-    public function beforeTask(TaskRunContext $context): void
-    {
-        $this->runIf(Extension::TASK_BEFORE, $context);
-    }
-
-    public function afterTask(TaskRunContext $context): void
-    {
-        $this->runIf(Extension::TASK_AFTER, $context);
-    }
-
-    public function onTaskSuccess(TaskRunContext $context): void
-    {
-        $this->runIf(Extension::TASK_SUCCESS, $context);
-    }
-
-    public function onTaskFailure(TaskRunContext $context): void
-    {
-        $this->runIf(Extension::TASK_FAILURE, $context);
+        return $this->callback;
     }
 
     public static function taskFilter(callable $callback): self
@@ -135,12 +92,5 @@ final class CallbackExtension extends SelfHandlingExtension
         }
 
         return $ref->getName();
-    }
-
-    private function runIf(string $expectedHook, RunContext $context): void
-    {
-        if ($expectedHook === $this->hook) {
-            ($this->callback)($context);
-        }
     }
 }

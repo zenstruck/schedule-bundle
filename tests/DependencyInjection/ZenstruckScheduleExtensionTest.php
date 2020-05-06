@@ -18,6 +18,7 @@ use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EnvironmentExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\BetweenTimeHandler;
+use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\CallbackHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\EmailHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\EnvironmentHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\PingHandler;
@@ -79,6 +80,9 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasServiceDefinitionWithTag(ScheduleLoggerSubscriber::class, 'monolog.logger', ['channel' => 'schedule']);
 
         $this->assertContainerBuilderHasService(ExtensionHandlerRegistry::class);
+
+        $this->assertContainerBuilderHasService(CallbackHandler::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(CallbackHandler::class, 'schedule.extension_handler');
 
         $this->assertContainerBuilderHasService(BetweenTimeHandler::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(BetweenTimeHandler::class, 'schedule.extension_handler');
