@@ -91,6 +91,9 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
 
         $this->assertContainerBuilderHasServiceDefinitionWithTag(PingHandler::class, 'schedule.extension_handler');
         $this->assertEmpty($this->container->findDefinition(PingHandler::class)->getArguments());
+
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(WithoutOverlappingHandler::class, 'schedule.extension_handler');
+        $this->assertEmpty($this->container->findDefinition(WithoutOverlappingHandler::class)->getArguments());
     }
 
     /**

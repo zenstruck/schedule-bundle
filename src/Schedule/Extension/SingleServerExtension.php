@@ -21,7 +21,7 @@ final class SingleServerExtension implements Extension, HasMissingHandlerMessage
     public function __construct(int $ttl = self::DEFAULT_TTL)
     {
         $this->ttl = $ttl;
-        $this->lock = new Lock(self::class);
+        $this->lock = new Lock();
     }
 
     public function __toString(): string

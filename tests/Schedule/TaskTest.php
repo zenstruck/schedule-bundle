@@ -4,13 +4,9 @@ namespace Zenstruck\ScheduleBundle\Tests\Schedule;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Email;
-use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
-use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\Task;
-use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 
 /**
@@ -210,27 +206,6 @@ final class TaskTest extends TestCase
         $task = self::task()->onSingleServer();
 
         $this->assertInstanceOf(SingleServerExtension::class, $task->getExtensions()[0]);
-    }
-
-    /**
-     * @test
-     */
-    public function can_add_without_overlapping_extension()
-    {
-        $task1 = self::task('task')->withoutOverlapping();
-        $task2 = self::task('task')->withoutOverlapping();
-
-        $task1->getExtensions()[0]->filterTask(self::taskRunContext());
-
-        $this->expectException(SkipTask::class);
-        $this->expectExceptionMessage('Task running in another process.');
-
-        $task2->getExtensions()[0]->filterTask(self::taskRunContext());
-    }
-
-    private static function taskRunContext(): TaskRunContext
-    {
-        return new TaskRunContext(new ScheduleRunContext(new Schedule()), self::task());
     }
 
     private static function task(string $description = 'task description'): Task

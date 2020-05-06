@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
+use Symfony\Component\Lock\LockFactory;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleTimezoneSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\TaskConfigurationSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
@@ -55,9 +56,11 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
             ->setArgument(0, $mergedConfig['tasks'])
         ;
 
-        if ($mergedConfig['without_overlapping_handler']) {
+        if ($mergedConfig['without_overlapping_handler'] || \class_exists(LockFactory::class)) {
             $loader->load('without_overlapping.xml');
+        }
 
+        if ($mergedConfig['without_overlapping_handler']) {
             $container
                 ->getDefinition(WithoutOverlappingHandler::class)
                 ->setArgument(0, new Reference($mergedConfig['without_overlapping_handler']))

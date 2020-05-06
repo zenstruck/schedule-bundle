@@ -3,22 +3,18 @@
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
 use Symfony\Component\Lock\LockFactory;
-use Symfony\Component\Lock\PersistingStoreInterface;
-use Symfony\Component\Lock\Store\FlockStore;
-use Symfony\Component\Lock\Store\SemaphoreStore;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
-use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
+use Zenstruck\ScheduleBundle\Schedule\Extension;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class WithoutOverlappingExtension extends SelfHandlingExtension
+final class WithoutOverlappingExtension implements Extension, HasMissingHandlerMessage
 {
     public const DEFAULT_TTL = 86400;
 
     private $ttl;
     private $lock;
-    private $lockFactory;
 
     /**
      * @param int $ttl Maximum expected lock duration in seconds
@@ -26,7 +22,7 @@ final class WithoutOverlappingExtension extends SelfHandlingExtension
     public function __construct(int $ttl = self::DEFAULT_TTL)
     {
         $this->ttl = $ttl;
-        $this->lock = new Lock(self::class);
+        $this->lock = new Lock();
     }
 
     public function __toString(): string
@@ -34,36 +30,20 @@ final class WithoutOverlappingExtension extends SelfHandlingExtension
         return 'Without overlapping';
     }
 
-    public function filterTask(TaskRunContext $context): void
+    public function aquireLock(LockFactory $lockFactory, string $mutex): void
     {
-        if (!$this->lock->aquire($this->getLockFactory(), $context->getTask()->getId(), $this->ttl)) {
+        if (!$this->lock->aquire($lockFactory, $mutex, $this->ttl)) {
             throw new SkipTask('Task running in another process.');
         }
     }
 
-    public function afterTask(TaskRunContext $context): void
+    public function releaseLock(): void
     {
         $this->lock->release();
     }
 
-    public function setLockFactory(LockFactory $lockFactory): self
+    public function getMissingHandlerMessage(): string
     {
-        $this->lockFactory = $lockFactory;
-
-        return $this;
-    }
-
-    private function getLockFactory(): LockFactory
-    {
-        return $this->lockFactory ?: $this->lockFactory = new LockFactory(self::createLocalStore());
-    }
-
-    private static function createLocalStore(): PersistingStoreInterface
-    {
-        if (SemaphoreStore::isSupported()) {
-            return new SemaphoreStore();
-        }
-
-        return new FlockStore();
+        return 'Symfony Lock is required to use the without overlapping extension. Install with "composer require symfony/lock".';
     }
 }
