@@ -10,7 +10,6 @@ use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry;
-use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\SelfHandlingHandler;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunner;
@@ -85,10 +84,7 @@ final class MockScheduleBuilder implements ScheduleBuilder
             $dispatcher->addSubscriber($subscriber);
         }
 
-        $handlers = $this->handlers;
-        $handlers[] = new SelfHandlingHandler();
-
-        return new ScheduleRunner(\array_merge($this->runners, [new MockTaskRunner()]), new ExtensionHandlerRegistry($handlers), $dispatcher);
+        return new ScheduleRunner(\array_merge($this->runners, [new MockTaskRunner()]), new ExtensionHandlerRegistry($this->handlers), $dispatcher);
     }
 
     public function buildSchedule(Schedule $schedule): void

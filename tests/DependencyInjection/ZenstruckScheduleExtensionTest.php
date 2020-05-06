@@ -20,7 +20,6 @@ use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\EmailHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\EnvironmentHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\PingHandler;
-use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\SelfHandlingHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\SingleServerHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\WithoutOverlappingHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension;
@@ -78,9 +77,6 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasServiceDefinitionWithTag(ScheduleLoggerSubscriber::class, 'monolog.logger', ['channel' => 'schedule']);
 
         $this->assertContainerBuilderHasService(ExtensionHandlerRegistry::class);
-
-        $this->assertContainerBuilderHasService(SelfHandlingHandler::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithTag(SelfHandlingHandler::class, 'schedule.extension_handler', ['priority' => -100]);
 
         $this->assertContainerBuilderHasService(EnvironmentHandler::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(EnvironmentHandler::class, 'schedule.extension_handler');
