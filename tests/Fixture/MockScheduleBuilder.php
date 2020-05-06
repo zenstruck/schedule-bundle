@@ -15,7 +15,6 @@ use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task;
-use Zenstruck\ScheduleBundle\Schedule\Task\Runner\SelfRunningTaskRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunner;
 
 /**
@@ -89,7 +88,7 @@ final class MockScheduleBuilder implements ScheduleBuilder
         $handlers = $this->handlers;
         $handlers[] = new SelfHandlingHandler();
 
-        return new ScheduleRunner(\array_merge($this->runners, [new SelfRunningTaskRunner()]), new ExtensionHandlerRegistry($handlers), $dispatcher);
+        return new ScheduleRunner(\array_merge($this->runners, [new MockTaskRunner()]), new ExtensionHandlerRegistry($handlers), $dispatcher);
     }
 
     public function buildSchedule(Schedule $schedule): void

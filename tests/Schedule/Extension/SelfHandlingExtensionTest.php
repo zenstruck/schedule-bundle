@@ -62,9 +62,9 @@ final class SelfHandlingExtensionTest extends TestCase
         ], $builder->calls);
     }
 
-    private function createBuilder(callable $callback): ScheduleBuilder
+    private function createBuilder(Task $task): ScheduleBuilder
     {
-        return new class($callback) implements ScheduleBuilder {
+        return new class($task) implements ScheduleBuilder {
             public $calls = [];
 
             private $task;

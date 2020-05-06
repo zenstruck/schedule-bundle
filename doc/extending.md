@@ -6,16 +6,10 @@ You can define your own task types. Tasks consist of a *task* object that extend
 [`Task`](../src/Schedule/Task.php) and a *runner* that implements
 [`TaskRunner`](../src/Schedule/Task/TaskRunner.php). The runner is responsible
 for running the command and returning a [`Result`](../src/Schedule/Task/Result.php).
-If your task is capable of running itself, have it implement
-[`SelfRunningTask`](../src/Schedule/Task/SelfRunningTask.php) (a *runner* is not required).
 
-If your task requires a *runner*, the runner must be a service with the `schedule.task_runner` tag
-(this is *autoconfigurable*). Runners must implement the `supports()` method which should return
-true when passed the task it handles.
-
-See [`CallbackTask`](../src/Schedule/Task/CallbackTask.php) for an example of a *self-running*
-task and [`CommandTask`](../src/Schedule/Task/CommandTask.php) for an example of a task with
-a *[runner](../src/Schedule/Task/Runner/CommandTaskRunner.php)*.
+The runner must be a service with the `schedule.task_runner` tag (this is *autoconfigurable*).
+Runners must implement the `supports()` method which should return true when passed the task
+it handles.
 
 As an example, let's create a Task that sends a *Message* to your *MessageBus* (`symfony/messenger`
 required).

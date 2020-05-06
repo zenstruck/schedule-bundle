@@ -27,8 +27,10 @@ use Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\WithoutOverlappingExtension;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunner;
+use Zenstruck\ScheduleBundle\Schedule\Task\Runner\CallbackTaskRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\Runner\CommandTaskRunner;
-use Zenstruck\ScheduleBundle\Schedule\Task\Runner\SelfRunningTaskRunner;
+use Zenstruck\ScheduleBundle\Schedule\Task\Runner\NullTaskRunner;
+use Zenstruck\ScheduleBundle\Schedule\Task\Runner\ProcessTaskRunner;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -62,8 +64,14 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService(CommandTaskRunner::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(CommandTaskRunner::class, 'schedule.task_runner');
 
-        $this->assertContainerBuilderHasService(SelfRunningTaskRunner::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithTag(SelfRunningTaskRunner::class, 'schedule.task_runner');
+        $this->assertContainerBuilderHasService(ProcessTaskRunner::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(ProcessTaskRunner::class, 'schedule.task_runner');
+
+        $this->assertContainerBuilderHasService(CallbackTaskRunner::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(CallbackTaskRunner::class, 'schedule.task_runner');
+
+        $this->assertContainerBuilderHasService(NullTaskRunner::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(NullTaskRunner::class, 'schedule.task_runner');
 
         $this->assertContainerBuilderHasService(ScheduleLoggerSubscriber::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(ScheduleLoggerSubscriber::class, 'kernel.event_subscriber');

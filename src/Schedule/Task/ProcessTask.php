@@ -8,7 +8,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class ProcessTask extends Task implements SelfRunningTask
+final class ProcessTask extends Task
 {
     private $process;
 
@@ -30,19 +30,9 @@ final class ProcessTask extends Task implements SelfRunningTask
         parent::__construct($process->getCommandLine());
     }
 
-    public function __invoke(): Result
+    public function getProcess(): Process
     {
-        $this->process->run();
-
-        if ($this->process->isSuccessful()) {
-            return Result::successful($this, $this->process->getOutput());
-        }
-
-        return Result::failure(
-            $this,
-            "Exit {$this->process->getExitCode()}: {$this->process->getExitCodeText()}",
-            $this->process->getErrorOutput()
-        );
+        return $this->process;
     }
 
     public function getContext(): array

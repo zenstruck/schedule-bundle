@@ -52,7 +52,15 @@
             <tag name="schedule.task_runner" />
         </service>
 
-        <service id="Zenstruck\ScheduleBundle\Schedule\Task\Runner\SelfRunningTaskRunner">
+        <service id="Zenstruck\ScheduleBundle\Schedule\Task\Runner\NullTaskRunner">
+            <tag name="schedule.task_runner" />
+        </service>
+
+        <service id="Zenstruck\ScheduleBundle\Schedule\Task\Runner\ProcessTaskRunner">
+            <tag name="schedule.task_runner" />
+        </service>
+
+        <service id="Zenstruck\ScheduleBundle\Schedule\Task\Runner\CallbackTaskRunner">
             <tag name="schedule.task_runner" />
         </service>
 

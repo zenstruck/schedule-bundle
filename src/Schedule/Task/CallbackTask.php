@@ -8,7 +8,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class CallbackTask extends Task implements SelfRunningTask
+final class CallbackTask extends Task
 {
     private $callback;
 
@@ -22,39 +22,13 @@ final class CallbackTask extends Task implements SelfRunningTask
         $this->callback = $callback;
     }
 
-    public function __invoke(): Result
+    public function getCallback(): callable
     {
-        $output = ($this->callback)();
-
-        return Result::successful($this, self::stringify($output));
+        return $this->callback;
     }
 
     public function getContext(): array
     {
         return ['Callable' => CallbackExtension::createDescriptionFromCallback($this->callback)];
-    }
-
-    /**
-     * @param mixed $value
-     */
-    private static function stringify($value): ?string
-    {
-        if (null === $value) {
-            return null;
-        }
-
-        if (\is_scalar($value)) {
-            return $value;
-        }
-
-        if (\is_object($value) && \method_exists($value, '__toString')) {
-            return $value;
-        }
-
-        if (\is_object($value)) {
-            return '[object] '.\get_class($value);
-        }
-
-        return '('.\gettype($value).')';
     }
 }

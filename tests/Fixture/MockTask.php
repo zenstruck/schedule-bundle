@@ -4,12 +4,11 @@ namespace Zenstruck\ScheduleBundle\Tests\Fixture;
 
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\Result;
-use Zenstruck\ScheduleBundle\Schedule\Task\SelfRunningTask;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class MockTask extends Task implements SelfRunningTask
+final class MockTask extends Task
 {
     private $result;
 
@@ -18,7 +17,7 @@ final class MockTask extends Task implements SelfRunningTask
         parent::__construct($description);
     }
 
-    public function __invoke(): Result
+    public function getResult(): Result
     {
         return $this->result;
     }
