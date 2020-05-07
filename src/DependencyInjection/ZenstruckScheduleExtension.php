@@ -76,14 +76,14 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
             ;
         }
 
-        if ($mergedConfig['ping_handler'] || \class_exists(HttpClient::class)) {
-            $loader->load('ping.xml');
+        if ($mergedConfig['http_client'] || \class_exists(HttpClient::class)) {
+            $loader->load('http.xml');
         }
 
-        if ($mergedConfig['ping_handler']) {
+        if ($mergedConfig['http_client']) {
             $container
                 ->getDefinition(PingHandler::class)
-                ->setArgument(0, new Reference($mergedConfig['ping_handler']))
+                ->setArgument(0, new Reference($mergedConfig['http_client']))
             ;
         }
 
@@ -95,16 +95,16 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
             ;
         }
 
-        if ($mergedConfig['email_handler']['enabled']) {
-            $loader->load('email_handler.xml');
+        if ($mergedConfig['mailer']['enabled']) {
+            $loader->load('mailer.xml');
 
             $container
                 ->getDefinition(EmailHandler::class)
                 ->setArguments([
-                    new Reference($mergedConfig['email_handler']['service']),
-                    $mergedConfig['email_handler']['default_from'],
-                    $mergedConfig['email_handler']['default_to'],
-                    $mergedConfig['email_handler']['subject_prefix'],
+                    new Reference($mergedConfig['mailer']['service']),
+                    $mergedConfig['mailer']['default_from'],
+                    $mergedConfig['mailer']['default_to'],
+                    $mergedConfig['mailer']['subject_prefix'],
                 ])
             ;
         }

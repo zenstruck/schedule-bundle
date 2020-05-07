@@ -582,7 +582,7 @@ $task->pingOnFailure('https://example.com/task-failed');
     # config/packages/zenstruck_schedule.yaml
 
     zenstruck_schedule:
-        ping_handler: my_http_client
+        http_client: my_http_client
     ```
 
 ### Email Output
@@ -650,7 +650,7 @@ $task->emailOnFailure('admin@example.com', 'my email subject', function (Symfony
     # config/packages/zenstruck_schedule.yaml
 
     zenstruck_schedule:
-        email_handler:
+        mailer:
             service: mailer # required
             default_to: admin@example.com # optional (exclude if defined in code)
             default_from: webmaster@example.com # exclude only if a "global from" is defined for your application

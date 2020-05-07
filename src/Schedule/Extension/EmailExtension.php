@@ -85,6 +85,6 @@ final class EmailExtension implements HasMissingHandlerMessage
 
     public function getMissingHandlerMessage(): string
     {
-        return 'To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").';
+        return 'To use the email extension you must configure a mailer (config path: "zenstruck_schedule.mailer").';
     }
 }

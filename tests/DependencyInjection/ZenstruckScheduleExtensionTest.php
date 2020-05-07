@@ -142,7 +142,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
      */
     public function can_configure_ping_handler_http_client()
     {
-        $this->load(['ping_handler' => 'my_client']);
+        $this->load(['http_client' => 'my_client']);
 
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(PingHandler::class, 0, 'my_client');
         $this->assertContainerBuilderHasServiceDefinitionWithTag(PingHandler::class, 'schedule.extension_handler');
@@ -153,7 +153,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
      */
     public function can_configure_email_handler()
     {
-        $this->load(['email_handler' => [
+        $this->load(['mailer' => [
             'service' => 'my_mailer',
             'default_from' => 'from@example.com',
             'default_to' => 'to@example.com',
@@ -172,7 +172,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
      */
     public function minimum_email_handler_configuration()
     {
-        $this->load(['email_handler' => [
+        $this->load(['mailer' => [
             'service' => 'my_mailer',
         ]]);
 

@@ -205,7 +205,7 @@ abstract class Task
 
     /**
      * Ping a webhook before task runs (will not ping if task was skipped).
-     * If you want to control the HttpClientInterface used, configure `zenstruck_schedule.ping_handler`.
+     * If you want to control the HttpClient used, configure `zenstruck_schedule.http_client`.
      *
      * @param array $options See HttpClientInterface::OPTIONS_DEFAULTS
      */
@@ -216,7 +216,7 @@ abstract class Task
 
     /**
      * Ping a webhook after task has run (will not ping if task was skipped).
-     * If you want to control the HttpClientInterface used, configure `zenstruck_schedule.ping_handler`.
+     * If you want to control the HttpClient used, configure `zenstruck_schedule.http_client`.
      *
      * @param array $options See HttpClientInterface::OPTIONS_DEFAULTS
      */
@@ -235,7 +235,7 @@ abstract class Task
 
     /**
      * Ping a webhook if task was successful (will not ping if task was skipped).
-     * If you want to control the HttpClientInterface used, configure `zenstruck_schedule.ping_handler`.
+     * If you want to control the HttpClient used, configure `zenstruck_schedule.http_client`.
      *
      * @param array $options See HttpClientInterface::OPTIONS_DEFAULTS
      */
@@ -246,7 +246,7 @@ abstract class Task
 
     /**
      * Ping a webhook if task failed (will not ping if task was skipped).
-     * If you want to control the HttpClientInterface used, configure `zenstruck_schedule.ping_handler`.
+     * If you want to control the HttpClient used, configure `zenstruck_schedule.http_client`.
      *
      * @param array $options See HttpClientInterface::OPTIONS_DEFAULTS
      */
@@ -257,7 +257,7 @@ abstract class Task
 
     /**
      * Email task detail after run (on success or failure, not if skipped).
-     * Be sure to configure `zenstruck_schedule.email_handler`.
+     * Be sure to configure `zenstruck_schedule.mailer`.
      *
      * @param string|string[] $to       Email address(es)
      * @param callable|null   $callback Add your own headers etc
@@ -278,7 +278,7 @@ abstract class Task
 
     /**
      * Email task/failure details if failed (not if skipped).
-     * Be sure to configure `zenstruck_schedule.email_handler`.
+     * Be sure to configure `zenstruck_schedule.mailer`.
      *
      * @param string|string[] $to       Email address(es)
      * @param callable|null   $callback Add your own headers etc

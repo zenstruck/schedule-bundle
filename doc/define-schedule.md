@@ -252,7 +252,7 @@ $schedule->pingOnFailure('https://example.com/some-tasks-failed');
     # config/packages/zenstruck_schedule.yaml
 
     zenstruck_schedule:
-        ping_handler: my_http_client
+        http_client: my_http_client
     ```
 
 ### Email On Failure
@@ -303,7 +303,7 @@ $schedule->emailOnFailure('admin@example.com', 'my email subject', function (\Sy
     # config/packages/zenstruck_schedule.yaml
 
     zenstruck_schedule:
-        email_handler:
+        mailer:
             service: mailer # required
             default_to: admin@example.com # optional (exclude if defined in code/config)
             default_from: webmaster@example.com # exclude only if a "global from" is defined for your application

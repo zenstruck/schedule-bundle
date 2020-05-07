@@ -103,7 +103,7 @@ $ composer require zenstruck/schedule-bundle
     # config/packages/zenstruck_schedule.yaml
 
     zenstruck_schedule:
-        email_handler: # enable email notifications
+        mailer: # enable email notifications
             default_from: webmaster@example.com
             default_to: admin@example.com
 
@@ -149,12 +149,12 @@ zenstruck_schedule:
     single_server_lock_factory: null # Example: lock.redis.factory
 
     # The HttpClient service to use
-    ping_handler:         null # Example: http_client
+    http_client:          null # Example: http_client
 
     # The default timezone for tasks (override at task level), null for system default
     timezone:             null # Example: America/New_York
 
-    email_handler:
+    mailer:
         enabled:              false
 
         # The mailer service to use
@@ -185,7 +185,7 @@ zenstruck_schedule:
         email_on_failure:
             enabled:              false
 
-            # Email address to send email to (leave blank to use "zenstruck_schedule.email_handler.default_to")
+            # Email address to send email to (leave blank to use "zenstruck_schedule.mailer.default_to")
             to:                   null
 
             # Email subject (leave blank to use extension default)
@@ -344,7 +344,7 @@ zenstruck_schedule:
             email_after:
                 enabled:              false
 
-                # Email address to send email to (leave blank to use "zenstruck_schedule.email_handler.default_to")
+                # Email address to send email to (leave blank to use "zenstruck_schedule.mailer.default_to")
                 to:                   null
 
                 # Email subject (leave blank to use extension default)
@@ -354,7 +354,7 @@ zenstruck_schedule:
             email_on_failure:
                 enabled:              false
 
-                # Email address to send email to (leave blank to use "zenstruck_schedule.email_handler.default_to")
+                # Email address to send email to (leave blank to use "zenstruck_schedule.mailer.default_to")
                 to:                   null
 
                 # Email subject (leave blank to use extension default)

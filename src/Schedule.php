@@ -184,7 +184,7 @@ final class Schedule
 
     /**
      * Ping a webhook before any tasks run (even if none are due).
-     * If you want to control the HttpClientInterface used, configure `zenstruck_schedule.ping_handler`.
+     * If you want to control the HttpClient used, configure `zenstruck_schedule.http_client`.
      *
      * @param array $options See HttpClientInterface::OPTIONS_DEFAULTS
      */
@@ -195,7 +195,7 @@ final class Schedule
 
     /**
      * Ping a webhook after tasks ran (even if none ran).
-     * If you want to control the HttpClientInterface used, configure `zenstruck_schedule.ping_handler`.
+     * If you want to control the HttpClient used, configure `zenstruck_schedule.http_client`.
      *
      * @param array $options See HttpClientInterface::OPTIONS_DEFAULTS
      */
@@ -214,7 +214,7 @@ final class Schedule
 
     /**
      * Ping a webhook after tasks run if all tasks succeeded (skipped tasks are considered successful).
-     * If you want to control the HttpClientInterface used, configure `zenstruck_schedule.ping_handler`.
+     * If you want to control the HttpClient used, configure `zenstruck_schedule.http_client`.
      *
      * @param array $options See HttpClientInterface::OPTIONS_DEFAULTS
      */
@@ -225,7 +225,7 @@ final class Schedule
 
     /**
      * Ping a webhook after tasks run if one or more tasks failed.
-     * If you want to control the HttpClientInterface used, configure `zenstruck_schedule.ping_handler`.
+     * If you want to control the HttpClient used, configure `zenstruck_schedule.http_client`.
      *
      * @param array $options See HttpClientInterface::OPTIONS_DEFAULTS
      */
@@ -236,7 +236,7 @@ final class Schedule
 
     /**
      * Email failed task detail after tasks run if one or more tasks failed.
-     * Be sure to configure `zenstruck_schedule.email_handler`.
+     * Be sure to configure `zenstruck_schedule.mailer`.
      *
      * @param string|string[] $to       Email address(es)
      * @param callable|null   $callback Add your own headers etc

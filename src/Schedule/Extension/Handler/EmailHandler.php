@@ -143,7 +143,7 @@ final class EmailHandler extends ExtensionHandler
         }
 
         if (empty($email->getTo())) {
-            throw new \LogicException('There is no "To" configured for the email. Either set it when adding the extension or in your configuration (config path: "zenstruck_schedule.email_handler.default_to").');
+            throw new \LogicException('There is no "To" configured for the email. Either set it when adding the extension or in your configuration (config path: "zenstruck_schedule.mailer.default_to").');
         }
 
         return $email;

@@ -63,7 +63,7 @@ $ bin/console schedule:list
 
  [WARNING] 1 task issue:
 
- [ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").      
+ [ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.mailer").      
 
  ! [NOTE] For more details, run php bin/console schedule:list --detail
 
@@ -105,7 +105,7 @@ $ bin/console schedule:list --detail
 
  [WARNING] 1 issue with this task:
 
- [ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").      
+ [ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.mailer").      
 
 (2/2) CommandTask: Send the weekly sales report
 -----------------------------------------------
@@ -139,7 +139,7 @@ There are two issues that need to be resolved in the bundle config:
 
 zenstruck_schedule:
     single_server_lock_factory: lock.default.factory # required to use "onSingleServer"
-    email_handler: # required to use "emailOnFailure"
+    mailer: # required to use "emailOnFailure"
         service: mailer
         default_from: webmaster@example.com
 ```
