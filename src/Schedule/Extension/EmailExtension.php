@@ -2,16 +2,16 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Zenstruck\ScheduleBundle\Schedule;
+use Zenstruck\ScheduleBundle\Schedule\HasMissingDependencyMessage;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class EmailExtension implements HasMissingHandlerMessage
+final class EmailExtension implements HasMissingDependencyMessage
 {
     private $hook;
     private $email;
@@ -21,10 +21,6 @@ final class EmailExtension implements HasMissingHandlerMessage
      */
     private function __construct(string $hook, $to = null, string $subject = null, callable $callback = null)
     {
-        if (!\interface_exists(MailerInterface::class)) {
-            throw new \LogicException(\sprintf('Symfony Mailer is required to use the "%s" extension. Install with "composer require symfony/mailer".', self::class));
-        }
-
         $this->hook = $hook;
 
         $email = new Email();
@@ -83,7 +79,7 @@ final class EmailExtension implements HasMissingHandlerMessage
         return $expectedHook === $this->hook;
     }
 
-    public function getMissingHandlerMessage(): string
+    public static function getMissingDependencyMessage(): string
     {
         return 'To use the email extension you must configure a mailer (config path: "zenstruck_schedule.mailer").';
     }

@@ -2,10 +2,12 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
+use Zenstruck\ScheduleBundle\Schedule\HasMissingDependencyMessage;
+
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class SingleServerExtension extends LockingExtension implements HasMissingHandlerMessage
+final class SingleServerExtension extends LockingExtension implements HasMissingDependencyMessage
 {
     public const DEFAULT_TTL = 3600;
 
@@ -22,7 +24,7 @@ final class SingleServerExtension extends LockingExtension implements HasMissing
         return 'Run on single server';
     }
 
-    public function getMissingHandlerMessage(): string
+    public static function getMissingDependencyMessage(): string
     {
         return 'To use "onSingleServer" you must configure a lock factory (config path: "zenstruck_schedule.single_server_lock_factory").';
     }

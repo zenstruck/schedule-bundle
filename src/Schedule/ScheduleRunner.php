@@ -9,6 +9,7 @@ use Zenstruck\ScheduleBundle\Event\BeforeScheduleEvent;
 use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
 use Zenstruck\ScheduleBundle\Event\BuildScheduleEvent;
 use Zenstruck\ScheduleBundle\Schedule;
+use Zenstruck\ScheduleBundle\Schedule\Exception\MissingDependency;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry;
@@ -89,7 +90,7 @@ final class ScheduleRunner
             }
         }
 
-        throw new \LogicException(\sprintf('No task runner registered to handle "%s".', \get_class($task)));
+        throw MissingDependency::noTaskRunner($task);
     }
 
     private function runTask(TaskRunContext $context): Result

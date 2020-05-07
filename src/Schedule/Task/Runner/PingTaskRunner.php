@@ -4,6 +4,7 @@ namespace Zenstruck\ScheduleBundle\Schedule\Task\Runner;
 
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Zenstruck\ScheduleBundle\Schedule\Exception\MissingDependency;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\PingTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\Result;
@@ -19,7 +20,7 @@ final class PingTaskRunner implements TaskRunner
     public function __construct(HttpClientInterface $httpClient = null)
     {
         if (null === $httpClient && !\class_exists(HttpClient::class)) {
-            throw new \LogicException(\sprintf('Symfony HttpClient is required to use "%s". Install with "composer require symfony/http-client".', self::class));
+            throw new MissingDependency(PingTask::getMissingDependencyMessage());
         }
 
         $this->httpClient = $httpClient ?: HttpClient::create();

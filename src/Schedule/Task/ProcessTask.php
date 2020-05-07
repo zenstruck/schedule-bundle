@@ -3,12 +3,13 @@
 namespace Zenstruck\ScheduleBundle\Schedule\Task;
 
 use Symfony\Component\Process\Process;
+use Zenstruck\ScheduleBundle\Schedule\HasMissingDependencyMessage;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class ProcessTask extends Task
+final class ProcessTask extends Task implements HasMissingDependencyMessage
 {
     private $process;
 
@@ -17,10 +18,6 @@ final class ProcessTask extends Task
      */
     public function __construct($process)
     {
-        if (!\class_exists(Process::class)) {
-            throw new \LogicException(\sprintf('"symfony/process" is required to use "%s". Install with "composer require symfony/process".', self::class));
-        }
-
         if (!$process instanceof Process) {
             $process = Process::fromShellCommandline($process);
         }
@@ -41,5 +38,10 @@ final class ProcessTask extends Task
             'Command Line' => $this->process->getCommandLine(),
             'Command Timeout' => $this->process->getTimeout(),
         ];
+    }
+
+    public static function getMissingDependencyMessage(): string
+    {
+        return \sprintf('"symfony/process" is required to use "%s". Install with "composer require symfony/process".', self::class);
     }
 }

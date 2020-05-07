@@ -3,12 +3,13 @@
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
 use Zenstruck\ScheduleBundle\Schedule;
+use Zenstruck\ScheduleBundle\Schedule\HasMissingDependencyMessage;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class PingExtension implements HasMissingHandlerMessage
+final class PingExtension implements HasMissingDependencyMessage
 {
     private $hook;
     private $url;
@@ -51,7 +52,7 @@ final class PingExtension implements HasMissingHandlerMessage
         return $this->options;
     }
 
-    public function getMissingHandlerMessage(): string
+    public static function getMissingDependencyMessage(): string
     {
         return 'Symfony HttpClient is required to use the ping extension. Install with "composer require symfony/http-client".';
     }

@@ -2,10 +2,12 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
+use Zenstruck\ScheduleBundle\Schedule\HasMissingDependencyMessage;
+
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class WithoutOverlappingExtension extends LockingExtension implements HasMissingHandlerMessage
+final class WithoutOverlappingExtension extends LockingExtension implements HasMissingDependencyMessage
 {
     public const DEFAULT_TTL = 86400;
 
@@ -22,7 +24,7 @@ final class WithoutOverlappingExtension extends LockingExtension implements HasM
         return 'Without overlapping';
     }
 
-    public function getMissingHandlerMessage(): string
+    public static function getMissingDependencyMessage(): string
     {
         return 'Symfony Lock is required to use the without overlapping extension. Install with "composer require symfony/lock".';
     }

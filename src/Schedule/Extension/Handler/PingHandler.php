@@ -5,6 +5,7 @@ namespace Zenstruck\ScheduleBundle\Schedule\Extension\Handler;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Zenstruck\ScheduleBundle\Schedule;
+use Zenstruck\ScheduleBundle\Schedule\Exception\MissingDependency;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
@@ -21,7 +22,7 @@ final class PingHandler extends ExtensionHandler
     public function __construct(HttpClientInterface $httpClient = null)
     {
         if (null === $httpClient && !\class_exists(HttpClient::class)) {
-            throw new \LogicException(\sprintf('Symfony HttpClient is required to use the "%s" extension. Install with "composer require symfony/http-client".', PingExtension::class));
+            throw new MissingDependency(PingExtension::getMissingDependencyMessage());
         }
 
         $this->httpClient = $httpClient ?: HttpClient::create();

@@ -6,6 +6,7 @@ use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\PersistingStoreInterface;
 use Symfony\Component\Lock\Store\FlockStore;
 use Symfony\Component\Lock\Store\SemaphoreStore;
+use Zenstruck\ScheduleBundle\Schedule\Exception\MissingDependency;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\WithoutOverlappingExtension;
@@ -21,7 +22,7 @@ final class WithoutOverlappingHandler extends ExtensionHandler
     public function __construct(LockFactory $lockFactory = null)
     {
         if (null === $lockFactory && !\class_exists(LockFactory::class)) {
-            throw new \LogicException(\sprintf('Symfony Lock is required to use the "%s" extension. Install with "composer require symfony/lock".', WithoutOverlappingExtension::class));
+            throw new MissingDependency(WithoutOverlappingExtension::getMissingDependencyMessage());
         }
 
         $this->lockFactory = $lockFactory ?: new LockFactory(self::createLocalStore());
