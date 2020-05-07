@@ -120,7 +120,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
      */
     public function can_configure_single_server_lock_factory()
     {
-        $this->load(['single_server_handler' => 'my_factory']);
+        $this->load(['single_server_lock_factory' => 'my_factory']);
 
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(SingleServerHandler::class, 0, 'my_factory');
         $this->assertContainerBuilderHasServiceDefinitionWithTag(SingleServerHandler::class, 'schedule.extension_handler');
@@ -131,7 +131,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
      */
     public function can_configure_without_overlapping_handler_lock_factory()
     {
-        $this->load(['without_overlapping_handler' => 'my_factory']);
+        $this->load(['without_overlapping_lock_factory' => 'my_factory']);
 
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(WithoutOverlappingHandler::class, 0, 'my_factory');
         $this->assertContainerBuilderHasServiceDefinitionWithTag(WithoutOverlappingHandler::class, 'schedule.extension_handler');

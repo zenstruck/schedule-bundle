@@ -142,11 +142,11 @@ $ composer require zenstruck/schedule-bundle
 ```yaml
 zenstruck_schedule:
 
-    # The LockFactory service to use
-    without_overlapping_handler: null # Example: lock.default.factory
+    # The LockFactory service to use for the without overlapping extension
+    without_overlapping_lock_factory: null # Example: lock.default.factory
 
-    # The LockFactory service to use - be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)
-    single_server_handler: null # Example: lock.redis.factory
+    # The LockFactory service to use for the single server extension - be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)
+    single_server_lock_factory: null # Example: lock.redis.factory
 
     # The HttpClient service to use
     ping_handler:         null # Example: http_client

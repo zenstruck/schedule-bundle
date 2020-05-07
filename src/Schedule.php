@@ -249,7 +249,7 @@ final class Schedule
 
     /**
      * Restrict running of schedule to a single server.
-     * Be sure to configure `zenstruck_schedule.single_server_handler`.
+     * Be sure to configure `zenstruck_schedule.single_server_lock_factory`.
      *
      * @param int $ttl Maximum expected lock duration in seconds
      */

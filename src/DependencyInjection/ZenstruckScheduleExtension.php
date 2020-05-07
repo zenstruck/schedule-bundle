@@ -56,23 +56,23 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
             ->setArgument(0, $mergedConfig['tasks'])
         ;
 
-        if ($mergedConfig['without_overlapping_handler'] || \class_exists(LockFactory::class)) {
+        if ($mergedConfig['without_overlapping_lock_factory'] || \class_exists(LockFactory::class)) {
             $loader->load('without_overlapping.xml');
         }
 
-        if ($mergedConfig['without_overlapping_handler']) {
+        if ($mergedConfig['without_overlapping_lock_factory']) {
             $container
                 ->getDefinition(WithoutOverlappingHandler::class)
-                ->setArgument(0, new Reference($mergedConfig['without_overlapping_handler']))
+                ->setArgument(0, new Reference($mergedConfig['without_overlapping_lock_factory']))
             ;
         }
 
-        if ($mergedConfig['single_server_handler']) {
+        if ($mergedConfig['single_server_lock_factory']) {
             $loader->load('single_server.xml');
 
             $container
                 ->getDefinition(SingleServerHandler::class)
-                ->setArgument(0, new Reference($mergedConfig['single_server_handler']))
+                ->setArgument(0, new Reference($mergedConfig['single_server_lock_factory']))
             ;
         }
 

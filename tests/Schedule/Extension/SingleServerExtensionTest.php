@@ -65,7 +65,7 @@ final class SingleServerExtensionTest extends TestCase
     public function provides_helpful_message_if_handler_not_configured()
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('To use "onSingleServer" you must configure a lock factory (config path: "zenstruck_schedule.single_server_handler")');
+        $this->expectExceptionMessage('To use "onSingleServer" you must configure a lock factory (config path: "zenstruck_schedule.single_server_lock_factory")');
 
         (new MockScheduleBuilder())
             ->addExtension(new SingleServerExtension())

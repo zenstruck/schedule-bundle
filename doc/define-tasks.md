@@ -728,7 +728,7 @@ $task->withoutOverlapping();
     # config/packages/zenstruck_schedule.yaml
 
     zenstruck_schedule:
-        without_overlapping_handler: my_lock_factory
+        without_overlapping_lock_factory: my_lock_factory
     ```
 
 ### Run on Single Server
@@ -761,7 +761,7 @@ $task->onSingleServer();
     # config/packages/zenstruck_schedule.yaml
 
     zenstruck_schedule:
-        single_server_handler: my_lock_factory_service # Be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)
+        single_server_lock_factory: my_lock_factory_service # Be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)
     ```
 
 ### Between

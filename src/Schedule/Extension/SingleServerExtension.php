@@ -24,6 +24,6 @@ final class SingleServerExtension extends LockingExtension implements HasMissing
 
     public function getMissingHandlerMessage(): string
     {
-        return 'To use "onSingleServer" you must configure a lock factory (config path: "zenstruck_schedule.single_server_handler").';
+        return 'To use "onSingleServer" you must configure a lock factory (config path: "zenstruck_schedule.single_server_lock_factory").';
     }
 }
