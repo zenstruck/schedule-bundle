@@ -10,6 +10,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Process\Process;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleTimezoneSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\TaskConfigurationSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
@@ -51,6 +52,10 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
 
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+
+        if (\class_exists(Process::class)) {
+            $loader->load('process.xml');
+        }
 
         $container
             ->getDefinition(TaskConfigurationSubscriber::class)
