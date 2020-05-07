@@ -9,17 +9,6 @@ to see where to add these.
 
 This task runs a Symfony console command.
 
-**Define in [Configuration](define-schedule.md#bundle-configuration):**
-
-```yaml
-# config/packages/zenstruck_schedule.yaml
-
-zenstruck_schedule:
-    tasks:
-        -   task: my:command arg1 --option1 --option1=value
-            frequency: '0 * * * *'
-```
-
 **Define in [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
@@ -31,6 +20,17 @@ $schedule->addCommand('my:command', 'arg1', '--option1', '--option2=value');
 $schedule->addCommand(\App\Command\MyCommand::class)
     ->arguments('arg1', '--option1', '--option2=value')
 ;
+```
+
+**Define in [Configuration](define-schedule.md#bundle-configuration):**
+
+```yaml
+# config/packages/zenstruck_schedule.yaml
+
+zenstruck_schedule:
+    tasks:
+        -   task: my:command arg1 --option1 --option1=value
+            frequency: '0 * * * *'
 ```
 
 ### CallbackTask
@@ -54,17 +54,6 @@ $schedule->addCallback(function () {
 
 This task executes shell commands.
 
-**Define in [Configuration](define-schedule.md#bundle-configuration):**
-
-```yaml
-# config/packages/zenstruck_schedule.yaml
-
-zenstruck_schedule:
-    tasks:
-        -   task: bash:/bin/my-script # note the "bash:" prefix
-            frequency: '0 * * * *'
-```
-
 **Define in [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
@@ -79,6 +68,17 @@ $schedule->addProcess(
     Process::fromShellCommandline('/bin/my-script')
         ->setTimeout(10)
 );
+```
+
+**Define in [Configuration](define-schedule.md#bundle-configuration):**
+
+```yaml
+# config/packages/zenstruck_schedule.yaml
+
+zenstruck_schedule:
+    tasks:
+        -   task: bash:/bin/my-script # note the "bash:" prefix
+            frequency: '0 * * * *'
 ```
 
 **Notes**:
@@ -123,6 +123,16 @@ This task pings the provided URL. This task type is useful for Cron health monit
 tools like [Cronitor](https://cronitor.io/), [Laravel Envoyer](https://envoyer.io/) and
 [Healthchecks](https://healthchecks.io/).
 
+**Define in [PHP](define-schedule.md#schedulebuilder-service):**
+
+```php
+use Zenstruck\ScheduleBundle\Schedule\Task\PingTask;
+
+/* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
+
+$schedule->add(new PingTask('https://example.com'));
+```
+
 **Define in [Configuration](define-schedule.md#bundle-configuration):**
 
 ```yaml
@@ -132,16 +142,6 @@ zenstruck_schedule:
     tasks:
         -   task: ping:https://example.com # note the "ping:" prefix
             frequency: '0 * * * *'
-```
-
-**Define in [PHP](define-schedule.md#schedulebuilder-service):**
-
-```php
-use Zenstruck\ScheduleBundle\Schedule\Task\PingTask;
-
-/* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
-
-$schedule->add(new PingTask('https://example.com'));
 ```
 
 **Notes**:
@@ -167,6 +167,22 @@ This is a special task that allows you to group other tasks together that share 
 frequency, timezone and extensions. When due, grouped tasks are run in the order
 they are defined.
 
+**Define in [PHP](define-schedule.md#schedulebuilder-service):**
+
+```php
+/* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
+
+$schedule->addCompound()
+    ->addCommand('my:command')
+    ->addCallback(function () { /* do something */ })
+    ->addProcess('/bin/my-script')
+    ->mondays()
+    ->at('1:30')
+    ->timezone('UTC')
+    ->emailOnFailure('admin@example.com')
+;
+```
+
 **Define in [Configuration](define-schedule.md#bundle-configuration):**
 
 ```yaml
@@ -186,26 +202,20 @@ zenstruck_schedule:
                 "run my bash bash script": bash:/bin/my-script
 ```
 
+## Task Description
+
+Optionally add a unique description to your task. If none is provided, tasks define a
+default description based on their input.
+
 **Define in [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
 /* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
 
-$schedule->addCompound()
-    ->addCommand('my:command')
-    ->addCallback(function () { /* do something */ })
-    ->addProcess('/bin/my-script')
-    ->mondays()
-    ->at('1:30')
-    ->timezone('UTC')
-    ->emailOnFailure('admin@example.com')
+$schedule->addCommand('my:command')
+    ->description('this describes my task')
 ;
 ```
-
-## Task Description
-
-Optionally add a unique description to your task. If none is provided, tasks define a
-default description based on their input.
 
 **Define in [Configuration](define-schedule.md#bundle-configuration):**
 
@@ -219,16 +229,6 @@ zenstruck_schedule:
             description: this describes my task
 ```
 
-**Define in [PHP](define-schedule.md#schedulebuilder-service):**
-
-```php
-/* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
-
-$schedule->addCommand('my:command')
-    ->description('this describes my task')
-;
-```
-
 ## Frequency
 
 These are the options for defining how often your task runs:
@@ -238,6 +238,16 @@ These are the options for defining how often your task runs:
 A standard Cron expression. Check [crontab.guru](https://crontab.guru/) for
 help. The extended expression syntax may be used (`@hourly`, `@daily`, `@weekly`,
 `@monthly`, `@yearly`, `@annually`).
+
+**Define in [PHP](define-schedule.md#schedulebuilder-service):**
+
+```php
+/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
+
+$task->cron('0,30 9-17 * * 1-5'); // every 30 minutes between 9am and 5pm on weekdays
+
+$task->cron('@daily');  //daily @ midnight
+```
 
 **Define in [Configuration](define-schedule.md#bundle-configuration):**
 
@@ -251,16 +261,6 @@ zenstruck_schedule:
 
         -   task: my:command
             frequency: '@daily' # daily @ midnight
-```
-
-**Define in [PHP](define-schedule.md#schedulebuilder-service):**
-
-```php
-/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
-
-$task->cron('0,30 9-17 * * 1-5'); // every 30 minutes between 9am and 5pm on weekdays
-
-$task->cron('@daily');  //daily @ midnight
 ```
 
 ### Fluent Expression Builder
@@ -379,30 +379,6 @@ The following *hash* aliases are provided:
 | `#annually` | `# # # # *` (at some time on some day, once per year)                  |
 | `#yearly`   | `# # # # *` (at some time on some day, once per year)                  |
 
-**Define in [Configuration](define-schedule.md#bundle-configuration):**
-
-```yaml
-# config/packages/zenstruck_schedule.yaml
-
-zenstruck_schedule:
-    tasks:
-        -   task: my:command
-            description: my task
-            frequency: '# # * * #' # converts to "56 20 * * 0" (every Sunday @ 8:56pm)
-
-        -   task: my:command
-            description: another task
-            frequency: '# #(1-4) 1,15 * *' # converts to "24 1 1,15 * *" (1:24am on the first and fifteenth days of each month)
-
-        -   task: my:command
-            description: yet another task
-            frequency: '#midnight' # converts to "52 1 * * *" (daily @ 1:52am)
-
-        -   task: my:command
-            description: yet another task 2 # note the different description calculates a different frequency
-            frequency: '#midnight' # converts to "32 2 * * *" (daily @ 2:32am)
-```
-
 **Define in [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
@@ -429,6 +405,30 @@ $task
 ;
 ```
 
+**Define in [Configuration](define-schedule.md#bundle-configuration):**
+
+```yaml
+# config/packages/zenstruck_schedule.yaml
+
+zenstruck_schedule:
+    tasks:
+        -   task: my:command
+            description: my task
+            frequency: '# # * * #' # converts to "56 20 * * 0" (every Sunday @ 8:56pm)
+
+        -   task: my:command
+            description: another task
+            frequency: '# #(1-4) 1,15 * *' # converts to "24 1 1,15 * *" (1:24am on the first and fifteenth days of each month)
+
+        -   task: my:command
+            description: yet another task
+            frequency: '#midnight' # converts to "52 1 * * *" (daily @ 1:52am)
+
+        -   task: my:command
+            description: yet another task 2 # note the different description calculates a different frequency
+            frequency: '#midnight' # converts to "32 2 * * *" (daily @ 2:32am)
+```
+
 ## Task ID
 
 Each task has an ID that is a hash of the task type,
@@ -448,6 +448,17 @@ run a task. If none is provided, it will use PHP's default timezone.
 Alternatively, you can define the [timezone for all tasks](define-schedule.md#timezone)
 (timezone defined on a task will take precedence).
 
+**Define in [PHP](define-schedule.md#schedulebuilder-service):**
+
+```php
+/* @var \Zenstruck\ScheduleBundle\Schedule\Task $task */
+
+$task->timezone('UTC');
+
+// alternatively, pass a \DateTimeZone instance
+$task->timezone(new \DateTimeZone('UTC'));
+```
+
 **Define in [Configuration](define-schedule.md#bundle-configuration):**
 
 ```yaml
@@ -458,17 +469,6 @@ zenstruck_schedule:
         -   task: my:command
             frequency: '0 * * * *'
             timezone: UTC
-```
-
-**Define in [PHP](define-schedule.md#schedulebuilder-service):**
-
-```php
-/* @var \Zenstruck\ScheduleBundle\Schedule\Task $task */
-
-$task->timezone('UTC');
-
-// alternatively, pass a \DateTimeZone instance
-$task->timezone(new \DateTimeZone('UTC'));
 ```
 
 ## Task Extensions
@@ -535,23 +535,6 @@ This extension is useful for Cron health monitoring tools like
 [Cronitor](https://cronitor.io/), [Laravel Envoyer](https://envoyer.io/) and
 [Healthchecks](https://healthchecks.io/).
 
-**Define in [Configuration](define-schedule.md#bundle-configuration):**
-
-```yaml
-# config/packages/zenstruck_schedule.yaml
-
-zenstruck_schedule:
-    tasks:
-        -   task: my:command
-            frequency: '0 * * * *'
-            ping_before: https://example.com/before-task-run
-            ping_after:
-                url: https://example.com/after-task-runs
-                method: POST
-            ping_on_success: https://example.com/task-succeeded
-            ping_on_failure: https://example.com/task-failed
-```
-
 **Define in [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
@@ -567,6 +550,23 @@ $task->thenPing('https://example.com/after-task-runs');
 $task->pingOnSuccess('https://example.com/task-succeeded');
 
 $task->pingOnFailure('https://example.com/task-failed');
+```
+
+**Define in [Configuration](define-schedule.md#bundle-configuration):**
+
+```yaml
+# config/packages/zenstruck_schedule.yaml
+
+zenstruck_schedule:
+    tasks:
+        -   task: my:command
+            frequency: '0 * * * *'
+            ping_before: https://example.com/before-task-run
+            ping_after:
+                url: https://example.com/after-task-runs
+                method: POST
+            ping_on_success: https://example.com/task-succeeded
+            ping_on_failure: https://example.com/task-failed
 ```
 
 **Notes**:
@@ -592,25 +592,6 @@ This extension can be used to notify site administrators via email
 that the task ran. Either just if it failed (`email_on_failure`) or
 regardless of the result (`email_after`).
 
-**Define in [Configuration](define-schedule.md#bundle-configuration):**
-
-```yaml
-# config/packages/zenstruck_schedule.yaml
-
-zenstruck_schedule:
-    tasks:
-        -   task: my:command
-            frequency: '0 * * * *'
-            email_after: admin@example.com
-            email_on_failure: ~ # default "to" address can be configured (see below)
-
-        -   task: my:command
-            frequency: '0 * * * *'
-            email_after:
-                to: admin@example.com
-                subject: my custom subject
-```
-
 **Define in [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
@@ -635,6 +616,25 @@ $task->emailOnFailure('admin@example.com', 'my email subject', function (Symfony
     $email->addCc('sales@example.com');
     $email->getHeaders()->addTextHeader('X-TRACKING', 'enabled');
 });
+```
+
+**Define in [Configuration](define-schedule.md#bundle-configuration):**
+
+```yaml
+# config/packages/zenstruck_schedule.yaml
+
+zenstruck_schedule:
+    tasks:
+        -   task: my:command
+            frequency: '0 * * * *'
+            email_after: admin@example.com
+            email_on_failure: ~ # default "to" address can be configured (see below)
+
+        -   task: my:command
+            frequency: '0 * * * *'
+            email_after:
+                to: admin@example.com
+                subject: my custom subject
 ```
 
 **Notes:**
@@ -695,6 +695,14 @@ $task->emailOnFailure('admin@example.com', 'my email subject', function (Symfony
 This extension *locks* the task so it cannot run if it is still running from
 a previous instance. If it is still running, the task is skipped.
 
+**Define in [PHP](define-schedule.md#schedulebuilder-service):**
+
+```php
+/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
+
+$task->withoutOverlapping();
+```
+
 **Define in [Configuration](define-schedule.md#bundle-configuration):**
 
 ```yaml
@@ -705,14 +713,6 @@ zenstruck_schedule:
         -   task: my:command
             frequency: '0 * * * *'
             without_overlapping: ~
-```
-
-**Define in [PHP](define-schedule.md#schedulebuilder-service):**
-
-```php
-/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
-
-$task->withoutOverlapping();
 ```
 
 **Notes:**
@@ -770,6 +770,18 @@ $task->onSingleServer();
 *only_between* skips the task if run outside of the given range. *unless_between*
 skips the task if run inside the the given range.
 
+**Define in [PHP](define-schedule.md#schedulebuilder-service):**
+
+```php
+/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
+
+$task->onlyBetween(9, 17); // only runs between 9am and 5pm (skips otherwise)
+$task->onlyBetween('21:30', '6:15'); // only runs between 9:30pm and 6:15am (skips otherwise)
+
+$task->unlessBetween(9, 17); // skips if between 9am and 5pm
+$task->unlessBetween('21:30', '6:15'); // skips if between 9:30pm and 6:15am
+```
+
 **Define in [Configuration](define-schedule.md#bundle-configuration):**
 
 ```yaml
@@ -796,16 +808,4 @@ zenstruck_schedule:
             unless_between: # skips if between 9:30pm and 6:15am
                 start: 21:30
                 end: 6:15
-```
-
-**Define in [PHP](define-schedule.md#schedulebuilder-service):**
-
-```php
-/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
-
-$task->onlyBetween(9, 17); // only runs between 9am and 5pm (skips otherwise)
-$task->onlyBetween('21:30', '6:15'); // only runs between 9:30pm and 6:15am (skips otherwise)
-
-$task->unlessBetween(9, 17); // skips if between 9am and 5pm
-$task->unlessBetween('21:30', '6:15'); // skips if between 9:30pm and 6:15am
 ```

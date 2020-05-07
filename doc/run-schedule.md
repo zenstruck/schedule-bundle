@@ -169,6 +169,17 @@ cron:
 # ...
 ```
 
+### Custom Schedule Extension
+
+You can create a [custom schedule extension](extending.md#custom-extensions) with a
+`onScheduleFailure` hook to add your own failure logic.
+
+### AfterSchedule Event
+
+You can [create an event subscriber](extending.md#events) that listens to the
+[`AfterScheduleEvent`](../src/Event/AfterScheduleEvent.php), check if the schedule
+failed, and run your own failure logic.
+
 ## Ensuring the Schedule is Running
 
 It is important to be assured your schedule is always running. The best method
