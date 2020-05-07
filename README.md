@@ -18,10 +18,10 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
 1. [Installation](#installation)
 2. [Quick Start](#quick-start)
 3. [Defining the Schedule](doc/define-schedule.md)
-    1. [Bundle Configuration](doc/define-schedule.md#bundle-configuration)
-    2. [ScheduleBuilder Service](doc/define-schedule.md#schedulebuilder-service)
-    3. [Self-Scheduling Commands](doc/define-schedule.md#self-scheduling-commands)
-    4. [Your Kernel](doc/define-schedule.md#your-kernel)
+    1. [ScheduleBuilder Service](doc/define-schedule.md#schedulebuilder-service)
+    2. [Your Kernel](doc/define-schedule.md#your-kernel)
+    3. [Bundle Configuration](doc/define-schedule.md#bundle-configuration)
+    4. [Self-Scheduling Commands](doc/define-schedule.md#self-scheduling-commands)
     5. [Timezone](doc/define-schedule.md#timezone)
     6. [Schedule Extensions](doc/define-schedule.md#schedule-extensions)
         1. [Filters](doc/define-schedule.md#filters)
@@ -35,8 +35,8 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
         1. [CommandTask](doc/define-tasks.md#commandtask)
         2. [CallbackTask](doc/define-tasks.md#callbacktask)
         3. [ProcessTask](doc/define-tasks.md#processtask)
+        3. [PingTask](doc/define-tasks.md#pingtask)
         4. [CompoundTask](doc/define-tasks.md#compoundtask)
-        5. [NullTask](doc/define-tasks.md#nulltask)
     2. [Task Description](doc/define-tasks.md#task-description)
     3. [Frequency](doc/define-tasks.md#frequency)
         1. [Cron Expression](doc/define-tasks.md#cron-expression)
@@ -70,59 +70,40 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
 
 ## Installation
 
-### Applications that use Symfony Flex
-
 ```console
 $ composer require zenstruck/schedule-bundle
 ```
 
-### Applications that don't use Symfony Flex
-
-1. Download the Bundle
-
-    ```console
-    $ composer require zenstruck/schedule-bundle
-    ```
-
-2. Enable the Bundle
-
-    ```php
-    // config/bundles.php
-    
-    return [
-        // ...
-        Zenstruck\ScheduleBundle\ZenstruckScheduleBundle::class => ['all' => true],
-    ];
-    ```
+*If not using Symfony Flex, be sure to enable the bundle.*
 
 ## Quick Start
 
-1. Add tasks and schedule configuration to your bundle config:
+1. Add your schedule service (assumes *autowire* and *autoconfiguration* enabled):
 
-    ```yaml
-    # config/packages/zenstruck_schedule.yaml
+    ```php
+    // src/Schedule/AppScheduleBuilder.php
 
-    zenstruck_schedule:
-        email_handler: # enable email notifications
-            default_from: webmaster@example.com
-            default_to: admin@example.com
+    use Zenstruck\ScheduleBundle\Schedule;
+    use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
 
-        timezone: America/New_York # all tasks will run in this timezone
+    class AppScheduleBuilder implements ScheduleBuilder
+    {
+        public function buildSchedule(Schedule $schedule): void
+        {
+            $schedule
+                ->timezone('UTC')
+                ->environments('prod')
+            ;
 
-        schedule_extensions:
-            environiments: prod # only run when in production
-            email_on_failure: ~ # send email if some tasks fail
-
-        tasks:
-            -   task: app:send-weekly-report
-                frequency: '0 * * * 0' # Sundays @ 1am
-                email_on_failure: ~ # send email if this task fails
-                ping_on_success: https://www.example.com/weekly-report-healthcheck
-    
-            -   task: app:send-hourly-report --to=accounting@example.com --to=sales@example.com
-                frequency: '0 9-17 * * 1-5' # Hourly on weekdays between 9am and 5pm
-                without_overlapping: ~ # prevent running over itself
-                ping_on_success: https://www.example.com/hourly-report-healthcheck
+            $schedule->addCommand('app:send-weekly-report --detailed')
+                ->description('Send the weekly report to users.')
+                ->sundays()
+                ->at(1)
+            ;
+   
+            // ...
+        }
+    }
     ```
 
 2. List your tasks to diagnose any problems:
@@ -137,24 +118,27 @@ $ composer require zenstruck/schedule-bundle
     * * * * * cd /path-to-your-project && bin/console schedule:run >> /dev/null 2>&1
     ```
 
+See [Defining the Schedule](doc/define-schedule.md) and [Defining Tasks](doc/define-tasks.md)
+for more options.
+
 ## Full Configuration Reference
 
 ```yaml
 zenstruck_schedule:
 
-    # The LockFactory service to use
-    without_overlapping_handler: null # Example: lock.default.factory
+    # The LockFactory service to use for the without overlapping extension
+    without_overlapping_lock_factory: null # Example: lock.default.factory
 
-    # The LockFactory service to use - be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)
-    single_server_handler: null # Example: lock.redis.factory
+    # The LockFactory service to use for the single server extension - be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)
+    single_server_lock_factory: null # Example: lock.redis.factory
 
     # The HttpClient service to use
-    ping_handler:         null # Example: http_client
+    http_client:          null # Example: http_client
 
     # The default timezone for tasks (override at task level), null for system default
     timezone:             null # Example: America/New_York
 
-    email_handler:
+    mailer:
         enabled:              false
 
         # The mailer service to use
@@ -185,7 +169,7 @@ zenstruck_schedule:
         email_on_failure:
             enabled:              false
 
-            # Email address to send email to (leave blank to use "zenstruck_schedule.email_handler.default_to")
+            # Email address to send email to (leave blank to use "zenstruck_schedule.mailer.default_to")
             to:                   null
 
             # Email subject (leave blank to use extension default)
@@ -257,8 +241,8 @@ zenstruck_schedule:
         # Prototype
         -
 
-            # Defaults to CommandTask, prefix with "bash:" to create ProcessTask, pass (null) to create NullTask, pass array of commands to create CompoundTask (optionally keyed by description)
-            task:                 ~ # Required, Example: "my:command arg1 --option1=value" or "bash:/bin/my-script"
+            # Defaults to CommandTask, prefix with "bash:" to create ProcessTask, prefix url with "ping:" to create PingTask, pass array of commands to create CompoundTask (optionally keyed by description)
+            task:                 ~ # Required, Example: "my:command arg1 --option1=value", "bash:/bin/my-script" or "ping:https://example.com"
 
             # Cron expression
             frequency:            ~ # Required, Example: '0 * * * *'
@@ -344,7 +328,7 @@ zenstruck_schedule:
             email_after:
                 enabled:              false
 
-                # Email address to send email to (leave blank to use "zenstruck_schedule.email_handler.default_to")
+                # Email address to send email to (leave blank to use "zenstruck_schedule.mailer.default_to")
                 to:                   null
 
                 # Email subject (leave blank to use extension default)
@@ -354,7 +338,7 @@ zenstruck_schedule:
             email_on_failure:
                 enabled:              false
 
-                # Email address to send email to (leave blank to use "zenstruck_schedule.email_handler.default_to")
+                # Email address to send email to (leave blank to use "zenstruck_schedule.mailer.default_to")
                 to:                   null
 
                 # Email subject (leave blank to use extension default)

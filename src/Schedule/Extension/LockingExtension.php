@@ -8,25 +8,25 @@ use Symfony\Component\Lock\LockInterface;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class Lock
+abstract class LockingExtension
 {
+    private $ttl;
+
     /** @var LockInterface|null */
     private $lock;
 
-    public function __construct(string $extensionClass)
+    public function __construct(int $ttl)
     {
-        if (!\interface_exists(LockInterface::class)) {
-            throw new \LogicException(\sprintf('Symfony Lock is required to use the "%s" extension. Install with "composer require symfony/lock".', $extensionClass));
-        }
+        $this->ttl = $ttl;
     }
 
-    public function aquire(LockFactory $lockFactory, string $mutex, int $ttl): bool
+    final public function acquireLock(LockFactory $lockFactory, string $mutex): bool
     {
         if (null !== $this->lock) {
             throw new \LogicException('A lock is already in place.');
         }
 
-        $this->lock = $lockFactory->createLock('symfony-schedule-'.$mutex, $ttl);
+        $this->lock = $lockFactory->createLock('symfony-schedule-'.$mutex, $this->ttl);
 
         if ($this->lock->acquire()) {
             return true;
@@ -37,7 +37,7 @@ final class Lock
         return false;
     }
 
-    public function release(): void
+    final public function releaseLock(): void
     {
         if ($this->lock) {
             $this->lock->release();

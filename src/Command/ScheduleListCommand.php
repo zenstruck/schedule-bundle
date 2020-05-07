@@ -10,7 +10,6 @@ use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task;
@@ -177,7 +176,7 @@ EOF
     }
 
     /**
-     * @param Extension[] $extensions
+     * @param object[] $extensions
      */
     private function renderExtenstions(SymfonyStyle $io, string $type, array $extensions): void
     {
@@ -187,11 +186,15 @@ EOF
 
         $io->comment(\sprintf('<info>%d</info> %s Extension%s:', $count, $type, $count > 1 ? 's' : ''));
         $io->listing(\array_map(
-            function (Extension $extension) {
-                return \sprintf('%s <comment>(%s)</comment>',
-                    \strtr($extension, self::extensionHighlightMap()),
-                    \get_class($extension)
-                );
+            function (object $extension) {
+                if (\method_exists($extension, '__toString')) {
+                    return \sprintf('%s <comment>(%s)</comment>',
+                        \strtr($extension, self::extensionHighlightMap()),
+                        \get_class($extension)
+                    );
+                }
+
+                return \get_class($extension);
             },
             $extensions
         ));
@@ -233,10 +236,10 @@ EOF
     private static function extensionHighlightMap(): array
     {
         return [
-            Extension::TASK_SUCCESS => \sprintf('<info>%s</info>', Extension::TASK_SUCCESS),
-            Extension::SCHEDULE_SUCCESS => \sprintf('<info>%s</info>', Extension::SCHEDULE_SUCCESS),
-            Extension::TASK_FAILURE => \sprintf('<error>%s</error>', Extension::TASK_FAILURE),
-            Extension::SCHEDULE_FAILURE => \sprintf('<error>%s</error>', Extension::SCHEDULE_FAILURE),
+            Task::SUCCESS => \sprintf('<info>%s</info>', Task::SUCCESS),
+            Schedule::SUCCESS => \sprintf('<info>%s</info>', Schedule::SUCCESS),
+            Task::FAILURE => \sprintf('<error>%s</error>', Task::FAILURE),
+            Schedule::FAILURE => \sprintf('<error>%s</error>', Schedule::FAILURE),
         ];
     }
 

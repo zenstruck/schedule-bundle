@@ -8,7 +8,7 @@ use Zenstruck\ScheduleBundle\DependencyInjection\Configuration;
 use Zenstruck\ScheduleBundle\EventListener\TaskConfigurationSubscriber;
 use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
-use Zenstruck\ScheduleBundle\Schedule\Task\NullTask;
+use Zenstruck\ScheduleBundle\Schedule\Task\PingTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\ProcessTask;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
 
@@ -72,6 +72,28 @@ final class TaskConfigurationSubscriberTest extends TestCase
     /**
      * @test
      */
+    public function can_configure_ping_tasks()
+    {
+        $schedule = $this->createSchedule([
+            [
+                'task' => 'ping: https://example.com',
+                'frequency' => '0 * * * *',
+            ],
+        ]);
+
+        $this->assertCount(1, $schedule->all());
+        $this->assertInstanceOf(PingTask::class, $schedule->all()[0]);
+        $this->assertSame('Ping https://example.com', $schedule->all()[0]->getDescription());
+        $this->assertSame('0 * * * *', (string) $schedule->all()[0]->getExpression());
+        $this->assertCount(0, $schedule->all()[0]->getExtensions());
+        $this->assertSame('https://example.com', $schedule->all()[0]->getUrl());
+        $this->assertSame('GET', $schedule->all()[0]->getMethod());
+        $this->assertSame([], $schedule->all()[0]->getOptions());
+    }
+
+    /**
+     * @test
+     */
     public function can_configure_compound_task()
     {
         $schedule = $this->createSchedule([
@@ -79,15 +101,16 @@ final class TaskConfigurationSubscriberTest extends TestCase
                 'task' => [
                     'my:command arg --option=foo',
                     'bash:/my-script',
+                    'ping:https://example.com',
                 ],
                 'frequency' => '0 * * * *',
                 'without_overlapping' => null,
             ],
         ]);
 
-        $this->assertCount(2, $schedule->all());
+        $this->assertCount(3, $schedule->all());
 
-        [$task1, $task2] = $schedule->all();
+        [$task1, $task2, $task3] = $schedule->all();
 
         $this->assertInstanceOf(CommandTask::class, $task1);
         $this->assertSame('my:command', $task1->getDescription());
@@ -100,6 +123,15 @@ final class TaskConfigurationSubscriberTest extends TestCase
         $this->assertSame('0 * * * *', (string) $task2->getExpression());
         $this->assertCount(1, $task2->getExtensions());
         $this->assertSame('Without overlapping', (string) $task2->getExtensions()[0]);
+
+        $this->assertInstanceOf(PingTask::class, $task3);
+        $this->assertSame('Ping https://example.com', $task3->getDescription());
+        $this->assertSame('0 * * * *', (string) $task3->getExpression());
+        $this->assertCount(1, $task3->getExtensions());
+        $this->assertSame('Without overlapping', (string) $task3->getExtensions()[0]);
+        $this->assertSame('https://example.com', $task3->getUrl());
+        $this->assertSame('GET', $task3->getMethod());
+        $this->assertSame([], $task3->getOptions());
     }
 
     /**
@@ -133,25 +165,6 @@ final class TaskConfigurationSubscriberTest extends TestCase
         $this->assertSame('0 * * * *', (string) $task2->getExpression());
         $this->assertCount(1, $task2->getExtensions());
         $this->assertSame('Without overlapping', (string) $task2->getExtensions()[0]);
-    }
-
-    /**
-     * @test
-     */
-    public function can_configure_null_task()
-    {
-        $schedule = $this->createSchedule([
-            [
-                'task' => null,
-                'frequency' => '0 * * * *',
-                'description' => 'my task',
-            ],
-        ]);
-
-        $this->assertCount(1, $schedule->all());
-        $this->assertInstanceOf(NullTask::class, $schedule->all()[0]);
-        $this->assertSame('my task', $schedule->all()[0]->getDescription());
-        $this->assertSame('0 * * * *', (string) $schedule->all()[0]->getExpression());
     }
 
     /**

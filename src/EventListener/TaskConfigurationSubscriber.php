@@ -8,7 +8,7 @@ use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\CompoundTask;
-use Zenstruck\ScheduleBundle\Schedule\Task\NullTask;
+use Zenstruck\ScheduleBundle\Schedule\Task\PingTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\ProcessTask;
 
 /**
@@ -17,6 +17,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task\ProcessTask;
 final class TaskConfigurationSubscriber implements EventSubscriberInterface
 {
     private const PROCESS_TASK_PREFIX = 'bash:';
+    private const PING_TASK_PREFIX = 'ping:';
 
     private $config;
 
@@ -93,13 +94,13 @@ final class TaskConfigurationSubscriber implements EventSubscriberInterface
     private function createTask(array $commands): Task
     {
         if (1 === \count($commands)) {
-            return $this->createSingleTask(\array_values($commands)[0]);
+            return self::createSingleTask(\array_values($commands)[0]);
         }
 
         $task = new CompoundTask();
 
         foreach ($commands as $description => $command) {
-            $subTask = $this->createSingleTask($command);
+            $subTask = self::createSingleTask($command);
 
             if (!\is_numeric($description)) {
                 $subTask->description($description);
@@ -111,16 +112,21 @@ final class TaskConfigurationSubscriber implements EventSubscriberInterface
         return $task;
     }
 
-    private function createSingleTask(?string $command): Task
+    private static function createSingleTask(string $command): Task
     {
-        if (null === $command) {
-            return new NullTask('to be overridden');
+        if (0 === \mb_strpos($command, self::PROCESS_TASK_PREFIX)) {
+            return new ProcessTask(self::removePrefix($command, self::PROCESS_TASK_PREFIX));
         }
 
-        if (0 !== \mb_strpos($command, self::PROCESS_TASK_PREFIX)) {
-            return new CommandTask($command);
+        if (0 === \mb_strpos($command, self::PING_TASK_PREFIX)) {
+            return new PingTask(self::removePrefix($command, self::PING_TASK_PREFIX));
         }
 
-        return new ProcessTask(\trim(\mb_substr($command, \mb_strlen(self::PROCESS_TASK_PREFIX))));
+        return new CommandTask($command);
+    }
+
+    private static function removePrefix(string $value, string $prefix): string
+    {
+        return \trim(\mb_substr($value, \mb_strlen($prefix)));
     }
 }

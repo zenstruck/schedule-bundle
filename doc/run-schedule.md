@@ -155,7 +155,7 @@ output and/or alert an administrator.
 
 ### Alert with Symfony Cloud
 
-When defining the `schedule:list` cron job with [Symfony Cloud](#symfony-cloud), you can
+When defining the `schedule:run` cron job with [Symfony Cloud](#symfony-cloud), you can
 [prefix the command with `croncape` to be alerted via email](https://symfony.com/doc/master/cloud/cookbooks/crons.html#command-to-run)
 when something goes wrong:
 
@@ -169,6 +169,17 @@ cron:
 # ...
 ```
 
+### Custom Schedule Extension
+
+You can create a [custom schedule extension](extending.md#custom-extensions) with a
+`onScheduleFailure` hook to add your own failure logic.
+
+### AfterSchedule Event
+
+You can [create an event subscriber](extending.md#events) that listens to the
+[`AfterScheduleEvent`](../src/Event/AfterScheduleEvent.php), check if the schedule
+failed, and run your own failure logic.
+
 ## Ensuring the Schedule is Running
 
 It is important to be assured your schedule is always running. The best method
@@ -178,46 +189,27 @@ These services give you a unique URL endpoint to *ping*. If the endpoint doesn't
 receive a ping after a specified amount of time, an administrator is notified.
 
 You can [configure your schedule to ping](define-schedule.md#ping-webhook) after
-running (assumes your endpoint is `https://hc-ping.com/445f6ea7-16d8-4685-ae51-c7416ccb8eae`):
+running (assumes your endpoint is `https://my-health-monitor.com/endpoint`):
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
 
 zenstruck_schedule:
     schedule_extensions:
-        ping_after: https://hc-ping.com/445f6ea7-16d8-4685-ae51-c7416ccb8eae
+        ping_after: https://my-health-monitor.com/endpoint
 ```
 
 This will ping the endpoint after the schedule runs (every minute). If this is too
-frequent, you can configure a *[null task](define-tasks.md#nulltask)* to [ping the
-endpoint](define-tasks.md#ping-webhook) at a different frequency:
+frequent, you can configure a *[PingTask](define-tasks.md#pingtask)* to ping the
+endpoint at a different frequency:
 
 ```yaml
 zenstruck_schedule:
     tasks:
-        -   task: ~
+        -   task: ping:https://my-health-monitor/endpoint
             description: Health check
             frequency: '@hourly'
-            ping_after: https://hc-ping.com/445f6ea7-16d8-4685-ae51-c7416ccb8eae
 ```
 
 In this case, a notification from one of these services means your schedule isn't
 running.
-
-Alternatively, you can configure a *[null task](define-tasks.md#nulltask)* to [email
-an administrator](define-tasks.md#email-output) at a specific frequency to let them
-know the schedule is still running:
-
-```yaml
-zenstruck_schedule:
-    tasks:
-        -   task: ~
-            description: Email health check
-            frequency: '0 7 * * *' # daily @ 7am
-            email_after:
-                to: admin@example.com
-                subject: Your schedule is still running!
-```
-
-*This is inferior to using a Cron health monitoring tool as the administrator needs
-to remember that if they do not get an email, something is wrong.*

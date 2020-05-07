@@ -6,16 +6,10 @@ You can define your own task types. Tasks consist of a *task* object that extend
 [`Task`](../src/Schedule/Task.php) and a *runner* that implements
 [`TaskRunner`](../src/Schedule/Task/TaskRunner.php). The runner is responsible
 for running the command and returning a [`Result`](../src/Schedule/Task/Result.php).
-If your task is capable of running itself, have it implement
-[`SelfRunningTask`](../src/Schedule/Task/SelfRunningTask.php) (a *runner* is not required).
 
-If your task requires a *runner*, the runner must be a service with the `schedule.task_runner` tag
-(this is *autoconfigurable*). Runners must implement the `supports()` method which should return
-true when passed the task it handles.
-
-See [`CallbackTask`](../src/Schedule/Task/CallbackTask.php) for an example of a *self-running*
-task and [`CommandTask`](../src/Schedule/Task/CommandTask.php) for an example of a task with
-a *[runner](../src/Schedule/Task/Runner/CommandTaskRunner.php)*.
+The runner must be a service with the `schedule.task_runner` tag (this is *autoconfigurable*).
+Runners must implement the `supports()` method which should return true when passed the task
+it handles.
 
 As an example, let's create a Task that sends a *Message* to your *MessageBus* (`symfony/messenger`
 required).
@@ -99,31 +93,24 @@ $schedule->add(new MessageTask(new DoSomething()))
 ## Custom Extensions
 
 The primary way of hooking into schedule/task events is with extensions. Extensions
-can be added to both tasks and the schedule as a whole. Extensions must implement
-[`Extension`](../src/Schedule/Extension.php) and require a *handler* than extends
-[`ExtensionHandler`](../src/Schedule/Extension/ExtensionHandler.php). If your
-extension is capable of handling itself, the extension can extend
-[`SelfHandlingExtension`](../src/Schedule/Extension/SelfHandlingExtension.php) (a
-handler is not required). Override the methods that are applicable to your extension.
+can be added to both tasks and the schedule as a whole. Extensions are plain objects
+and require a *handler* that extends
+[`ExtensionHandler`](../src/Schedule/Extension/ExtensionHandler.php).
 
-If your extension requires a *handler*, the handler must be a service with the
-`schedule.extension_handler` tag (this is *autoconfigurable*). Extension handlers must
-implement the `supports()` method which should return true when passed the extension
-it handles.
-
-See [`CallbackExtension`](../src/Schedule/Extension/CallbackExtension.php) for an example
-of a *self-handling* extension and
-[`EnvironmentExtension`](../src/Schedule/Extension/EnvironmentExtension.php)
-for an example of an extension with a
-*[handler](../src/Schedule/Extension/Handler/EnvironmentHandler.php)*.
+The handler must be a service with the `schedule.extension_handler` tag (this is
+*autoconfigurable*). Extension handlers must implement the `supports()` method which
+should return true when passed the extension it handles.
 
 If your extension is applicable to the schedule, you can auto-add it by registering
 it as a service and adding the `schedule.extension` tag (*autoconfiguration* is **not**
 available).
 
+Making your extension stringable by implementing `__toString` shows this value in the
+[`schedule:list`](cli-commands.md#schedulelist) command.
+
 Below are some examples of custom extensions:
 
-### Example 1: Skip Schedule if in maintenance mode
+### Example: Skip Schedule if in maintenance mode
 
 Say your application has the concept of maintenance mode. You want to prevent the
 schedule from running in maintenance mode. 
@@ -135,9 +122,7 @@ The *extension*:
 ```php
 // src/Schedule/Extension/NotInMaintenanceMode.php
 
-use Zenstruck\ScheduleBundle\Schedule\Extension;
-
-class NotInMaintenanceMode implements Extension
+class NotInMaintenanceMode
 {
     public function __toString(): string
     {
@@ -154,7 +139,6 @@ The *handler* service:
 use App\Kernel;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 
 class NotInMaintenanceModeHandler extends ExtensionHandler
@@ -166,7 +150,7 @@ class NotInMaintenanceModeHandler extends ExtensionHandler
         $this->kernel = $kernel;
     }
 
-    public function supports(Extension $extension) : bool
+    public function supports(object $extension) : bool
     {
         return $extension instanceof NotInMaintenanceMode;
     }
@@ -174,7 +158,7 @@ class NotInMaintenanceModeHandler extends ExtensionHandler
     /**
      * @param NotInMaintenanceMode $extension
      */
-    public function filterSchedule(ScheduleRunContext $context, Extension $extension): void
+    public function filterSchedule(ScheduleRunContext $context, object $extension): void
     {
         if ($this->kernel->isInMaintenanceMode()) {
             throw new SkipSchedule('Does not run in maintenance mode.');
@@ -222,65 +206,6 @@ class Kernel extends BaseKernel implements ScheduleBuilder
 
     // ...
 }
-```
-
-### Example 2: Send Failing Task Output to Webhook
-
-This example assumes you have an webhook (`https://example.com/failing-task`) that can receive
-failing task details.
-
-The *extension*:
-
-```php
-// src/Schedule/Extension/SendFailingTaskToWebhook.php
-
-use Symfony\Component\HttpClient\HttpClient;
-use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
-use Zenstruck\ScheduleBundle\Schedule\Extension\SelfHandlingExtension;
-
-class SendFailingTaskToWebhook extends SelfHandlingExtension
-{
-    private $url;
-
-    public function __construct(string $url)
-    {
-        $this->url = $url;
-    }
-
-    public function __toString(): string
-    {
-        return "Send failing task details to {$this->url}";
-    }
-
-    public function onTaskFailure(TaskRunContext $context): void
-    {
-        $task = $context->getTask();
-        $result = $context->getResult();
-    
-        HttpClient::create()->request('GET', $this->url, [
-            'json' => [
-                'id' => $task->getId(),
-                'type' => $task->getType(),
-                'description' => $task->getDescription(),
-                'result' => [
-                    'description' => $result->getDescription(),
-                    'output' => $result->getOutput(),
-                    'exception' => $result->isException() ? (string) $result->getException() : null,
-                ]
-            ]
-        ]);
-    }
-}
-```
-
-Add to a scheduled task:
-
-```php
-use App\Schedule\Extension\SendFailingTaskToWebhook;
-
-/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
-
-$task->addExtension(new SendFailingTaskToWebhook('https://example.com/failing-task'));
 ```
 
 ## Events

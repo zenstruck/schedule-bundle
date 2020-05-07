@@ -1,27 +1,26 @@
 <?php
 
-namespace Zenstruck\ScheduleBundle\Schedule\Task\Runner;
+namespace Zenstruck\ScheduleBundle\Tests\Fixture;
 
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\Result;
-use Zenstruck\ScheduleBundle\Schedule\Task\SelfRunningTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunner;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class SelfRunningTaskRunner implements TaskRunner
+final class MockTaskRunner implements TaskRunner
 {
     /**
-     * @param SelfRunningTask $task
+     * @param MockTask|Task $task
      */
     public function __invoke(Task $task): Result
     {
-        return $task();
+        return $task->getResult();
     }
 
     public function supports(Task $task): bool
     {
-        return $task instanceof SelfRunningTask;
+        return $task instanceof MockTask;
     }
 }

@@ -20,17 +20,17 @@ final class Configuration implements ConfigurationInterface
 
         $treeBuilder->getRootNode()
             ->children()
-                ->scalarNode('without_overlapping_handler')
-                    ->info('The LockFactory service to use')
+                ->scalarNode('without_overlapping_lock_factory')
+                    ->info('The LockFactory service to use for the without overlapping extension')
                     ->example('lock.default.factory')
                     ->defaultNull()
                 ->end()
-                ->scalarNode('single_server_handler')
-                    ->info('The LockFactory service to use - be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)')
+                ->scalarNode('single_server_lock_factory')
+                    ->info('The LockFactory service to use for the single server extension - be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)')
                     ->example('lock.redis.factory')
                     ->defaultNull()
                 ->end()
-                ->scalarNode('ping_handler')
+                ->scalarNode('http_client')
                     ->info('The HttpClient service to use')
                     ->example('http_client')
                     ->defaultNull()
@@ -44,7 +44,7 @@ final class Configuration implements ConfigurationInterface
                         ->thenInvalid('Timezone %s is not available')
                     ->end()
                 ->end()
-                ->arrayNode('email_handler')
+                ->arrayNode('mailer')
                     ->canBeEnabled()
                     ->children()
                         ->scalarNode('service')
@@ -126,23 +126,19 @@ final class Configuration implements ConfigurationInterface
                 ->end()
                 ->children()
                     ->arrayNode('task')
-                        ->info('Defaults to CommandTask, prefix with "bash:" to create ProcessTask, pass (null) to create NullTask, pass array of commands to create CompoundTask (optionally keyed by description)')
-                        ->example('"my:command arg1 --option1=value" or "bash:/bin/my-script"')
+                        ->info('Defaults to CommandTask, prefix with "bash:" to create ProcessTask, prefix url with "ping:" to create PingTask, pass array of commands to create CompoundTask (optionally keyed by description)')
+                        ->example('"my:command arg1 --option1=value", "bash:/bin/my-script" or "ping:https://example.com"')
                         ->validate()
                             ->ifTrue(function ($v) {
-                                if (1 === \count($v)) {
-                                    return false;
-                                }
-
                                 foreach ($v as $item) {
-                                    if (null === $item) {
+                                    if ('' === (string) $item) {
                                         return true;
                                     }
                                 }
 
                                 return false;
                             })
-                            ->thenInvalid('"null" tasks cannot be added to compound tasks.')
+                            ->thenInvalid('Task cannot be empty value.')
                         ->end()
                         ->beforeNormalization()
                             ->castToArray()
@@ -155,6 +151,7 @@ final class Configuration implements ConfigurationInterface
                         ->info('Cron expression')
                         ->example('0 * * * *')
                         ->isRequired()
+                        ->cannotBeEmpty()
                         ->validate()
                             ->ifTrue(function ($v) {
                                 try {
@@ -276,7 +273,7 @@ final class Configuration implements ConfigurationInterface
             ->end()
             ->children()
                 ->scalarNode('to')
-                    ->info('Email address to send email to (leave blank to use "zenstruck_schedule.email_handler.default_to")')
+                    ->info('Email address to send email to (leave blank to use "zenstruck_schedule.mailer.default_to")')
                     ->defaultNull()
                 ->end()
                 ->scalarNode('subject')

@@ -7,10 +7,10 @@ namespace Zenstruck\ScheduleBundle\Schedule;
  */
 trait HasExtensions
 {
-    /** @var Extension[] */
+    /** @var object[] */
     private $extensions = [];
 
-    final public function addExtension(Extension $extension): self
+    final public function addExtension(object $extension): self
     {
         $this->extensions[] = $extension;
 
@@ -18,7 +18,7 @@ trait HasExtensions
     }
 
     /**
-     * @return Extension[]
+     * @return object[]
      */
     final public function getExtensions(): array
     {

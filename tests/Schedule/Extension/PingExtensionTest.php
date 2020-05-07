@@ -60,9 +60,9 @@ final class PingExtensionTest extends TestCase
         ;
     }
 
-    private function createBuilder(callable $callback): ScheduleBuilder
+    private function createBuilder(Task $task): ScheduleBuilder
     {
-        return new class($callback) implements ScheduleBuilder {
+        return new class($task) implements ScheduleBuilder {
             private $task;
 
             public function __construct(Task $task)

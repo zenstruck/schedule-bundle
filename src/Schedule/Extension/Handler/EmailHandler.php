@@ -5,10 +5,12 @@ namespace Zenstruck\ScheduleBundle\Schedule\Extension\Handler;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
+use Zenstruck\ScheduleBundle\Schedule;
+use Zenstruck\ScheduleBundle\Schedule\Exception\MissingDependency;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
+use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\Result;
 use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
@@ -33,9 +35,9 @@ final class EmailHandler extends ExtensionHandler
     /**
      * @param EmailExtension $extension
      */
-    public function onScheduleFailure(ScheduleRunContext $context, Extension $extension): void
+    public function onScheduleFailure(ScheduleRunContext $context, object $extension): void
     {
-        if ($extension->isHook(Extension::SCHEDULE_FAILURE)) {
+        if ($extension->isHook(Schedule::FAILURE)) {
             $this->sendScheduleEmail($context, $extension);
         }
     }
@@ -43,9 +45,9 @@ final class EmailHandler extends ExtensionHandler
     /**
      * @param EmailExtension $extension
      */
-    public function afterTask(TaskRunContext $context, Extension $extension): void
+    public function afterTask(TaskRunContext $context, object $extension): void
     {
-        if ($extension->isHook(Extension::TASK_AFTER)) {
+        if ($extension->isHook(Task::AFTER)) {
             $this->sendTaskEmail($extension, $context->getResult(), $context->getScheduleRunContext());
         }
     }
@@ -53,14 +55,14 @@ final class EmailHandler extends ExtensionHandler
     /**
      * @param EmailExtension $extension
      */
-    public function onTaskFailure(TaskRunContext $context, Extension $extension): void
+    public function onTaskFailure(TaskRunContext $context, object $extension): void
     {
-        if ($extension->isHook(Extension::TASK_FAILURE)) {
+        if ($extension->isHook(Task::FAILURE)) {
             $this->sendTaskEmail($extension, $context->getResult(), $context->getScheduleRunContext());
         }
     }
 
-    public function supports(Extension $extension): bool
+    public function supports(object $extension): bool
     {
         return $extension instanceof EmailExtension;
     }
@@ -142,7 +144,7 @@ final class EmailHandler extends ExtensionHandler
         }
 
         if (empty($email->getTo())) {
-            throw new \LogicException('There is no "To" configured for the email. Either set it when adding the extension or in your configuration (config path: "zenstruck_schedule.email_handler.default_to").');
+            throw new MissingDependency('There is no "To" configured for the email. Either set it when adding the extension or in your configuration (config path: "zenstruck_schedule.mailer.default_to").');
         }
 
         return $email;

@@ -2,7 +2,9 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
-use Zenstruck\ScheduleBundle\Schedule\Extension;
+use Zenstruck\ScheduleBundle\Schedule\Exception\MissingDependency;
+use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\BetweenTimeHandler;
+use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\CallbackHandler;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
@@ -12,7 +14,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 final class ExtensionHandlerRegistry
 {
     private $handlers;
-    private $handlerCache = [];
+    private $handlerCache;
 
     /**
      * @param ExtensionHandler[] $handlers
@@ -20,9 +22,13 @@ final class ExtensionHandlerRegistry
     public function __construct(iterable $handlers)
     {
         $this->handlers = $handlers;
+        $this->handlerCache = [
+            CallbackExtension::class => new CallbackHandler(),
+            BetweenTimeExtension::class => new BetweenTimeHandler(),
+        ];
     }
 
-    public function handlerFor(Extension $extension): ExtensionHandler
+    public function handlerFor(object $extension): ExtensionHandler
     {
         $class = \get_class($extension);
 
@@ -36,13 +42,7 @@ final class ExtensionHandlerRegistry
             }
         }
 
-        $message = \sprintf('No extension handler registered for "%s: %s".', \get_class($extension), $extension);
-
-        if ($extension instanceof HasMissingHandlerMessage) {
-            $message = $extension->getMissingHandlerMessage();
-        }
-
-        throw new \LogicException($message);
+        throw MissingDependency::noExtensionHandler($extension);
     }
 
     public function beforeSchedule(ScheduleRunContext $context): void

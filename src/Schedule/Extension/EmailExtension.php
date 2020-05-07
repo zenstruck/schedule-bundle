@@ -2,15 +2,16 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
+use Zenstruck\ScheduleBundle\Schedule;
+use Zenstruck\ScheduleBundle\Schedule\HasMissingDependencyMessage;
+use Zenstruck\ScheduleBundle\Schedule\Task;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class EmailExtension implements Extension, HasMissingHandlerMessage
+final class EmailExtension implements HasMissingDependencyMessage
 {
     private $hook;
     private $email;
@@ -20,10 +21,6 @@ final class EmailExtension implements Extension, HasMissingHandlerMessage
      */
     private function __construct(string $hook, $to = null, string $subject = null, callable $callback = null)
     {
-        if (!\interface_exists(MailerInterface::class)) {
-            throw new \LogicException(\sprintf('Symfony Mailer is required to use the "%s" extension. Install with "composer require symfony/mailer".', self::class));
-        }
-
         $this->hook = $hook;
 
         $email = new Email();
@@ -59,17 +56,17 @@ final class EmailExtension implements Extension, HasMissingHandlerMessage
 
     public static function taskAfter($to = null, string $subject = null, callable $callback = null): self
     {
-        return new self(Extension::TASK_AFTER, $to, $subject, $callback);
+        return new self(Task::AFTER, $to, $subject, $callback);
     }
 
     public static function taskFailure($to = null, string $subject = null, callable $callback = null): self
     {
-        return new self(Extension::TASK_FAILURE, $to, $subject, $callback);
+        return new self(Task::FAILURE, $to, $subject, $callback);
     }
 
     public static function scheduleFailure($to = null, string $subject = null, callable $callback = null): self
     {
-        return new self(Extension::SCHEDULE_FAILURE, $to, $subject, $callback);
+        return new self(Schedule::FAILURE, $to, $subject, $callback);
     }
 
     public function getEmail(): Email
@@ -82,8 +79,8 @@ final class EmailExtension implements Extension, HasMissingHandlerMessage
         return $expectedHook === $this->hook;
     }
 
-    public function getMissingHandlerMessage(): string
+    public static function getMissingDependencyMessage(): string
     {
-        return 'To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").';
+        return 'To use the email extension you must configure a mailer (config path: "zenstruck_schedule.mailer").';
     }
 }

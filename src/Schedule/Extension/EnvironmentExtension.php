@@ -2,12 +2,10 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
-use Zenstruck\ScheduleBundle\Schedule\Extension;
-
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class EnvironmentExtension implements Extension
+final class EnvironmentExtension
 {
     private $runEnvironments;
 

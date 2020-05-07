@@ -5,8 +5,8 @@
         https://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
-        <service id="Zenstruck\ScheduleBundle\Schedule\Extension\Handler\WithoutOverlappingHandler">
-            <tag name="schedule.extension_handler" />
+        <service id="Zenstruck\ScheduleBundle\Schedule\Task\Runner\ProcessTaskRunner">
+            <tag name="schedule.task_runner" />
         </service>
     </services>
 </container>

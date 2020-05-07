@@ -4,14 +4,8 @@ namespace Zenstruck\ScheduleBundle\Tests\Schedule;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Email;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Zenstruck\ScheduleBundle\Schedule;
-use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
-use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\Task;
-use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 
 /**
@@ -164,183 +158,6 @@ final class TaskTest extends TestCase
 
     /**
      * @test
-     */
-    public function false_when_filter_skips_task()
-    {
-        $task = self::task();
-
-        $task->when('boolean value', false);
-
-        $this->expectException(SkipTask::class);
-        $this->expectExceptionMessage('boolean value');
-
-        $task->getExtensions()[0]->filterTask(self::taskRunContext());
-    }
-
-    /**
-     * @test
-     */
-    public function callback_returning_false_when_filter_skips_task()
-    {
-        $task = self::task();
-
-        $task->when('callback value', function () { return false; });
-
-        $this->expectException(SkipTask::class);
-        $this->expectExceptionMessage('callback value');
-
-        $task->getExtensions()[0]->filterTask(self::taskRunContext());
-    }
-
-    /**
-     * @test
-     */
-    public function true_when_filter_allows_task_to_run()
-    {
-        $task = self::task();
-
-        $task->when('boolean value', true);
-
-        $task->getExtensions()[0]->filterTask(self::taskRunContext());
-
-        $this->assertTrue(true);
-    }
-
-    /**
-     * @test
-     */
-    public function callback_returning_true_when_filter_allows_task_to_run()
-    {
-        $task = self::task();
-
-        $task->when('callback value', function () { return true; });
-
-        $task->getExtensions()[0]->filterTask(self::taskRunContext());
-
-        $this->assertTrue(true);
-    }
-
-    /**
-     * @test
-     */
-    public function true_skip_filter_skips_task()
-    {
-        $task = self::task();
-
-        $task->skip('boolean value', true);
-
-        $this->expectException(SkipTask::class);
-        $this->expectExceptionMessage('boolean value');
-
-        $task->getExtensions()[0]->filterTask(self::taskRunContext());
-    }
-
-    /**
-     * @test
-     */
-    public function callback_returning_true_skip_filter_skips_task()
-    {
-        $task = self::task();
-
-        $task->skip('callback value', function () { return true; });
-
-        $this->expectException(SkipTask::class);
-        $this->expectExceptionMessage('callback value');
-
-        $task->getExtensions()[0]->filterTask(self::taskRunContext());
-    }
-
-    /**
-     * @test
-     */
-    public function false_skip_filter_allows_task_to_run()
-    {
-        $task = self::task();
-
-        $task->skip('boolean value', false);
-
-        $task->getExtensions()[0]->filterTask(self::taskRunContext());
-
-        $this->assertTrue(true);
-    }
-
-    /**
-     * @test
-     */
-    public function callback_returning_false_skip_filter_allows_task_to_run()
-    {
-        $task = self::task();
-
-        $task->skip('callback value', function () { return false; });
-
-        $task->getExtensions()[0]->filterTask(self::taskRunContext());
-
-        $this->assertTrue(true);
-    }
-
-    /**
-     * @test
-     */
-    public function can_add_callback_extensions()
-    {
-        $task = self::task();
-        $calls = [];
-
-        $task->filter(function () use (&$calls) { $calls[] = 'filter'; });
-        $task->before(function () use (&$calls) { $calls[] = 'before'; });
-        $task->after(function () use (&$calls) { $calls[] = 'after'; });
-        $task->then(function () use (&$calls) { $calls[] = 'then'; });
-        $task->onSuccess(function () use (&$calls) { $calls[] = 'onSuccess'; });
-        $task->onFailure(function () use (&$calls) { $calls[] = 'onFailure'; });
-
-        $task->getExtensions()[0]->filterTask(self::taskRunContext());
-        $task->getExtensions()[1]->beforeTask(self::taskRunContext());
-        $task->getExtensions()[2]->afterTask(self::taskRunContext());
-        $task->getExtensions()[3]->afterTask(self::taskRunContext());
-        $task->getExtensions()[4]->onTaskSuccess(self::taskRunContext());
-        $task->getExtensions()[5]->onTaskFailure(self::taskRunContext());
-
-        $this->assertSame([
-            'filter',
-            'before',
-            'after',
-            'then',
-            'onSuccess',
-            'onFailure',
-        ], $calls);
-    }
-
-    /**
-     * @test
-     */
-    public function can_add_ping_extensions()
-    {
-        $task = self::task();
-
-        $task->pingBefore('http://before.com');
-        $task->pingAfter('http://after.com', 'POST');
-        $task->thenPing('http://then.com');
-        $task->pingOnSuccess('http://success.com');
-        $task->pingOnFailure('http://failure.com');
-
-        $client = $this->createMock(HttpClientInterface::class);
-        $client->expects($this->exactly(5))->method('request')->withConsecutive(
-            [$this->equalTo('GET'), $this->equalTo('http://before.com'), $this->isType('array')],
-            [$this->equalTo('POST'), $this->equalTo('http://after.com'), $this->isType('array')],
-            [$this->equalTo('GET'), $this->equalTo('http://then.com'), $this->isType('array')],
-            [$this->equalTo('GET'), $this->equalTo('http://success.com'), $this->isType('array')],
-            [$this->equalTo('GET'), $this->equalTo('http://failure.com'), $this->isType('array')]
-        );
-
-        $task->getExtensions()[0]->setHttpClient($client)->beforeTask(self::taskRunContext());
-        $task->getExtensions()[1]->setHttpClient($client)->afterTask(self::taskRunContext());
-        $task->getExtensions()[2]->setHttpClient($client)->afterTask(self::taskRunContext());
-        $task->getExtensions()[3]->setHttpClient($client)->onTaskSuccess(self::taskRunContext());
-        $task->getExtensions()[4]->setHttpClient($client)->onTaskFailure(self::taskRunContext());
-    }
-
-    /**
-     * @test
      * @dataProvider emailAfterMethodProvider
      */
     public function can_add_email_after_extension($method)
@@ -350,7 +167,7 @@ final class TaskTest extends TestCase
             $email->cc('emily@example.com');
         });
 
-        $this->assertTrue($task->getExtensions()[0]->isHook(Extension::TASK_AFTER));
+        $this->assertTrue($task->getExtensions()[0]->isHook(Task::AFTER));
         $this->assertSame('kevin@example.com', $task->getExtensions()[0]->getEmail()->getTo()[0]->toString());
         $this->assertSame('emily@example.com', $task->getExtensions()[0]->getEmail()->getCc()[0]->toString());
         $this->assertSame('my subject', $task->getExtensions()[0]->getEmail()->getSubject());
@@ -374,7 +191,7 @@ final class TaskTest extends TestCase
             $email->cc('emily@example.com');
         });
 
-        $this->assertTrue($task->getExtensions()[0]->isHook(Extension::TASK_FAILURE));
+        $this->assertTrue($task->getExtensions()[0]->isHook(Task::FAILURE));
         $this->assertSame('kevin@example.com', $task->getExtensions()[0]->getEmail()->getTo()[0]->toString());
         $this->assertSame('emily@example.com', $task->getExtensions()[0]->getEmail()->getCc()[0]->toString());
         $this->assertSame('my subject', $task->getExtensions()[0]->getEmail()->getSubject());
@@ -388,129 +205,6 @@ final class TaskTest extends TestCase
         $task = self::task()->onSingleServer();
 
         $this->assertInstanceOf(SingleServerExtension::class, $task->getExtensions()[0]);
-    }
-
-    /**
-     * @test
-     */
-    public function can_add_without_overlapping_extension()
-    {
-        $task1 = self::task('task')->withoutOverlapping();
-        $task2 = self::task('task')->withoutOverlapping();
-
-        $task1->getExtensions()[0]->filterTask(self::taskRunContext());
-
-        $this->expectException(SkipTask::class);
-        $this->expectExceptionMessage('Task running in another process.');
-
-        $task2->getExtensions()[0]->filterTask(self::taskRunContext());
-    }
-
-    /**
-     * @test
-     * @dataProvider onlyBetweenExtensionSkipProvider
-     */
-    public function only_between_extension_skip($start, $end, $inclusive)
-    {
-        $start = (new \DateTime($start))->format('H:i');
-        $end = (new \DateTime($end))->format('H:i');
-
-        $task = self::task()->onlyBetween($start, $end, $inclusive);
-
-        $this->expectException(SkipTask::class);
-        $this->expectExceptionMessage("Only runs between {$start} and {$end}");
-
-        $task->getExtensions()[0]->filterTask(self::taskRunContext());
-    }
-
-    public static function onlyBetweenExtensionSkipProvider()
-    {
-        return [
-            ['+2 minutes', '+3 minutes', true],
-            ['now', '+3 minutes', false],
-            ['+5 minutes', '+23 hours', true],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider onlyBetweenExtensionRunProvider
-     */
-    public function only_between_extension_run($start, $end, $inclusive)
-    {
-        $start = (new \DateTime($start))->format('H:i');
-        $end = (new \DateTime($end))->format('H:i');
-
-        $task = self::task()->onlyBetween($start, $end, $inclusive);
-
-        $task->getExtensions()[0]->filterTask(self::taskRunContext());
-
-        $this->assertTrue(true);
-    }
-
-    public static function onlyBetweenExtensionRunProvider()
-    {
-        return [
-            ['now', '+3 minutes', true],
-            ['-1 minute', '+3 minutes', false],
-            ['-1 minutes', '+23 hours', true],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider unlessBetweenExtensionSkipProvider
-     */
-    public function unless_between_extension_skip($start, $end, $inclusive)
-    {
-        $start = (new \DateTime($start))->format('H:i');
-        $end = (new \DateTime($end))->format('H:i');
-
-        $task = self::task()->unlessBetween($start, $end, $inclusive);
-
-        $this->expectException(SkipTask::class);
-        $this->expectExceptionMessage("Only runs if not between {$start} and {$end}");
-
-        $task->getExtensions()[0]->filterTask(self::taskRunContext());
-    }
-
-    public static function unlessBetweenExtensionSkipProvider()
-    {
-        return [
-            ['-1 minute', '+3 minutes', false],
-            ['now', '+3 minutes', true],
-            ['-1 minutes', '+23 hours', true],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider unlessBetweenExtensionRunProvider
-     */
-    public function unless_between_extension_run($start, $end, $inclusive)
-    {
-        $start = (new \DateTime($start))->format('H:i');
-        $end = (new \DateTime($end))->format('H:i');
-
-        $task = self::task()->unlessBetween($start, $end, $inclusive);
-
-        $task->getExtensions()[0]->filterTask(self::taskRunContext());
-
-        $this->assertTrue(true);
-    }
-
-    public static function unlessBetweenExtensionRunProvider()
-    {
-        return [
-            ['now', '+3 minutes', false],
-            ['+1 minute', '+3 minutes', true],
-            ['+5 minutes', '+23 hours', true],
-        ];
-    }
-
-    private static function taskRunContext(): TaskRunContext
-    {
-        return new TaskRunContext(new ScheduleRunContext(new Schedule()), self::task());
     }
 
     private static function task(string $description = 'task description'): Task

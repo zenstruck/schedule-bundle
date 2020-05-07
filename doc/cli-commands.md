@@ -63,7 +63,7 @@ $ bin/console schedule:list
 
  [WARNING] 1 task issue:
 
- [ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").      
+ [ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.mailer").      
 
  ! [NOTE] For more details, run php bin/console schedule:list --detail
 
@@ -74,7 +74,7 @@ $ bin/console schedule:list
  [WARNING] 1 issue with schedule:
 
  [ERROR] To use "onSingleServer" you must configure a lock factory (config path:
-         "zenstruck_schedule.single_server_handler").
+         "zenstruck_schedule.single_server_lock_factory").
 ```
 
 ![schedule:list with issues](images/schedule-list-with-issues.png)
@@ -105,7 +105,7 @@ $ bin/console schedule:list --detail
 
  [WARNING] 1 issue with this task:
 
- [ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").      
+ [ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.mailer").      
 
 (2/2) CommandTask: Send the weekly sales report
 -----------------------------------------------
@@ -129,7 +129,7 @@ $ bin/console schedule:list --detail
  [WARNING] 1 issue with schedule:
 
  [ERROR] To use "onSingleServer" you must configure a lock factory (config path:
-         "zenstruck_schedule.single_server_handler").
+         "zenstruck_schedule.single_server_lock_factory").
 ```
 
 There are two issues that need to be resolved in the bundle config:
@@ -138,8 +138,8 @@ There are two issues that need to be resolved in the bundle config:
 # config/packages/zenstruck_schedule.yaml
 
 zenstruck_schedule:
-    single_server_handler: lock.default.factory # required to use "onSingleServer"
-    email_handler: # required to use "emailOnFailure"
+    single_server_lock_factory: lock.default.factory # required to use "onSingleServer"
+    mailer: # required to use "emailOnFailure"
         service: mailer
         default_from: webmaster@example.com
 ```

@@ -2,15 +2,13 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
-use Zenstruck\ScheduleBundle\Schedule\Extension;
-use Zenstruck\ScheduleBundle\Schedule\RunContext;
-use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
-use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
+use Zenstruck\ScheduleBundle\Schedule;
+use Zenstruck\ScheduleBundle\Schedule\Task;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class CallbackExtension extends SelfHandlingExtension
+final class CallbackExtension
 {
     private $hook;
     private $callback;
@@ -26,104 +24,64 @@ final class CallbackExtension extends SelfHandlingExtension
         return \sprintf('%s callback: %s', $this->hook, self::createDescriptionFromCallback($this->callback));
     }
 
-    public function filterSchedule(ScheduleRunContext $context): void
+    public function getHook(): string
     {
-        $this->runIf(Extension::SCHEDULE_FILTER, $context);
+        return $this->hook;
     }
 
-    public function beforeSchedule(ScheduleRunContext $context): void
+    public function getCallback(): callable
     {
-        $this->runIf(Extension::SCHEDULE_BEFORE, $context);
-    }
-
-    public function afterSchedule(ScheduleRunContext $context): void
-    {
-        $this->runIf(Extension::SCHEDULE_AFTER, $context);
-    }
-
-    public function onScheduleSuccess(ScheduleRunContext $context): void
-    {
-        $this->runIf(Extension::SCHEDULE_SUCCESS, $context);
-    }
-
-    public function onScheduleFailure(ScheduleRunContext $context): void
-    {
-        $this->runIf(Extension::SCHEDULE_FAILURE, $context);
-    }
-
-    public function filterTask(TaskRunContext $context): void
-    {
-        $this->runIf(Extension::TASK_FILTER, $context);
-    }
-
-    public function beforeTask(TaskRunContext $context): void
-    {
-        $this->runIf(Extension::TASK_BEFORE, $context);
-    }
-
-    public function afterTask(TaskRunContext $context): void
-    {
-        $this->runIf(Extension::TASK_AFTER, $context);
-    }
-
-    public function onTaskSuccess(TaskRunContext $context): void
-    {
-        $this->runIf(Extension::TASK_SUCCESS, $context);
-    }
-
-    public function onTaskFailure(TaskRunContext $context): void
-    {
-        $this->runIf(Extension::TASK_FAILURE, $context);
+        return $this->callback;
     }
 
     public static function taskFilter(callable $callback): self
     {
-        return new self(Extension::TASK_FILTER, $callback);
+        return new self(Task::FILTER, $callback);
     }
 
     public static function taskBefore(callable $callback): self
     {
-        return new self(Extension::TASK_BEFORE, $callback);
+        return new self(Task::BEFORE, $callback);
     }
 
     public static function taskAfter(callable $callback): self
     {
-        return new self(Extension::TASK_AFTER, $callback);
+        return new self(Task::AFTER, $callback);
     }
 
     public static function taskSuccess(callable $callback): self
     {
-        return new self(Extension::TASK_SUCCESS, $callback);
+        return new self(Task::SUCCESS, $callback);
     }
 
     public static function taskFailure(callable $callback): self
     {
-        return new self(Extension::TASK_FAILURE, $callback);
+        return new self(Task::FAILURE, $callback);
     }
 
     public static function scheduleFilter(callable $callback): self
     {
-        return new self(Extension::SCHEDULE_FILTER, $callback);
+        return new self(Schedule::FILTER, $callback);
     }
 
     public static function scheduleBefore(callable $callback): self
     {
-        return new self(Extension::SCHEDULE_BEFORE, $callback);
+        return new self(Schedule::BEFORE, $callback);
     }
 
     public static function scheduleAfter(callable $callback): self
     {
-        return new self(Extension::SCHEDULE_AFTER, $callback);
+        return new self(Schedule::AFTER, $callback);
     }
 
     public static function scheduleSuccess(callable $callback): self
     {
-        return new self(Extension::SCHEDULE_SUCCESS, $callback);
+        return new self(Schedule::SUCCESS, $callback);
     }
 
     public static function scheduleFailure(callable $callback): self
     {
-        return new self(Extension::SCHEDULE_FAILURE, $callback);
+        return new self(Schedule::FAILURE, $callback);
     }
 
     public static function createDescriptionFromCallback(callable $callback): string
@@ -135,12 +93,5 @@ final class CallbackExtension extends SelfHandlingExtension
         }
 
         return $ref->getName();
-    }
-
-    private function runIf(string $expectedHook, RunContext $context): void
-    {
-        if ($expectedHook === $this->hook) {
-            ($this->callback)($context);
-        }
     }
 }

@@ -2,11 +2,14 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Extension\Handler;
 
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Zenstruck\ScheduleBundle\Schedule\Extension;
+use Zenstruck\ScheduleBundle\Schedule;
+use Zenstruck\ScheduleBundle\Schedule\Exception\MissingDependency;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
+use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
@@ -16,77 +19,88 @@ final class PingHandler extends ExtensionHandler
 {
     private $httpClient;
 
-    public function __construct(HttpClientInterface $httpClient)
+    public function __construct(HttpClientInterface $httpClient = null)
     {
-        $this->httpClient = $httpClient;
+        if (null === $httpClient && !\class_exists(HttpClient::class)) {
+            throw new MissingDependency(PingExtension::getMissingDependencyMessage());
+        }
+
+        $this->httpClient = $httpClient ?: HttpClient::create();
     }
 
     /**
      * @param PingExtension $extension
      */
-    public function beforeSchedule(ScheduleRunContext $context, Extension $extension): void
+    public function beforeSchedule(ScheduleRunContext $context, object $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->beforeSchedule($context);
+        $this->pingIf($extension, Schedule::BEFORE);
     }
 
     /**
      * @param PingExtension $extension
      */
-    public function afterSchedule(ScheduleRunContext $context, Extension $extension): void
+    public function afterSchedule(ScheduleRunContext $context, object $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->afterSchedule($context);
+        $this->pingIf($extension, Schedule::AFTER);
     }
 
     /**
      * @param PingExtension $extension
      */
-    public function onScheduleSuccess(ScheduleRunContext $context, Extension $extension): void
+    public function onScheduleSuccess(ScheduleRunContext $context, object $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->onScheduleSuccess($context);
+        $this->pingIf($extension, Schedule::SUCCESS);
     }
 
     /**
      * @param PingExtension $extension
      */
-    public function onScheduleFailure(ScheduleRunContext $context, Extension $extension): void
+    public function onScheduleFailure(ScheduleRunContext $context, object $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->onScheduleFailure($context);
+        $this->pingIf($extension, Schedule::FAILURE);
     }
 
     /**
      * @param PingExtension $extension
      */
-    public function beforeTask(TaskRunContext $context, Extension $extension): void
+    public function beforeTask(TaskRunContext $context, object $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->beforeTask($context);
+        $this->pingIf($extension, Task::BEFORE);
     }
 
     /**
      * @param PingExtension $extension
      */
-    public function afterTask(TaskRunContext $context, Extension $extension): void
+    public function afterTask(TaskRunContext $context, object $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->afterTask($context);
+        $this->pingIf($extension, Task::AFTER);
     }
 
     /**
      * @param PingExtension $extension
      */
-    public function onTaskSuccess(TaskRunContext $context, Extension $extension): void
+    public function onTaskSuccess(TaskRunContext $context, object $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->onTaskSuccess($context);
+        $this->pingIf($extension, Task::SUCCESS);
     }
 
     /**
      * @param PingExtension $extension
      */
-    public function onTaskFailure(TaskRunContext $context, Extension $extension): void
+    public function onTaskFailure(TaskRunContext $context, object $extension): void
     {
-        $extension->setHttpClient($this->httpClient)->onTaskFailure($context);
+        $this->pingIf($extension, Task::FAILURE);
     }
 
-    public function supports(Extension $extension): bool
+    public function supports(object $extension): bool
     {
         return $extension instanceof PingExtension;
+    }
+
+    private function pingIf(PingExtension $extension, string $expectedHook): void
+    {
+        if ($expectedHook === $extension->getHook()) {
+            $this->httpClient->request($extension->getMethod(), $extension->getUrl(), $extension->getOptions())->getStatusCode();
+        }
     }
 }

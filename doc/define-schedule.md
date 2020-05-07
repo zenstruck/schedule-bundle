@@ -1,27 +1,5 @@
 # Defining the Schedule
 
-## Bundle Configuration
-
-Most [tasks](define-tasks.md#task-types), [task extensions](define-tasks.md#task-extensions)
-and [schedule extensions](#schedule-extensions) can be configured:
-
-```yaml
-# config/packages/zenstruck_schedule.yaml
-
-zenstruck_schedule:
-    timezone: UTC
-    ping_on_success: https://example.com/schedule-success
-    
-    tasks:
-        -   task: app:send-weekly-report --detailed
-            frequency: '0 1 * * 0' # sundays @ 1am
-
-        -   task: app:send-hourly-report
-            frequency: '0 0 * * 1-5' # hourly on weekdays
-            only_between: 9-17 # only run between 9am and 5pm
-            unless_between: 11-13 # except at lunch
-```
-
 ## ScheduleBuilder Service
 
 You can define one or more services that implement
@@ -85,6 +63,28 @@ class Kernel extends BaseKernel implements ScheduleBuilder
 }
 ```
 
+## Bundle Configuration
+
+Most [tasks](define-tasks.md#task-types), [task extensions](define-tasks.md#task-extensions)
+and [schedule extensions](#schedule-extensions) can be configured:
+
+```yaml
+# config/packages/zenstruck_schedule.yaml
+
+zenstruck_schedule:
+    timezone: UTC
+    ping_on_success: https://example.com/schedule-success
+    
+    tasks:
+        -   task: app:send-weekly-report --detailed
+            frequency: '0 1 * * 0' # sundays @ 1am
+
+        -   task: app:send-hourly-report
+            frequency: '0 0 * * 1-5' # hourly on weekdays
+            only_between: 9-17 # only run between 9am and 5pm
+            unless_between: 11-13 # except at lunch
+```
+
 ## Self-Scheduling Commands
 
 You can make your application's console commands schedule themselves. Have your command
@@ -121,6 +121,14 @@ You may optionally define the *schedule* timezone for all tasks to use. If none 
 it will use PHP's default timezone. [Tasks can override](define-tasks.md#timezone)
 the *schedule* timezone.
 
+**Define in [PHP](#schedulebuilder-service):**
+
+```php
+/* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
+
+$schedule->timezone('America/New_York');
+```
+
 **Define in [Configuration](#bundle-configuration):**
 
 ```yaml
@@ -128,14 +136,6 @@ the *schedule* timezone.
 
 zenstruck_schedule:
     timezone: America/New_York
-```
-
-**Define in [PHP](#schedulebuilder-service):**
-
-```php
-/* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
-
-$schedule->timezone('America/New_York');
 ```
 
 ## Schedule Extensions
@@ -202,23 +202,6 @@ This extension is useful for Cron health monitoring tools like
 [Cronitor](https://cronitor.io/), [Laravel Envoyer](https://envoyer.io/) and
 [Healthchecks](https://healthchecks.io/).
 
-**Define in [Configuration](#bundle-configuration):**
-
-```yaml
-# config/packages/zenstruck_schedule.yaml
-
-zenstruck_schedule:
-    schedule_extensions:
-        ping_before: https://example.com/before-tasks-run
-        ping_after:
-            url: https://example.com/after-tasks-run
-            method: POST
-        ping_on_success:
-            url: https://example.com/all-tasks-succeeded
-        ping_on_failure:
-            url: https://example.com/some-tasks-failed
-```
-
 **Define in [PHP](#schedulebuilder-service):**
 
 ```php
@@ -238,6 +221,23 @@ $schedule->pingOnSuccess('https://example.com/all-tasks-succeeded');
 $schedule->pingOnFailure('https://example.com/some-tasks-failed');
 ```
 
+**Define in [Configuration](#bundle-configuration):**
+
+```yaml
+# config/packages/zenstruck_schedule.yaml
+
+zenstruck_schedule:
+    schedule_extensions:
+        ping_before: https://example.com/before-tasks-run
+        ping_after:
+            url: https://example.com/after-tasks-run
+            method: POST
+        ping_on_success:
+            url: https://example.com/all-tasks-succeeded
+        ping_on_failure:
+            url: https://example.com/some-tasks-failed
+```
+
 **Notes**:
 
 1. This extension **requires** `symfony/http-client`:
@@ -252,25 +252,13 @@ $schedule->pingOnFailure('https://example.com/some-tasks-failed');
     # config/packages/zenstruck_schedule.yaml
 
     zenstruck_schedule:
-        ping_handler: my_http_client
+        http_client: my_http_client
     ```
 
 ### Email On Failure
 
 This extension can be used to notify site administrators via email
 when tasks fail.
-
-**Define in [Configuration](#bundle-configuration):**
-
-```yaml
-# config/packages/zenstruck_schedule.yaml
-
-zenstruck_schedule:
-    schedule_extensions:
-        email_on_failure:
-           to: admin@example.com # optional if configured
-           subject: my subject # optional, leave empty to use default
-```
 
 **Define in [PHP](#schedulebuilder-service):**
 
@@ -289,6 +277,18 @@ $schedule->emailOnFailure('admin@example.com', 'my email subject', function (\Sy
 });
 ```
 
+**Define in [Configuration](#bundle-configuration):**
+
+```yaml
+# config/packages/zenstruck_schedule.yaml
+
+zenstruck_schedule:
+    schedule_extensions:
+        email_on_failure:
+           to: admin@example.com # optional if configured
+           subject: my subject # optional, leave empty to use default
+```
+
 **Notes:**
 
 1. This extension **requires** `symfony/mailer`:
@@ -303,7 +303,7 @@ $schedule->emailOnFailure('admin@example.com', 'my email subject', function (\Sy
     # config/packages/zenstruck_schedule.yaml
 
     zenstruck_schedule:
-        email_handler:
+        mailer:
             service: mailer # required
             default_to: admin@example.com # optional (exclude if defined in code/config)
             default_from: webmaster@example.com # exclude only if a "global from" is defined for your application
@@ -356,6 +356,14 @@ schedule will have their schedule skip. Be sure to configure this extension (see
 below) with a **[remote store](https://symfony.com/doc/current/components/lock.html#remote-stores)**.
 If you use a *local store* it will not be able to lock other servers.
 
+**Define in [PHP](#schedulebuilder-service):**
+
+```php
+/* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
+
+$schedule->onSingleServer();
+```
+
 **Define in [Configuration](#bundle-configuration):**
 
 ```yaml
@@ -364,14 +372,6 @@ If you use a *local store* it will not be able to lock other servers.
 zenstruck_schedule:
     schedule_extensions:
         on_single_server: ~
-```
-
-**Define in [PHP](#schedulebuilder-service):**
-
-```php
-/* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
-
-$schedule->onSingleServer();
 ```
 
 **Notes:**
@@ -388,10 +388,18 @@ $schedule->onSingleServer();
     # config/packages/zenstruck_schedule.yaml
 
     zenstruck_schedule:
-        single_server_handler: my_lock_factory_service # Be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)
+        single_server_lock_factory: my_lock_factory_service # Be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)
     ```
 
 ### Limit to specific environment(s)
+
+**Define in [PHP](#schedulebuilder-service):**
+
+```php
+/* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
+
+$schedule->environments('prod');
+```
 
 **Define in [Configuration](#bundle-configuration):**
 
@@ -401,12 +409,4 @@ $schedule->onSingleServer();
 zenstruck_schedule:
     schedule_extensions:
         environments: prod
-```
-
-**Define in [PHP](#schedulebuilder-service):**
-
-```php
-/* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
-
-$schedule->environments('prod');
 ```

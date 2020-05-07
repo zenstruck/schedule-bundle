@@ -20,15 +20,16 @@ use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandlerRegistry;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\EmailHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\EnvironmentHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\PingHandler;
-use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\SelfHandlingHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\SingleServerHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\WithoutOverlappingHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\WithoutOverlappingExtension;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunner;
+use Zenstruck\ScheduleBundle\Schedule\Task\Runner\CallbackTaskRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\Runner\CommandTaskRunner;
-use Zenstruck\ScheduleBundle\Schedule\Task\Runner\SelfRunningTaskRunner;
+use Zenstruck\ScheduleBundle\Schedule\Task\Runner\PingTaskRunner;
+use Zenstruck\ScheduleBundle\Schedule\Task\Runner\ProcessTaskRunner;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -62,8 +63,11 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasService(CommandTaskRunner::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(CommandTaskRunner::class, 'schedule.task_runner');
 
-        $this->assertContainerBuilderHasService(SelfRunningTaskRunner::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithTag(SelfRunningTaskRunner::class, 'schedule.task_runner');
+        $this->assertContainerBuilderHasService(ProcessTaskRunner::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(ProcessTaskRunner::class, 'schedule.task_runner');
+
+        $this->assertContainerBuilderHasService(CallbackTaskRunner::class);
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(CallbackTaskRunner::class, 'schedule.task_runner');
 
         $this->assertContainerBuilderHasService(ScheduleLoggerSubscriber::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(ScheduleLoggerSubscriber::class, 'kernel.event_subscriber');
@@ -71,15 +75,21 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
 
         $this->assertContainerBuilderHasService(ExtensionHandlerRegistry::class);
 
-        $this->assertContainerBuilderHasService(SelfHandlingHandler::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithTag(SelfHandlingHandler::class, 'schedule.extension_handler', ['priority' => -100]);
-
         $this->assertContainerBuilderHasService(EnvironmentHandler::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(EnvironmentHandler::class, 'schedule.extension_handler');
 
         $this->assertContainerBuilderHasService(TaskConfigurationSubscriber::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(ScheduleBuilderSubscriber::class, 'kernel.event_subscriber');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(TaskConfigurationSubscriber::class, 0, []);
+
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(PingHandler::class, 'schedule.extension_handler');
+        $this->assertEmpty($this->container->findDefinition(PingHandler::class)->getArguments());
+
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(PingTaskRunner::class, 'schedule.task_runner');
+        $this->assertEmpty($this->container->findDefinition(PingTaskRunner::class)->getArguments());
+
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(WithoutOverlappingHandler::class, 'schedule.extension_handler');
+        $this->assertEmpty($this->container->findDefinition(WithoutOverlappingHandler::class)->getArguments());
     }
 
     /**
@@ -110,7 +120,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
      */
     public function can_configure_single_server_lock_factory()
     {
-        $this->load(['single_server_handler' => 'my_factory']);
+        $this->load(['single_server_lock_factory' => 'my_factory']);
 
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(SingleServerHandler::class, 0, 'my_factory');
         $this->assertContainerBuilderHasServiceDefinitionWithTag(SingleServerHandler::class, 'schedule.extension_handler');
@@ -121,7 +131,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
      */
     public function can_configure_without_overlapping_handler_lock_factory()
     {
-        $this->load(['without_overlapping_handler' => 'my_factory']);
+        $this->load(['without_overlapping_lock_factory' => 'my_factory']);
 
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(WithoutOverlappingHandler::class, 0, 'my_factory');
         $this->assertContainerBuilderHasServiceDefinitionWithTag(WithoutOverlappingHandler::class, 'schedule.extension_handler');
@@ -130,12 +140,14 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     /**
      * @test
      */
-    public function can_configure_ping_handler_http_client()
+    public function can_configure_http_client()
     {
-        $this->load(['ping_handler' => 'my_client']);
+        $this->load(['http_client' => 'my_client']);
 
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(PingHandler::class, 0, 'my_client');
         $this->assertContainerBuilderHasServiceDefinitionWithTag(PingHandler::class, 'schedule.extension_handler');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(PingTaskRunner::class, 0, 'my_client');
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(PingTaskRunner::class, 'schedule.task_runner');
     }
 
     /**
@@ -143,7 +155,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
      */
     public function can_configure_email_handler()
     {
-        $this->load(['email_handler' => [
+        $this->load(['mailer' => [
             'service' => 'my_mailer',
             'default_from' => 'from@example.com',
             'default_to' => 'to@example.com',
@@ -162,7 +174,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
      */
     public function minimum_email_handler_configuration()
     {
-        $this->load(['email_handler' => [
+        $this->load(['mailer' => [
             'service' => 'my_mailer',
         ]]);
 
@@ -377,35 +389,14 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     /**
      * @test
      */
-    public function can_configure_a_null_task()
-    {
-        $this->load([
-            'tasks' => [
-                [
-                    'task' => null,
-                    'frequency' => '0 * * * *',
-                    'description' => 'my task',
-                ],
-            ],
-        ]);
-
-        $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
-
-        $this->assertSame([null], $config['task']);
-    }
-
-    /**
-     * @test
-     */
-    public function null_task_must_have_a_description()
+    public function task_is_required()
     {
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('Invalid configuration for path "zenstruck_schedule.tasks.0": "null" tasks must have a description.');
+        $this->expectExceptionMessage('The child node "task" at path "zenstruck_schedule.tasks.0" must be configured.');
 
         $this->load([
             'tasks' => [
                 [
-                    'task' => null,
                     'frequency' => '0 * * * *',
                 ],
             ],
@@ -415,16 +406,87 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     /**
      * @test
      */
-    public function compound_tasks_must_not_contain_null_tasks()
+    public function task_cannot_be_null()
     {
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('Invalid configuration for path "zenstruck_schedule.tasks.0.task": "null" tasks cannot be added to compound tasks.');
+        $this->expectExceptionMessage('Invalid configuration for path "zenstruck_schedule.tasks.0.task": Task cannot be empty value.');
+
+        $this->load([
+            'tasks' => [
+                [
+                    'task' => null,
+                    'frequency' => '0 * * * *',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function task_cannot_be_empty()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "zenstruck_schedule.tasks.0.task": Task cannot be empty value.');
+
+        $this->load([
+            'tasks' => [
+                [
+                    'task' => '',
+                    'frequency' => '0 * * * *',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function compound_tasks_must_not_contain_null_values()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "zenstruck_schedule.tasks.0.task": Task cannot be empty value.');
 
         $this->load([
             'tasks' => [
                 [
                     'task' => ['my:command', null],
                     'frequency' => 'invalid',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function task_frequency_is_required()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The child node "frequency" at path "zenstruck_schedule.tasks.0" must be configured.');
+
+        $this->load([
+            'tasks' => [
+                [
+                    'task' => 'my:command',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function task_frequency_cannot_be_null()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The path "zenstruck_schedule.tasks.0.frequency" cannot contain an empty value, but got null.');
+
+        $this->load([
+            'tasks' => [
+                [
+                    'task' => 'my:command',
+                    'frequency' => null,
                 ],
             ],
         ]);

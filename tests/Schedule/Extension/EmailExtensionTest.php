@@ -235,7 +235,7 @@ final class EmailExtensionTest extends TestCase
     public function provides_helpful_message_if_handler_not_configured()
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('To use the email extension you must configure a mailer (config path: "zenstruck_schedule.email_handler").');
+        $this->expectExceptionMessage('To use the email extension you must configure a mailer (config path: "zenstruck_schedule.mailer").');
 
         (new MockScheduleBuilder())
             ->addBuilder(new class() implements ScheduleBuilder {
@@ -260,7 +260,7 @@ final class EmailExtensionTest extends TestCase
         ;
 
         $this->assertInstanceOf(\LogicException::class, $context->getResults()[0]->getException());
-        $this->assertSame('There is no "To" configured for the email. Either set it when adding the extension or in your configuration (config path: "zenstruck_schedule.email_handler.default_to").', $context->getResults()[0]->getException()->getMessage());
+        $this->assertSame('There is no "To" configured for the email. Either set it when adding the extension or in your configuration (config path: "zenstruck_schedule.mailer.default_to").', $context->getResults()[0]->getException()->getMessage());
     }
 
     /**
