@@ -28,7 +28,6 @@ use Zenstruck\ScheduleBundle\Schedule\Extension\WithoutOverlappingExtension;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\Runner\CallbackTaskRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\Runner\CommandTaskRunner;
-use Zenstruck\ScheduleBundle\Schedule\Task\Runner\NullTaskRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\Runner\PingTaskRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\Runner\ProcessTaskRunner;
 
@@ -69,9 +68,6 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
 
         $this->assertContainerBuilderHasService(CallbackTaskRunner::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(CallbackTaskRunner::class, 'schedule.task_runner');
-
-        $this->assertContainerBuilderHasService(NullTaskRunner::class);
-        $this->assertContainerBuilderHasServiceDefinitionWithTag(NullTaskRunner::class, 'schedule.task_runner');
 
         $this->assertContainerBuilderHasService(ScheduleLoggerSubscriber::class);
         $this->assertContainerBuilderHasServiceDefinitionWithTag(ScheduleLoggerSubscriber::class, 'kernel.event_subscriber');
@@ -393,35 +389,14 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     /**
      * @test
      */
-    public function can_configure_a_null_task()
-    {
-        $this->load([
-            'tasks' => [
-                [
-                    'task' => null,
-                    'frequency' => '0 * * * *',
-                    'description' => 'my task',
-                ],
-            ],
-        ]);
-
-        $config = $this->container->getDefinition(TaskConfigurationSubscriber::class)->getArgument(0)[0];
-
-        $this->assertSame([null], $config['task']);
-    }
-
-    /**
-     * @test
-     */
-    public function null_task_must_have_a_description()
+    public function task_is_required()
     {
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('Invalid configuration for path "zenstruck_schedule.tasks.0": "null" tasks must have a description.');
+        $this->expectExceptionMessage('The child node "task" at path "zenstruck_schedule.tasks.0" must be configured.');
 
         $this->load([
             'tasks' => [
                 [
-                    'task' => null,
                     'frequency' => '0 * * * *',
                 ],
             ],
@@ -431,16 +406,87 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     /**
      * @test
      */
-    public function compound_tasks_must_not_contain_null_tasks()
+    public function task_cannot_be_null()
     {
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('Invalid configuration for path "zenstruck_schedule.tasks.0.task": "null" tasks cannot be added to compound tasks.');
+        $this->expectExceptionMessage('Invalid configuration for path "zenstruck_schedule.tasks.0.task": Task cannot be empty value.');
+
+        $this->load([
+            'tasks' => [
+                [
+                    'task' => null,
+                    'frequency' => '0 * * * *',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function task_cannot_be_empty()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "zenstruck_schedule.tasks.0.task": Task cannot be empty value.');
+
+        $this->load([
+            'tasks' => [
+                [
+                    'task' => '',
+                    'frequency' => '0 * * * *',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function compound_tasks_must_not_contain_null_values()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "zenstruck_schedule.tasks.0.task": Task cannot be empty value.');
 
         $this->load([
             'tasks' => [
                 [
                     'task' => ['my:command', null],
                     'frequency' => 'invalid',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function task_frequency_is_required()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The child node "frequency" at path "zenstruck_schedule.tasks.0" must be configured.');
+
+        $this->load([
+            'tasks' => [
+                [
+                    'task' => 'my:command',
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function task_frequency_cannot_be_null()
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('The path "zenstruck_schedule.tasks.0.frequency" cannot contain an empty value, but got null.');
+
+        $this->load([
+            'tasks' => [
+                [
+                    'task' => 'my:command',
+                    'frequency' => null,
                 ],
             ],
         ]);

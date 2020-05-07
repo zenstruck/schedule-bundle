@@ -126,23 +126,19 @@ final class Configuration implements ConfigurationInterface
                 ->end()
                 ->children()
                     ->arrayNode('task')
-                        ->info('Defaults to CommandTask, prefix with "bash:" to create ProcessTask, prefix url with "ping:" to create PingTask, pass (null) to create NullTask, pass array of commands to create CompoundTask (optionally keyed by description)')
+                        ->info('Defaults to CommandTask, prefix with "bash:" to create ProcessTask, prefix url with "ping:" to create PingTask, pass array of commands to create CompoundTask (optionally keyed by description)')
                         ->example('"my:command arg1 --option1=value", "bash:/bin/my-script" or "ping:https://example.com"')
                         ->validate()
                             ->ifTrue(function ($v) {
-                                if (1 === \count($v)) {
-                                    return false;
-                                }
-
                                 foreach ($v as $item) {
-                                    if (null === $item) {
+                                    if ('' === (string) $item) {
                                         return true;
                                     }
                                 }
 
                                 return false;
                             })
-                            ->thenInvalid('"null" tasks cannot be added to compound tasks.')
+                            ->thenInvalid('Task cannot be empty value.')
                         ->end()
                         ->beforeNormalization()
                             ->castToArray()
@@ -155,6 +151,7 @@ final class Configuration implements ConfigurationInterface
                         ->info('Cron expression')
                         ->example('0 * * * *')
                         ->isRequired()
+                        ->cannotBeEmpty()
                         ->validate()
                             ->ifTrue(function ($v) {
                                 try {
