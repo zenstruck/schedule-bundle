@@ -117,6 +117,50 @@ $schedule->addProcess(
                 frequency: '0 * * * *'
     ```
 
+### PingTask
+
+This task pings the provided URL. This task type is useful for Cron health monitoring
+tools like [Cronitor](https://cronitor.io/), [Laravel Envoyer](https://envoyer.io/) and
+[Healthchecks](https://healthchecks.io/).
+
+**Define in [Configuration](define-schedule.md#bundle-configuration):**
+
+```yaml
+# config/packages/zenstruck_schedule.yaml
+
+zenstruck_schedule:
+    tasks:
+        -   task: ping:https://example.com # note the "ping:" prefix
+            frequency: '0 * * * *'
+```
+
+**Define in [PHP](define-schedule.md#schedulebuilder-service):**
+
+```php
+use Zenstruck\ScheduleBundle\Schedule\Task\PingTask;
+
+/* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
+
+$schedule->add(new PingTask('https://example.com'));
+```
+
+**Notes**:
+
+1. This task type **requires** `symfony/http-client`:
+
+    ```console
+    $ composer require symfony/http-client
+    ```
+
+2. *Optionally* customize the `HttpClient` service in your configuration:
+
+    ```yaml
+    # config/packages/zenstruck_schedule.yaml
+
+    zenstruck_schedule:
+        http_client: my_http_client
+    ```
+
 ### CompoundTask
 
 This is a special task that allows you to group other tasks together that share a

@@ -29,6 +29,7 @@ use Zenstruck\ScheduleBundle\Schedule\ScheduleRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\Runner\CallbackTaskRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\Runner\CommandTaskRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\Runner\NullTaskRunner;
+use Zenstruck\ScheduleBundle\Schedule\Task\Runner\PingTaskRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\Runner\ProcessTaskRunner;
 
 /**
@@ -88,6 +89,9 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasServiceDefinitionWithTag(PingHandler::class, 'schedule.extension_handler');
         $this->assertEmpty($this->container->findDefinition(PingHandler::class)->getArguments());
 
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(PingTaskRunner::class, 'schedule.task_runner');
+        $this->assertEmpty($this->container->findDefinition(PingTaskRunner::class)->getArguments());
+
         $this->assertContainerBuilderHasServiceDefinitionWithTag(WithoutOverlappingHandler::class, 'schedule.extension_handler');
         $this->assertEmpty($this->container->findDefinition(WithoutOverlappingHandler::class)->getArguments());
     }
@@ -140,12 +144,14 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     /**
      * @test
      */
-    public function can_configure_ping_handler_http_client()
+    public function can_configure_http_client()
     {
         $this->load(['http_client' => 'my_client']);
 
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(PingHandler::class, 0, 'my_client');
         $this->assertContainerBuilderHasServiceDefinitionWithTag(PingHandler::class, 'schedule.extension_handler');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(PingTaskRunner::class, 0, 'my_client');
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(PingTaskRunner::class, 'schedule.task_runner');
     }
 
     /**

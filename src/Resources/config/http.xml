@@ -8,5 +8,9 @@
         <service id="Zenstruck\ScheduleBundle\Schedule\Extension\Handler\PingHandler">
             <tag name="schedule.extension_handler" />
         </service>
+
+        <service id="Zenstruck\ScheduleBundle\Schedule\Task\Runner\PingTaskRunner">
+            <tag name="schedule.task_runner" />
+        </service>
     </services>
 </container>

@@ -35,6 +35,7 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
         1. [CommandTask](doc/define-tasks.md#commandtask)
         2. [CallbackTask](doc/define-tasks.md#callbacktask)
         3. [ProcessTask](doc/define-tasks.md#processtask)
+        3. [PingTask](doc/define-tasks.md#pingtask)
         4. [CompoundTask](doc/define-tasks.md#compoundtask)
         5. [NullTask](doc/define-tasks.md#nulltask)
     2. [Task Description](doc/define-tasks.md#task-description)
@@ -257,8 +258,8 @@ zenstruck_schedule:
         # Prototype
         -
 
-            # Defaults to CommandTask, prefix with "bash:" to create ProcessTask, pass (null) to create NullTask, pass array of commands to create CompoundTask (optionally keyed by description)
-            task:                 ~ # Required, Example: "my:command arg1 --option1=value" or "bash:/bin/my-script"
+            # Defaults to CommandTask, prefix with "bash:" to create ProcessTask, prefix url with "ping:" to create PingTask, pass (null) to create NullTask, pass array of commands to create CompoundTask (optionally keyed by description)
+            task:                 ~ # Required, Example: "my:command arg1 --option1=value", "bash:/bin/my-script" or "ping:https://example.com"
 
             # Cron expression
             frequency:            ~ # Required, Example: '0 * * * *'

@@ -126,8 +126,8 @@ final class Configuration implements ConfigurationInterface
                 ->end()
                 ->children()
                     ->arrayNode('task')
-                        ->info('Defaults to CommandTask, prefix with "bash:" to create ProcessTask, pass (null) to create NullTask, pass array of commands to create CompoundTask (optionally keyed by description)')
-                        ->example('"my:command arg1 --option1=value" or "bash:/bin/my-script"')
+                        ->info('Defaults to CommandTask, prefix with "bash:" to create ProcessTask, prefix url with "ping:" to create PingTask, pass (null) to create NullTask, pass array of commands to create CompoundTask (optionally keyed by description)')
+                        ->example('"my:command arg1 --option1=value", "bash:/bin/my-script" or "ping:https://example.com"')
                         ->validate()
                             ->ifTrue(function ($v) {
                                 if (1 === \count($v)) {

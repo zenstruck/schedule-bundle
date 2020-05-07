@@ -23,6 +23,7 @@ use Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
 use Zenstruck\ScheduleBundle\Schedule\SelfSchedulingCommand;
+use Zenstruck\ScheduleBundle\Schedule\Task\Runner\PingTaskRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunner;
 
 /**
@@ -83,6 +84,11 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
         if ($mergedConfig['http_client']) {
             $container
                 ->getDefinition(PingHandler::class)
+                ->setArgument(0, new Reference($mergedConfig['http_client']))
+            ;
+
+            $container
+                ->getDefinition(PingTaskRunner::class)
                 ->setArgument(0, new Reference($mergedConfig['http_client']))
             ;
         }
