@@ -16,7 +16,7 @@ final class CallbackTaskRunnerTest extends TestCase
      */
     public function can_create_successful_result()
     {
-        $result = (new CallbackTaskRunner())(new CallbackTask(function () {}));
+        $result = (new CallbackTaskRunner())(new CallbackTask(function() {}));
 
         $this->assertTrue($result->isSuccessful());
         $this->assertNull($result->getOutput());
@@ -28,7 +28,7 @@ final class CallbackTaskRunnerTest extends TestCase
      */
     public function stringifies_output($output, $expectedOutput)
     {
-        $result = (new CallbackTaskRunner())(new CallbackTask(function () use ($output) { return $output; }));
+        $result = (new CallbackTaskRunner())(new CallbackTask(function() use ($output) { return $output; }));
 
         $this->assertTrue($result->isSuccessful());
         $this->assertSame($expectedOutput, $result->getOutput());
@@ -59,6 +59,6 @@ final class CallbackTaskRunnerTest extends TestCase
      */
     public function supports_callback_task()
     {
-        $this->assertTrue((new CallbackTaskRunner())->supports(new CallbackTask(function () {})));
+        $this->assertTrue((new CallbackTaskRunner())->supports(new CallbackTask(function() {})));
     }
 }

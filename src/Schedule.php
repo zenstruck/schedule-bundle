@@ -38,7 +38,7 @@ final class Schedule
     public function getId(): string
     {
         $tasks = \array_map(
-            function (Task $task) {
+            function(Task $task) {
                 return $task->getId();
             },
             $this->all()
@@ -101,11 +101,11 @@ final class Schedule
      */
     public function when(string $description, $callback): self
     {
-        $callback = \is_callable($callback) ? $callback : function () use ($callback) {
+        $callback = \is_callable($callback) ? $callback : function() use ($callback) {
             return (bool) $callback;
         };
 
-        return $this->filter(function (ScheduleRunContext $context) use ($callback, $description) {
+        return $this->filter(function(ScheduleRunContext $context) use ($callback, $description) {
             if (!$callback($context)) {
                 throw new SkipSchedule($description);
             }
@@ -120,11 +120,11 @@ final class Schedule
      */
     public function skip(string $description, $callback): self
     {
-        $callback = \is_callable($callback) ? $callback : function () use ($callback) {
+        $callback = \is_callable($callback) ? $callback : function() use ($callback) {
             return (bool) $callback;
         };
 
-        return $this->filter(function (ScheduleRunContext $context) use ($callback, $description) {
+        return $this->filter(function(ScheduleRunContext $context) use ($callback, $description) {
             if ($callback($context)) {
                 throw new SkipSchedule($description);
             }

@@ -125,11 +125,11 @@ abstract class Task
      */
     final public function when(string $description, $callback): self
     {
-        $callback = \is_callable($callback) ? $callback : function () use ($callback) {
+        $callback = \is_callable($callback) ? $callback : function() use ($callback) {
             return (bool) $callback;
         };
 
-        return $this->filter(function (TaskRunContext $context) use ($callback, $description) {
+        return $this->filter(function(TaskRunContext $context) use ($callback, $description) {
             if (!$callback($context)) {
                 throw new SkipTask($description);
             }
@@ -144,11 +144,11 @@ abstract class Task
      */
     final public function skip(string $description, $callback): self
     {
-        $callback = \is_callable($callback) ? $callback : function () use ($callback) {
+        $callback = \is_callable($callback) ? $callback : function() use ($callback) {
             return (bool) $callback;
         };
 
-        return $this->filter(function (TaskRunContext $context) use ($callback, $description) {
+        return $this->filter(function(TaskRunContext $context) use ($callback, $description) {
             if ($callback($context)) {
                 throw new SkipTask($description);
             }

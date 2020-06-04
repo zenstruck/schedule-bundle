@@ -15,7 +15,7 @@ final class CallbackTaskTest extends TestCase
      */
     public function has_default_description()
     {
-        $this->assertRegExp('#^\(callable\) Zenstruck\\\\ScheduleBundle\\\\Tests\\\\Schedule\\\\Task\\\\CallbackTaskTest\:\d+$#', (new CallbackTask(function () {}))->getDescription());
+        $this->assertRegExp('#^\(callable\) Zenstruck\\\\ScheduleBundle\\\\Tests\\\\Schedule\\\\Task\\\\CallbackTaskTest\:\d+$#', (new CallbackTask(function() {}))->getDescription());
         $this->assertRegExp('#^\(callable\) Zenstruck\\\\ScheduleBundle\\\\Tests\\\\Schedule\\\\Task\\\\CallbackTaskTest\:\d+$#', (new CallbackTask([$this, __METHOD__]))->getDescription());
         $this->assertRegExp('#^\(callable\) Zenstruck\\\\ScheduleBundle\\\\Tests\\\\Schedule\\\\Task\\\\FixtureForCallbackTaskTest\:\d+$#', (new CallbackTask(new FixtureForCallbackTaskTest()))->getDescription());
         $this->assertRegExp('#^\(callable\) Zenstruck\\\\ScheduleBundle\\\\Tests\\\\Schedule\\\\Task\\\\FixtureForCallbackTaskTest\:\d+$#', (new CallbackTask([FixtureForCallbackTaskTest::class, 'staticMethod']))->getDescription());
@@ -27,7 +27,7 @@ final class CallbackTaskTest extends TestCase
      */
     public function task_has_context()
     {
-        $this->assertRegExp('#Zenstruck\\\\ScheduleBundle\\\\Tests\\\\Schedule\\\\Task\\\\CallbackTaskTest\:\d+$#', (new CallbackTask(function () {}))->getContext()['Callable']);
+        $this->assertRegExp('#Zenstruck\\\\ScheduleBundle\\\\Tests\\\\Schedule\\\\Task\\\\CallbackTaskTest\:\d+$#', (new CallbackTask(function() {}))->getContext()['Callable']);
     }
 }
 

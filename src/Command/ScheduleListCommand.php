@@ -134,7 +134,7 @@ EOF
         }
 
         $io->listing(\array_map(
-            function (array $line) {
+            function(array $line) {
                 return \sprintf('<info>%s:</info> %s', \array_keys($line)[0], \array_values($line)[0]);
             },
             $list
@@ -186,7 +186,7 @@ EOF
 
         $io->comment(\sprintf('<info>%d</info> %s Extension%s:', $count, $type, $count > 1 ? 's' : ''));
         $io->listing(\array_map(
-            function (object $extension) {
+            function(object $extension) {
                 if (\method_exists($extension, '__toString')) {
                     return \sprintf('%s <comment>(%s)</comment>',
                         \strtr($extension, self::extensionHighlightMap()),

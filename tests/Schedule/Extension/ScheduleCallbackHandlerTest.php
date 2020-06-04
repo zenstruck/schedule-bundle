@@ -18,7 +18,7 @@ final class ScheduleCallbackHandlerTest extends TestCase
      */
     public function false_when_filter_skips_schedule()
     {
-        $context = self::createBuilder(function (Schedule $schedule) {
+        $context = self::createBuilder(function(Schedule $schedule) {
             $schedule->when('boolean value', false);
         })->run();
 
@@ -32,8 +32,8 @@ final class ScheduleCallbackHandlerTest extends TestCase
      */
     public function callback_returning_false_when_filter_skips_schedule()
     {
-        $context = self::createBuilder(function (Schedule $schedule) {
-            $schedule->when('callback value', function () { return false; });
+        $context = self::createBuilder(function(Schedule $schedule) {
+            $schedule->when('callback value', function() { return false; });
         })->run();
 
         $this->assertFalse($context->hasRun());
@@ -46,7 +46,7 @@ final class ScheduleCallbackHandlerTest extends TestCase
      */
     public function true_when_filter_allows_schedule_to_run()
     {
-        $context = self::createBuilder(function (Schedule $schedule) {
+        $context = self::createBuilder(function(Schedule $schedule) {
             $schedule->when('boolean value', true);
         })->run();
 
@@ -59,8 +59,8 @@ final class ScheduleCallbackHandlerTest extends TestCase
      */
     public function callback_returning_true_when_filter_allows_schedule_to_run()
     {
-        $context = self::createBuilder(function (Schedule $schedule) {
-            $schedule->when('callback value', function () { return true; });
+        $context = self::createBuilder(function(Schedule $schedule) {
+            $schedule->when('callback value', function() { return true; });
         })->run();
 
         $this->assertTrue($context->hasRun());
@@ -72,7 +72,7 @@ final class ScheduleCallbackHandlerTest extends TestCase
      */
     public function true_skip_filter_skips_schedule()
     {
-        $context = self::createBuilder(function (Schedule $schedule) {
+        $context = self::createBuilder(function(Schedule $schedule) {
             $schedule->skip('boolean value', true);
         })->run();
 
@@ -86,8 +86,8 @@ final class ScheduleCallbackHandlerTest extends TestCase
      */
     public function callback_returning_true_skip_filter_skips_schedule()
     {
-        $context = self::createBuilder(function (Schedule $schedule) {
-            $schedule->skip('callback value', function () { return true; });
+        $context = self::createBuilder(function(Schedule $schedule) {
+            $schedule->skip('callback value', function() { return true; });
         })->run();
 
         $this->assertFalse($context->hasRun());
@@ -100,7 +100,7 @@ final class ScheduleCallbackHandlerTest extends TestCase
      */
     public function false_skip_filter_allows_schedule_to_run()
     {
-        $context = self::createBuilder(function (Schedule $schedule) {
+        $context = self::createBuilder(function(Schedule $schedule) {
             $schedule->skip('boolean value', false);
         })->run();
 
@@ -113,8 +113,8 @@ final class ScheduleCallbackHandlerTest extends TestCase
      */
     public function callback_returning_false_skip_filter_allows_schedule_to_run()
     {
-        $context = self::createBuilder(function (Schedule $schedule) {
-            $schedule->skip('callback value', function () { return false; });
+        $context = self::createBuilder(function(Schedule $schedule) {
+            $schedule->skip('callback value', function() { return false; });
         })->run();
 
         $this->assertTrue($context->hasRun());
@@ -128,13 +128,13 @@ final class ScheduleCallbackHandlerTest extends TestCase
     {
         $calls = [];
 
-        self::createBuilder(function (Schedule $schedule) use (&$calls) {
-            $schedule->filter(function () use (&$calls) { $calls[] = 'filter'; });
-            $schedule->before(function () use (&$calls) { $calls[] = 'before'; });
-            $schedule->after(function () use (&$calls) { $calls[] = 'after'; });
-            $schedule->then(function () use (&$calls) { $calls[] = 'then'; });
-            $schedule->onSuccess(function () use (&$calls) { $calls[] = 'onSuccess'; });
-            $schedule->onFailure(function () use (&$calls) { $calls[] = 'onFailure'; });
+        self::createBuilder(function(Schedule $schedule) use (&$calls) {
+            $schedule->filter(function() use (&$calls) { $calls[] = 'filter'; });
+            $schedule->before(function() use (&$calls) { $calls[] = 'before'; });
+            $schedule->after(function() use (&$calls) { $calls[] = 'after'; });
+            $schedule->then(function() use (&$calls) { $calls[] = 'then'; });
+            $schedule->onSuccess(function() use (&$calls) { $calls[] = 'onSuccess'; });
+            $schedule->onFailure(function() use (&$calls) { $calls[] = 'onFailure'; });
         })->run();
 
         $this->assertSame([
@@ -153,13 +153,13 @@ final class ScheduleCallbackHandlerTest extends TestCase
     {
         $calls = [];
 
-        self::createBuilder(function (Schedule $schedule) use (&$calls) {
-            $schedule->filter(function () use (&$calls) { $calls[] = 'filter'; });
-            $schedule->before(function () use (&$calls) { $calls[] = 'before'; });
-            $schedule->after(function () use (&$calls) { $calls[] = 'after'; });
-            $schedule->then(function () use (&$calls) { $calls[] = 'then'; });
-            $schedule->onSuccess(function () use (&$calls) { $calls[] = 'onSuccess'; });
-            $schedule->onFailure(function () use (&$calls) { $calls[] = 'onFailure'; });
+        self::createBuilder(function(Schedule $schedule) use (&$calls) {
+            $schedule->filter(function() use (&$calls) { $calls[] = 'filter'; });
+            $schedule->before(function() use (&$calls) { $calls[] = 'before'; });
+            $schedule->after(function() use (&$calls) { $calls[] = 'after'; });
+            $schedule->then(function() use (&$calls) { $calls[] = 'then'; });
+            $schedule->onSuccess(function() use (&$calls) { $calls[] = 'onSuccess'; });
+            $schedule->onFailure(function() use (&$calls) { $calls[] = 'onFailure'; });
         })->addTask(MockTask::success())->run();
 
         $this->assertSame([
@@ -178,13 +178,13 @@ final class ScheduleCallbackHandlerTest extends TestCase
     {
         $calls = [];
 
-        self::createBuilder(function (Schedule $schedule) use (&$calls) {
-            $schedule->filter(function () use (&$calls) { $calls[] = 'filter'; });
-            $schedule->before(function () use (&$calls) { $calls[] = 'before'; });
-            $schedule->after(function () use (&$calls) { $calls[] = 'after'; });
-            $schedule->then(function () use (&$calls) { $calls[] = 'then'; });
-            $schedule->onSuccess(function () use (&$calls) { $calls[] = 'onSuccess'; });
-            $schedule->onFailure(function () use (&$calls) { $calls[] = 'onFailure'; });
+        self::createBuilder(function(Schedule $schedule) use (&$calls) {
+            $schedule->filter(function() use (&$calls) { $calls[] = 'filter'; });
+            $schedule->before(function() use (&$calls) { $calls[] = 'before'; });
+            $schedule->after(function() use (&$calls) { $calls[] = 'after'; });
+            $schedule->then(function() use (&$calls) { $calls[] = 'then'; });
+            $schedule->onSuccess(function() use (&$calls) { $calls[] = 'onSuccess'; });
+            $schedule->onFailure(function() use (&$calls) { $calls[] = 'onFailure'; });
         })->addTask(MockTask::success())->addTask(MockTask::failure())->run();
 
         $this->assertSame([

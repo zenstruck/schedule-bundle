@@ -121,7 +121,7 @@ final class ScheduleRunner
     {
         $schedule = $this->buildSchedule();
 
-        $tasks = \array_map(function (string $id) use ($schedule) {
+        $tasks = \array_map(function(string $id) use ($schedule) {
             return $schedule->getTask($id);
         }, $taskIds);
 

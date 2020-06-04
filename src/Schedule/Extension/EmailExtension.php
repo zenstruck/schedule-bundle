@@ -48,7 +48,7 @@ final class EmailExtension implements HasMissingDependencyMessage
             return "{$this->hook}, email output";
         }
 
-        $to = \array_map(function (Address $address) { return $address->toString(); }, $to);
+        $to = \array_map(function(Address $address) { return $address->toString(); }, $to);
         $to = \implode('; ', $to);
 
         return "{$this->hook}, email output to \"{$to}\"";
