@@ -1,7 +1,6 @@
 # The ScheduleBundle
 
-[![Test Status](https://github.com/zenstruck/schedule-bundle/workflows/Tests/badge.svg?branch=master)](https://github.com/zenstruck/schedule-bundle/actions?query=workflow%3ATests+branch%3Amaster)
-[![Standards](https://github.com/zenstruck/schedule-bundle/workflows/Standards/badge.svg?branch=master)](https://github.com/zenstruck/schedule-bundle/actions?query=workflow%3AStandards+branch%3Amaster)
+[![CI](https://github.com/zenstruck/schedule-bundle/workflows/CI/badge.svg)](https://github.com/zenstruck/schedule-bundle/actions?query=workflow%3ACI)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/zenstruck/schedule-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/zenstruck/schedule-bundle/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/zenstruck/schedule-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/zenstruck/schedule-bundle/?branch=master)
 
