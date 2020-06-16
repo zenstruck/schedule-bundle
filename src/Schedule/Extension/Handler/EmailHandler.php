@@ -136,11 +136,11 @@ final class EmailHandler extends ExtensionHandler
         $email = $extension->getEmail();
 
         if (null !== $this->defaultFrom && empty($email->getFrom())) {
-            $email->from(Address::fromString($this->defaultFrom));
+            $email->from(Address::create($this->defaultFrom));
         }
 
         if (null !== $this->defaultTo && empty($email->getTo())) {
-            $email->to(Address::fromString($this->defaultTo));
+            $email->to(Address::create($this->defaultTo));
         }
 
         if (empty($email->getTo())) {
