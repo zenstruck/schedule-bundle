@@ -29,7 +29,7 @@ should be added to your production server's
 [crontab](http://man7.org/linux/man-pages/man5/crontab.5.html):
 
 ```
-* * * * * cd /path-to-your-project && bin/console schedule:run >> /dev/null 2>&1
+* * * * * cd /path-to-your-project && php bin/console schedule:run >> /dev/null 2>&1
 ```
 
 ## Symfony Cloud

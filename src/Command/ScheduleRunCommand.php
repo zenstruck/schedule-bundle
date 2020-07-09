@@ -44,7 +44,7 @@ Exit code 1: one or more tasks failed.
 
 Add this command as a Cron job to your production server(s) running every minute:
 
-* * * * * cd /path-to-your-project && bin/console schedule:run >> /dev/null 2>&1
+* * * * * cd /path-to-your-project && php bin/console schedule:run >> /dev/null 2>&1
 EOF
             )
         ;

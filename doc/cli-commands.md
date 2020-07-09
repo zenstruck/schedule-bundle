@@ -49,7 +49,7 @@ Assuming the bundle has no other configuration, running `schedule:list` shows th
 following output (exit code `1`):
 
 ```
-$ bin/console schedule:list
+$ php bin/console schedule:list
 
 2 Scheduled Tasks Configured
 ============================
@@ -82,7 +82,7 @@ $ bin/console schedule:list
 Running with the `--detail` flag outputs the following (exit code `1`):
 
 ```
-$ bin/console schedule:list --detail
+$ php bin/console schedule:list --detail
 
 2 Scheduled Tasks Configured
 ============================
@@ -147,7 +147,7 @@ zenstruck_schedule:
 Running now outputs the following (exit code `0`):
 
 ```
-$ bin/console schedule:list
+$ php bin/console schedule:list
 
 2 Scheduled Tasks Configured
 ============================
@@ -173,7 +173,7 @@ $ bin/console schedule:list
 Running with the `--detail` flag outputs the following (exit code `0`):
 
 ```
-$ bin/console schedule:list --detail
+$ php bin/console schedule:list --detail
 
 2 Scheduled Tasks Configured
 ============================
@@ -238,14 +238,14 @@ Help:
 
   Add this command as a Cron job to your production server(s) running every minute:
 
-  * * * * * cd /path-to-your-project && bin/console schedule:run >> /dev/null 2>&1
+  * * * * * cd /path-to-your-project && php bin/console schedule:run >> /dev/null 2>&1
 ```
 
 This is the command that runs currently due tasks. It should be added as a Cron
 job to your production server(s) running every minute:
 
 ```
-* * * * * cd /path-to-your-project && bin/console schedule:run >> /dev/null 2>&1
+* * * * * cd /path-to-your-project && php bin/console schedule:run >> /dev/null 2>&1
 ```
 
 The above Cron job sends the command output to `/dev/null` but the command does
@@ -256,7 +256,7 @@ the tasks is due at time of run, and the it ran successfully, the command will
 output the following (exit code `0`):
 
 ```
-$ bin/console schedule:run
+$ php bin/console schedule:run
 
  // Running 1 due task. (2 total tasks)
 
@@ -272,7 +272,7 @@ Running the command with the verbose flag (`-v`) displays task output
 (exit code `0`):
 
 ```
-$ bin/console schedule:run -v
+$ php bin/console schedule:run -v
 
  // Running 1 due task. (2 total tasks)
 
@@ -305,7 +305,7 @@ Assuming the due task failed, the command will output the following
 (exit code `1`):
 
 ```
-$ bin/console schedule:run
+$ php bin/console schedule:run
 
  // Running 1 due task. (2 total tasks)
 
@@ -321,7 +321,7 @@ Again, assuming the due task failed, the command with the verbose flag
 (`-v`) displays task output (exit code `1`):
 
 ```
-$ bin/console schedule:run -v
+$ php bin/console schedule:run -v
 
  // Running 1 due task. (2 total tasks)
 

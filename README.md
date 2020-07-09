@@ -3,12 +3,14 @@
 [![CI](https://github.com/zenstruck/schedule-bundle/workflows/CI/badge.svg)](https://github.com/zenstruck/schedule-bundle/actions?query=workflow%3ACI)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/zenstruck/schedule-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/zenstruck/schedule-bundle/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/zenstruck/schedule-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/zenstruck/schedule-bundle/?branch=master)
+[![Latest Version](https://img.shields.io/packagist/v/zenstruck/schedule-bundle.svg)](https://packagist.org/packages/zenstruck/schedule-bundle)
+[![Total Downloads](https://img.shields.io/packagist/dt/zenstruck/schedule-bundle.svg)](https://packagist.org/packages/zenstruck/schedule-bundle)
 
 Schedule Cron jobs (commands/callbacks/bash scripts) within your Symfony
 application. Most applications have jobs that need to run at specific intervals.
 This bundle enables you to define these jobs in your code. Job definitions (tasks)
 are version controlled like any other feature of your application. A single Cron
-entry (`bin/console schedule:run`) on your server running every minute executes due
+entry (`php bin/console schedule:run`) on your server running every minute executes due
 tasks.
 
 The inspiration and some of the API/code for this Bundle comes from [Laravel's
@@ -108,13 +110,13 @@ $ composer require zenstruck/schedule-bundle
 2. List your tasks to diagnose any problems:
 
     ```console
-    $ bin/console schedule:list
+    $ php bin/console schedule:list
     ```
 
 3. Add the following Cron job on your server running every minute:
 
     ```
-    * * * * * cd /path-to-your-project && bin/console schedule:run >> /dev/null 2>&1
+    * * * * * cd /path-to-your-project && php bin/console schedule:run >> /dev/null 2>&1
     ```
 
 See [Defining the Schedule](doc/define-schedule.md) and [Defining Tasks](doc/define-tasks.md)
