@@ -3,6 +3,8 @@
 [![CI](https://github.com/zenstruck/schedule-bundle/workflows/CI/badge.svg)](https://github.com/zenstruck/schedule-bundle/actions?query=workflow%3ACI)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/zenstruck/schedule-bundle/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/zenstruck/schedule-bundle/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/zenstruck/schedule-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/zenstruck/schedule-bundle/?branch=master)
+[![Latest Version](https://img.shields.io/packagist/v/zenstruck/schedule-bundle.svg)](https://packagist.org/packages/zenstruck/schedule-bundle)
+[![Total Downloads](https://img.shields.io/packagist/dt/zenstruck/schedule-bundle.svg)](https://packagist.org/packages/zenstruck/schedule-bundle)
 
 Schedule Cron jobs (commands/callbacks/bash scripts) within your Symfony
 application. Most applications have jobs that need to run at specific intervals.
