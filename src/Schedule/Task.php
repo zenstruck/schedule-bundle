@@ -9,6 +9,7 @@ use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\WithoutOverlappingExtension;
+use Zenstruck\ScheduleBundle\Schedule\Task\Config;
 use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 
 /**
@@ -30,10 +31,12 @@ abstract class Task
     private $description;
     private $expression = self::DEFAULT_EXPRESSION;
     private $timezone;
+    private $config;
 
     public function __construct(string $description)
     {
         $this->description = $description;
+        $this->config = new Config();
     }
 
     final public function __toString(): string
@@ -89,6 +92,14 @@ abstract class Task
         $this->description = $description;
 
         return $this;
+    }
+
+    /**
+     * Set extra configuration/metadata for this task.
+     */
+    final public function config(): Config
+    {
+        return $this->config;
     }
 
     /**

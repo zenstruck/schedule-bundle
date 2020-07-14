@@ -702,6 +702,25 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertSame('13:15', $config['unless_between']['end']);
     }
 
+    /**
+     * @test
+     */
+    public function task_config_must_be_an_array(): void
+    {
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid type for path "zenstruck_schedule.tasks.0.config"');
+
+        $this->load([
+            'tasks' => [
+                [
+                    'task' => 'my:command',
+                    'frequency' => '0 * * * *',
+                    'config' => 'not an array',
+                ],
+            ],
+        ]);
+    }
+
     protected function getContainerExtensions(): array
     {
         return [new ZenstruckScheduleExtension()];

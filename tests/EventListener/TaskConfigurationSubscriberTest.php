@@ -274,6 +274,31 @@ final class TaskConfigurationSubscriberTest extends TestCase
         $this->assertSame('On Task Failure, email output to "sales@example.com"', (string) $extensions[8]);
     }
 
+    /**
+     * @test
+     */
+    public function can_add_task_config(): void
+    {
+        $schedule = $this->createSchedule([
+            [
+                'task' => 'my:command',
+                'frequency' => '0 * * * *',
+                'config' => [
+                    'foo' => 'bar',
+                    'bar' => 'foo',
+                ],
+            ],
+        ]);
+
+        $this->assertSame(
+            [
+                'foo' => 'bar',
+                'bar' => 'foo',
+            ],
+            $schedule->all()[0]->config()->all()
+        );
+    }
+
     private function createSchedule(array $taskConfig): Schedule
     {
         $processor = new Processor();

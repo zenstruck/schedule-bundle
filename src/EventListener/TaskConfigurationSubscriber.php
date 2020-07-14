@@ -88,6 +88,10 @@ final class TaskConfigurationSubscriber implements EventSubscriberInterface
             $task->emailOnFailure($config['email_on_failure']['to'], $config['email_on_failure']['subject']);
         }
 
+        foreach ($config['config'] as $key => $value) {
+            $task->config()->set($key, $value);
+        }
+
         $schedule->add($task);
     }
 
