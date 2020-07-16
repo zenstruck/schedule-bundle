@@ -60,6 +60,7 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
     4. [Force Run](doc/run-schedule.md#force-run)
     5. [Dealing with Failures](doc/run-schedule.md#dealing-with-failures)
     6. [Ensuring Schedule is Running](doc/run-schedule.md#ensuring-the-schedule-is-running)
+    7. [Disable Schedule during Deploy](doc/run-schedule.md#disable-schedule-during-deploy)
 6. [CLI Commands](doc/cli-commands.md)
     1. [schedule:list](doc/cli-commands.md#schedulelist)
     2. [schedule:run](doc/cli-commands.md#schedulerun)
