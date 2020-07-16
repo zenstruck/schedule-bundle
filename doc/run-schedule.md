@@ -213,3 +213,33 @@ zenstruck_schedule:
 
 In this case, a notification from one of these services means your schedule isn't
 running.
+
+## Disable Schedule during Deploy
+
+Depending on your deployment strategy, it might be desirable to ensure the schedule does not
+run when deploying. One way to do this is to have your deployment script create a `.deploying`
+file somewhere on the webserver at the start of a deploy, then remove when complete. You can
+check for this file when building your schedule and skip if it exists:
+
+```php
+// src/Kernel.php
+
+use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Zenstruck\ScheduleBundle\Schedule;
+use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
+
+class Kernel extends BaseKernel implements ScheduleBuilder
+{
+    public function isDeploying(): bool
+    {
+        return file_exists('/path/to/file/.deploying');
+    }
+
+    public function buildSchedule(Schedule $schedule): void
+    {
+        $schedule->skip('App is deploying...', $this->isDeploying());
+    }
+
+    // ...
+}
+```
