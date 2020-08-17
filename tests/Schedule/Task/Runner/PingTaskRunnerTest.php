@@ -61,7 +61,9 @@ final class PingTaskRunnerTest extends TestCase
         $this->assertTrue($context->isFailure());
         $this->assertCount(1, $run = $context->getFailures());
         $this->assertInstanceOf(ClientException::class, $run[0]->getException());
-        $this->assertSame('ClientException: HTTP/1.1 404 Not Found returned for "https://example.com/".', $run[0]->getDescription());
+        $this->assertStringContainsString('ClientException', $run[0]->getDescription());
+        $this->assertStringContainsString('HTTP/1.1 404 Not Found', $run[0]->getDescription());
+        $this->assertStringContainsString('https://example.com/', $run[0]->getDescription());
     }
 
     /**
@@ -86,7 +88,9 @@ final class PingTaskRunnerTest extends TestCase
         $this->assertTrue($context->isFailure());
         $this->assertCount(1, $run = $context->getFailures());
         $this->assertInstanceOf(ServerException::class, $run[0]->getException());
-        $this->assertSame('ServerException: HTTP/1.1 500 Internal Server Error returned for "https://example.com/".', $run[0]->getDescription());
+        $this->assertStringContainsString('ServerException', $run[0]->getDescription());
+        $this->assertStringContainsString('HTTP/1.1 500 Internal Server Error', $run[0]->getDescription());
+        $this->assertStringContainsString('https://example.com/', $run[0]->getDescription());
     }
 
     private static function createBuilder(MockHttpClient $httpClient): MockScheduleBuilder
