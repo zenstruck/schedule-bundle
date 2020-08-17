@@ -3,7 +3,6 @@
 namespace Zenstruck\ScheduleBundle\Tests\Schedule\Extension;
 
 use PHPUnit\Framework\TestCase;
-use Psr\Log\Test\TestLogger;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\Store\FlockStore;
 use Zenstruck\ScheduleBundle\Schedule;
@@ -13,6 +12,7 @@ use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\SingleServerHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
 use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
+use Zenstruck\ScheduleBundle\Tests\Fixture\MockLogger;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockScheduleBuilder;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
 
@@ -26,7 +26,7 @@ final class SingleServerExtensionTest extends TestCase
      */
     public function can_lock_schedule()
     {
-        $logger = new TestLogger();
+        $logger = new MockLogger();
         $lockFactory = new LockFactory(new FlockStore());
         $lockFactory->setLogger($logger);
 
@@ -36,8 +36,8 @@ final class SingleServerExtensionTest extends TestCase
             ->run()
         ;
 
-        $this->assertTrue($logger->hasInfoThatContains('Successfully acquired'));
-        $this->assertTrue($logger->hasInfoThatContains('Expiration defined'));
+        $this->assertTrue($logger->hasMessageThatContains('Successfully acquired'));
+        $this->assertTrue($logger->hasMessageThatContains('Expiration defined'));
     }
 
     /**
@@ -45,7 +45,7 @@ final class SingleServerExtensionTest extends TestCase
      */
     public function can_lock_task()
     {
-        $logger = new TestLogger();
+        $logger = new MockLogger();
         $lockFactory = new LockFactory(new FlockStore());
         $lockFactory->setLogger($logger);
 
@@ -55,8 +55,8 @@ final class SingleServerExtensionTest extends TestCase
             ->run()
         ;
 
-        $this->assertTrue($logger->hasInfoThatContains('Successfully acquired'));
-        $this->assertTrue($logger->hasInfoThatContains('Expiration defined'));
+        $this->assertTrue($logger->hasMessageThatContains('Successfully acquired'));
+        $this->assertTrue($logger->hasMessageThatContains('Expiration defined'));
     }
 
     /**
