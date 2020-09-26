@@ -19,6 +19,10 @@ final class ScheduleBuilderKernelPass implements CompilerPassInterface
 
         $kernel = $container->getDefinition('kernel');
 
+        if (null === $kernel->getClass()) {
+            return;
+        }
+
         if ((new \ReflectionClass($kernel->getClass()))->implementsInterface(ScheduleBuilder::class)) {
             $kernel->addTag('schedule.builder');
         }
