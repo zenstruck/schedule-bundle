@@ -47,6 +47,18 @@ final class ScheduleBuilderKernelPassTest extends AbstractCompilerPassTestCase
         $this->assertSame([], $this->container->getDefinition('kernel')->getTags());
     }
 
+    /**
+     * @test
+     */
+    public function does_not_add_tag_if_kernel_class_is_null()
+    {
+        $this->setDefinition('kernel', new Definition());
+
+        $this->compile();
+
+        $this->assertSame([], $this->container->getDefinition('kernel')->getTags());
+    }
+
     protected function registerCompilerPass(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new ScheduleBuilderKernelPass());
