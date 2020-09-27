@@ -392,7 +392,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     public function task_is_required()
     {
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('The child node "task" at path "zenstruck_schedule.tasks.0" must be configured.');
+        $this->expectExceptionMessage('"task"');
 
         $this->load([
             'tasks' => [
@@ -463,7 +463,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     public function task_frequency_is_required()
     {
         $this->expectException(InvalidConfigurationException::class);
-        $this->expectExceptionMessage('The child node "frequency" at path "zenstruck_schedule.tasks.0" must be configured.');
+        $this->expectExceptionMessage('"frequency"');
 
         $this->load([
             'tasks' => [
