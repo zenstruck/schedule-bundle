@@ -183,8 +183,8 @@ failed, and run your own failure logic.
 ## Ensuring the Schedule is Running
 
 It is important to be assured your schedule is always running. The best method
-is to use a Cron health monitoring tool like [Cronitor](https://cronitor.io/),
-[Laravel Envoyer](https://envoyer.io/) or [Healthchecks](https://healthchecks.io/).
+is to use a Cron health monitoring tool like [Oh Dear](https://ohdear.app/),
+[Cronitor](https://cronitor.io/) or [Healthchecks](https://healthchecks.io/).
 These services give you a unique URL endpoint to *ping*. If the endpoint doesn't
 receive a ping after a specified amount of time, an administrator is notified.
 

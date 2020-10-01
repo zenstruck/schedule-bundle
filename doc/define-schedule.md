@@ -198,9 +198,8 @@ $schedule->onFailure(function () {
 
 ### Ping Webhook
 
-This extension is useful for Cron health monitoring tools like
-[Cronitor](https://cronitor.io/), [Laravel Envoyer](https://envoyer.io/) and
-[Healthchecks](https://healthchecks.io/).
+This extension is useful for Cron health monitoring tools like [Oh Dear](https://ohdear.app/),
+[Cronitor](https://cronitor.io/) and [Healthchecks](https://healthchecks.io/).
 
 **Define in [PHP](#schedulebuilder-service):**
 

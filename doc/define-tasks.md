@@ -120,7 +120,7 @@ zenstruck_schedule:
 ### PingTask
 
 This task pings the provided URL. This task type is useful for Cron health monitoring
-tools like [Cronitor](https://cronitor.io/), [Laravel Envoyer](https://envoyer.io/) and
+tools like [Oh Dear](https://ohdear.app/), [Cronitor](https://cronitor.io/) and
 [Healthchecks](https://healthchecks.io/).
 
 **Define in [PHP](define-schedule.md#schedulebuilder-service):**
@@ -531,9 +531,8 @@ $task->onFailure(function () {
 
 ### Ping Webhook
 
-This extension is useful for Cron health monitoring tools like
-[Cronitor](https://cronitor.io/), [Laravel Envoyer](https://envoyer.io/) and
-[Healthchecks](https://healthchecks.io/).
+This extension is useful for Cron health monitoring tools like [Oh Dear](https://ohdear.app/),
+[Cronitor](https://cronitor.io/) and [Healthchecks](https://healthchecks.io/).
 
 **Define in [PHP](define-schedule.md#schedulebuilder-service):**
 
