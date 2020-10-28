@@ -36,7 +36,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer global require --no-progress --no-scripts --no-plugins symfony/flex dev-master
+          composer global require --no-progress --no-scripts --no-plugins symfony/flex dev-main
           composer update --prefer-dist --no-interaction --no-suggest
           vendor/bin/simple-phpunit install
         env:
