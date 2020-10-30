@@ -24,6 +24,7 @@ use Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
 use Zenstruck\ScheduleBundle\Schedule\SelfSchedulingCommand;
+use Zenstruck\ScheduleBundle\Schedule\Task\Runner\MessageTaskRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\Runner\PingTaskRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunner;
 
@@ -103,6 +104,15 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
             $container
                 ->getDefinition(ScheduleTimezoneSubscriber::class)
                 ->setArgument(0, $mergedConfig['timezone'])
+            ;
+        }
+
+        if ($mergedConfig['messenger']['enabled']) {
+            $loader->load('messenger.xml');
+
+            $container
+                ->getDefinition(MessageTaskRunner::class)
+                ->setArgument(0, new Reference($mergedConfig['messenger']['message_bus']))
             ;
         }
 

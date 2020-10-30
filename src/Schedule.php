@@ -14,6 +14,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\CallbackTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\CompoundTask;
+use Zenstruck\ScheduleBundle\Schedule\Task\MessageTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\PingTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\ProcessTask;
 
@@ -84,6 +85,14 @@ final class Schedule
     public function addPing(string $url, string $method = 'GET', array $options = []): PingTask
     {
         return $this->add(new PingTask($url, $method, $options));
+    }
+
+    /**
+     * @see MessageTask::__construct()
+     */
+    public function addMessage(object $message, array $stamps = []): MessageTask
+    {
+        return $this->add(new MessageTask($message, $stamps));
     }
 
     public function addCompound(): CompoundTask

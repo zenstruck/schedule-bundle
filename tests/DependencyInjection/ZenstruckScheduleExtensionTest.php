@@ -28,6 +28,7 @@ use Zenstruck\ScheduleBundle\Schedule\Extension\WithoutOverlappingExtension;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\Runner\CallbackTaskRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\Runner\CommandTaskRunner;
+use Zenstruck\ScheduleBundle\Schedule\Task\Runner\MessageTaskRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\Runner\PingTaskRunner;
 use Zenstruck\ScheduleBundle\Schedule\Task\Runner\ProcessTaskRunner;
 
@@ -148,6 +149,28 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertContainerBuilderHasServiceDefinitionWithTag(PingHandler::class, 'schedule.extension_handler');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(PingTaskRunner::class, 0, 'my_client');
         $this->assertContainerBuilderHasServiceDefinitionWithTag(PingTaskRunner::class, 'schedule.task_runner');
+    }
+
+    /**
+     * @test
+     */
+    public function can_enable_messenger_with_default_bus(): void
+    {
+        $this->load(['messenger' => null]);
+
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(MessageTaskRunner::class, 0, 'message_bus');
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(MessageTaskRunner::class, 'schedule.task_runner');
+    }
+
+    /**
+     * @test
+     */
+    public function can_enable_messenger_with_custom_bus(): void
+    {
+        $this->load(['messenger' => ['message_bus' => 'my_bus']]);
+
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(MessageTaskRunner::class, 0, 'my_bus');
+        $this->assertContainerBuilderHasServiceDefinitionWithTag(MessageTaskRunner::class, 'schedule.task_runner');
     }
 
     /**

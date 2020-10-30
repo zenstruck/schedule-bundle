@@ -36,8 +36,9 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
         1. [CommandTask](doc/define-tasks.md#commandtask)
         2. [CallbackTask](doc/define-tasks.md#callbacktask)
         3. [ProcessTask](doc/define-tasks.md#processtask)
-        3. [PingTask](doc/define-tasks.md#pingtask)
-        4. [CompoundTask](doc/define-tasks.md#compoundtask)
+        3. [MessageTask](doc/define-tasks.md#messagetask)
+        4. [PingTask](doc/define-tasks.md#pingtask)
+        5. [CompoundTask](doc/define-tasks.md#compoundtask)
     2. [Task Description](doc/define-tasks.md#task-description)
     3. [Frequency](doc/define-tasks.md#frequency)
         1. [Cron Expression](doc/define-tasks.md#cron-expression)
@@ -139,6 +140,12 @@ zenstruck_schedule:
 
     # The default timezone for tasks (override at task level), null for system default
     timezone:             null # Example: America/New_York
+
+    messenger:
+        enabled:              false
+
+        # The message bus to use
+        message_bus:          message_bus
 
     mailer:
         enabled:              false

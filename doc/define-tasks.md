@@ -117,6 +117,46 @@ zenstruck_schedule:
                 frequency: '0 * * * *'
     ```
 
+### MessageTask
+
+*This task type is experimental and may experience BC breaks.*
+
+This task sends a message to a Symfony Messenger message bus.
+
+**Define in [PHP](define-schedule.md#schedulebuilder-service):**
+
+```php
+use Symfony\Component\Messenger\Stamp\DelayStamp;
+
+/* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
+
+$schedule->addMessage(new MyMessage('argument'));
+
+// with stamps
+$schedule->addMessage(new MyMessage('argument'), [new DelayStamp(10)]);
+```
+
+**Notes**:
+
+1. This task type requires `symfony/messenger`:
+
+    ```console
+    $ composer require symfony/messenger
+    ```
+
+2. You must enable this task type:
+
+    ```yaml
+    # config/packages/zenstruck_schedule.yaml
+    
+    zenstruck_schedule:
+        messenger: ~
+   
+        # optionally configure the message bus (uses "message_bus" by default)
+        messenger:
+            message_bus: my_bus
+    ```
+
 ### PingTask
 
 This task pings the provided URL. This task type is useful for Cron health monitoring
