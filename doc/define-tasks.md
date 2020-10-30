@@ -126,11 +126,9 @@ tools like [Oh Dear](https://ohdear.app/), [Cronitor](https://cronitor.io/) and
 **Define in [PHP](define-schedule.md#schedulebuilder-service):**
 
 ```php
-use Zenstruck\ScheduleBundle\Schedule\Task\PingTask;
-
 /* @var \Zenstruck\ScheduleBundle\Schedule $schedule */
 
-$schedule->add(new PingTask('https://example.com'));
+$schedule->addPing('https://example.com');
 ```
 
 **Define in [Configuration](define-schedule.md#bundle-configuration):**

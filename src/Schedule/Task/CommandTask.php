@@ -17,6 +17,9 @@ final class CommandTask extends Task
     private $name;
     private $arguments;
 
+    /**
+     * @param string $name Command class or name (my:command)
+     */
     public function __construct(string $name, string ...$arguments)
     {
         $parts = \explode(' ', $name, 2);
