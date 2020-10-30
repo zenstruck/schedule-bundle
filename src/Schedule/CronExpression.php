@@ -96,12 +96,12 @@ final class CronExpression
         return $this->getRawValue() !== $this->getParsedValue();
     }
 
-    public function getNextRun(string $timezone = null): \DateTimeInterface
+    public function getNextRun(?string $timezone = null): \DateTimeInterface
     {
         return CronSchedule::factory($this->getParsedValue())->getNextRunDate('now', 0, false, $timezone);
     }
 
-    public function isDue(\DateTimeInterface $timestamp, string $timezone = null): bool
+    public function isDue(\DateTimeInterface $timestamp, ?string $timezone = null): bool
     {
         return CronSchedule::factory($this->getParsedValue())->isDue($timestamp, $timezone);
     }

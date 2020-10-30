@@ -31,7 +31,7 @@ final class Result
         return $this->getDescription();
     }
 
-    public static function successful(Task $task, string $output = null, string $description = 'Successful'): self
+    public static function successful(Task $task, ?string $output = null, string $description = 'Successful'): self
     {
         $result = new self($task, self::SUCCESSFUL, $description);
         $result->output = $output;
@@ -39,7 +39,7 @@ final class Result
         return $result;
     }
 
-    public static function failure(Task $task, string $description, string $output = null): self
+    public static function failure(Task $task, string $description, ?string $output = null): self
     {
         $result = new self($task, self::FAILED, $description);
         $result->output = $output;
@@ -47,7 +47,7 @@ final class Result
         return $result;
     }
 
-    public static function exception(Task $task, \Throwable $exception, string $output = null, string $description = null): self
+    public static function exception(Task $task, \Throwable $exception, ?string $output = null, ?string $description = null): self
     {
         $description = $description ?: \sprintf('%s: %s', (new \ReflectionClass($exception))->getShortName(), $exception->getMessage());
 

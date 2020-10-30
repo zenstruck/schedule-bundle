@@ -24,7 +24,7 @@ final class EmailHandler extends ExtensionHandler
     private $defaultTo;
     private $subjectPrefix;
 
-    public function __construct(MailerInterface $mailer, string $defaultFrom = null, string $defaultTo = null, string $subjectPrefix = null)
+    public function __construct(MailerInterface $mailer, ?string $defaultFrom = null, ?string $defaultTo = null, ?string $subjectPrefix = null)
     {
         $this->mailer = $mailer;
         $this->defaultFrom = $defaultFrom;

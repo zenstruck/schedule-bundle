@@ -2,7 +2,6 @@
 
 namespace Zenstruck\ScheduleBundle;
 
-use Symfony\Component\Process\Process;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension\CallbackExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
@@ -15,6 +14,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Schedule\Task\CallbackTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\CompoundTask;
+use Zenstruck\ScheduleBundle\Schedule\Task\PingTask;
 use Zenstruck\ScheduleBundle\Schedule\Task\ProcessTask;
 
 /**
@@ -55,7 +55,7 @@ final class Schedule
     }
 
     /**
-     * @param string $name Command class or name (my:command)
+     * @see CommandTask::__construct()
      */
     public function addCommand(string $name, string ...$arguments): CommandTask
     {
@@ -63,7 +63,7 @@ final class Schedule
     }
 
     /**
-     * @param callable $callback Return value is considered "output"
+     * @see CallbackTask::__construct()
      */
     public function addCallback(callable $callback): CallbackTask
     {
@@ -71,11 +71,19 @@ final class Schedule
     }
 
     /**
-     * @param string|Process $process
+     * @see ProcessTask::__construct()
      */
     public function addProcess($process): ProcessTask
     {
         return $this->add(new ProcessTask($process));
+    }
+
+    /**
+     * @see PingTask::__construct()
+     */
+    public function addPing(string $url, string $method = 'GET', array $options = []): PingTask
+    {
+        return $this->add(new PingTask($url, $method, $options));
     }
 
     public function addCompound(): CompoundTask
@@ -242,7 +250,7 @@ final class Schedule
      * @param callable|null   $callback Add your own headers etc
      *                                  Receives an instance of \Symfony\Component\Mime\Email
      */
-    public function emailOnFailure($to = null, string $subject = null, callable $callback = null): self
+    public function emailOnFailure($to = null, ?string $subject = null, ?callable $callback = null): self
     {
         return $this->addExtension(EmailExtension::scheduleFailure($to, $subject, $callback));
     }

@@ -263,7 +263,7 @@ abstract class Task
      * @param callable|null   $callback Add your own headers etc
      *                                  Receives an instance of \Symfony\Component\Mime\Email
      */
-    final public function emailAfter($to = null, string $subject = null, callable $callback = null): self
+    final public function emailAfter($to = null, ?string $subject = null, ?callable $callback = null): self
     {
         return $this->addExtension(EmailExtension::taskAfter($to, $subject, $callback));
     }
@@ -271,7 +271,7 @@ abstract class Task
     /**
      * Alias for emailAfter().
      */
-    final public function thenEmail($to = null, string $subject = null, callable $callback = null): self
+    final public function thenEmail($to = null, ?string $subject = null, ?callable $callback = null): self
     {
         return $this->emailAfter($to, $subject, $callback);
     }
@@ -284,7 +284,7 @@ abstract class Task
      * @param callable|null   $callback Add your own headers etc
      *                                  Receives an instance of \Symfony\Component\Mime\Email
      */
-    final public function emailOnFailure($to = null, string $subject = null, callable $callback = null): self
+    final public function emailOnFailure($to = null, ?string $subject = null, ?callable $callback = null): self
     {
         return $this->addExtension(EmailExtension::taskFailure($to, $subject, $callback));
     }

@@ -74,7 +74,7 @@ final class MockScheduleBuilder implements ScheduleBuilder
         return $this->getRunner()(...$taskIds);
     }
 
-    public function getRunner(EventDispatcherInterface $dispatcher = null): ScheduleRunner
+    public function getRunner(?EventDispatcherInterface $dispatcher = null): ScheduleRunner
     {
         $dispatcher = $dispatcher ?: new EventDispatcher();
         $dispatcher->addSubscriber(new ScheduleBuilderSubscriber(\array_merge($this->builders, [$this])));

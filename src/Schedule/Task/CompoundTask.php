@@ -2,7 +2,6 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Task;
 
-use Symfony\Component\Process\Process;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 
 /**
@@ -30,27 +29,43 @@ final class CompoundTask extends Task implements \IteratorAggregate
     }
 
     /**
-     * @param string $name Command class or name (my:command)
+     * @see CommandTask::__construct()
+     *
+     * @param string|null $description optional description
      */
-    public function addCommand(string $name, array $arguments = [], string $description = null): self
+    public function addCommand(string $name, array $arguments = [], ?string $description = null): self
     {
         return $this->addWithDescription(new CommandTask($name, ...$arguments), $description);
     }
 
     /**
-     * @param callable $callback Return value is considered "output"
+     * @see CallbackTask::__construct()
+     *
+     * @param string|null $description optional description
      */
-    public function addCallback(callable $callback, string $description = null): self
+    public function addCallback(callable $callback, ?string $description = null): self
     {
         return $this->addWithDescription(new CallbackTask($callback), $description);
     }
 
     /**
-     * @param string|Process $process
+     * @see ProcessTask::__construct()
+     *
+     * @param string|null $description optional description
      */
-    public function addProcess($process, string $description = null): self
+    public function addProcess($process, ?string $description = null): self
     {
         return $this->addWithDescription(new ProcessTask($process), $description);
+    }
+
+    /**
+     * @see PingTask::__construct()
+     *
+     * @param string|null $description optional description
+     */
+    public function addPing(string $url, string $method = 'GET', array $options = [], ?string $description = null): self
+    {
+        return $this->addWithDescription(new PingTask($url, $method, $options), $description);
     }
 
     /**
@@ -73,7 +88,7 @@ final class CompoundTask extends Task implements \IteratorAggregate
         }
     }
 
-    private function addWithDescription(Task $task, string $description = null): self
+    private function addWithDescription(Task $task, ?string $description = null): self
     {
         if ($description) {
             $task->description($description);
