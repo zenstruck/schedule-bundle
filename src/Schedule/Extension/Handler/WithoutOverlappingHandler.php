@@ -19,7 +19,7 @@ final class WithoutOverlappingHandler extends ExtensionHandler
 {
     private $lockFactory;
 
-    public function __construct(LockFactory $lockFactory = null)
+    public function __construct(?LockFactory $lockFactory = null)
     {
         if (null === $lockFactory && !\class_exists(LockFactory::class)) {
             throw new MissingDependency(WithoutOverlappingExtension::getMissingDependencyMessage());

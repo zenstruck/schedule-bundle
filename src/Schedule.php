@@ -250,7 +250,7 @@ final class Schedule
      * @param callable|null   $callback Add your own headers etc
      *                                  Receives an instance of \Symfony\Component\Mime\Email
      */
-    public function emailOnFailure($to = null, string $subject = null, callable $callback = null): self
+    public function emailOnFailure($to = null, ?string $subject = null, ?callable $callback = null): self
     {
         return $this->addExtension(EmailExtension::scheduleFailure($to, $subject, $callback));
     }

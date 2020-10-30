@@ -285,7 +285,7 @@ final class EmailExtensionTest extends TestCase
             /** @var RawMessage */
             public $lastMessage;
 
-            public function send(RawMessage $message, Envelope $envelope = null): void
+            public function send(RawMessage $message, ?Envelope $envelope = null): void
             {
                 $this->lastMessage = $message;
             }

@@ -22,7 +22,7 @@ final class MockTask extends Task
         return $this->result;
     }
 
-    public static function success(string $name = 'my task', string $output = null): self
+    public static function success(string $name = 'my task', ?string $output = null): self
     {
         $task = new self($name);
         $task->result = Result::successful($task, $output);
@@ -30,7 +30,7 @@ final class MockTask extends Task
         return $task;
     }
 
-    public static function failure(string $description = 'failure description', string $name = 'my task', string $output = null): self
+    public static function failure(string $description = 'failure description', string $name = 'my task', ?string $output = null): self
     {
         $task = new self($name);
         $task->result = Result::failure($task, $description, $output);
@@ -46,7 +46,7 @@ final class MockTask extends Task
         return $task;
     }
 
-    public static function exception(\Throwable $e, string $name = 'my task', string $output = null): self
+    public static function exception(\Throwable $e, string $name = 'my task', ?string $output = null): self
     {
         $task = new self($name);
         $task->result = Result::exception($task, $e, $output);

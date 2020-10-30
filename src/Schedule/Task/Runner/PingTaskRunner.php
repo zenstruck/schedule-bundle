@@ -17,7 +17,7 @@ final class PingTaskRunner implements TaskRunner
 {
     private $httpClient;
 
-    public function __construct(HttpClientInterface $httpClient = null)
+    public function __construct(?HttpClientInterface $httpClient = null)
     {
         if (null === $httpClient && !\class_exists(HttpClient::class)) {
             throw new MissingDependency(PingTask::getMissingDependencyMessage());

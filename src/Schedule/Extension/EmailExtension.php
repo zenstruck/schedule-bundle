@@ -19,7 +19,7 @@ final class EmailExtension implements HasMissingDependencyMessage
     /**
      * @param string|Address|string[]|Address[]|null $to
      */
-    private function __construct(string $hook, $to = null, string $subject = null, callable $callback = null)
+    private function __construct(string $hook, $to = null, ?string $subject = null, ?callable $callback = null)
     {
         $this->hook = $hook;
 
@@ -54,17 +54,17 @@ final class EmailExtension implements HasMissingDependencyMessage
         return "{$this->hook}, email output to \"{$to}\"";
     }
 
-    public static function taskAfter($to = null, string $subject = null, callable $callback = null): self
+    public static function taskAfter($to = null, ?string $subject = null, ?callable $callback = null): self
     {
         return new self(Task::AFTER, $to, $subject, $callback);
     }
 
-    public static function taskFailure($to = null, string $subject = null, callable $callback = null): self
+    public static function taskFailure($to = null, ?string $subject = null, ?callable $callback = null): self
     {
         return new self(Task::FAILURE, $to, $subject, $callback);
     }
 
-    public static function scheduleFailure($to = null, string $subject = null, callable $callback = null): self
+    public static function scheduleFailure($to = null, ?string $subject = null, ?callable $callback = null): self
     {
         return new self(Schedule::FAILURE, $to, $subject, $callback);
     }
