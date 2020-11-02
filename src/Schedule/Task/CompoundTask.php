@@ -69,6 +69,16 @@ final class CompoundTask extends Task implements \IteratorAggregate
     }
 
     /**
+     * @see MessageTask::__construct()
+     *
+     * @param string|null $description optional description
+     */
+    public function addMessage(object $message, array $stamps = [], ?string $description = null): self
+    {
+        return $this->addWithDescription(new MessageTask($message, $stamps), $description);
+    }
+
+    /**
      * @return Task[]
      */
     public function getIterator(): iterable

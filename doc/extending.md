@@ -14,6 +14,8 @@ it handles.
 As an example, let's create a Task that sends a *Message* to your *MessageBus* (`symfony/messenger`
 required).
 
+**NOTE**: There is now a [MessageTask in core](define-tasks.md#messagetask).
+
 First, let's create the task:
 
 ```php
