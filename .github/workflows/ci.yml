@@ -46,14 +46,9 @@ jobs:
         run: vendor/bin/simple-phpunit -v
 
   prefer-lowest-tests:
-    name: "Test: PHP ${{ matrix.php }}, --prefer-lowest"
+    name: "Test: prefer-lowest"
 
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: true
-      matrix:
-        php: [7.2, 7.3, 7.4]
 
     steps:
       - name: Checkout code
@@ -62,14 +57,14 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: 7.2
           coverage: none
 
       - name: Cache dependencies
         uses: actions/cache@v1
         with:
           path: ~/.composer/cache/files
-          key: prefer-lowest-${{ matrix.php }}-${{ hashFiles('composer.json') }}
+          key: prefer-lowest-${{ hashFiles('composer.json') }}
 
       - name: Install dependencies
         run: |
@@ -80,14 +75,9 @@ jobs:
         run: vendor/bin/simple-phpunit -v
 
   dev-master-tests:
-    name: "Test: PHP ${{ matrix.php }}, dev-master"
+    name: "Test: dev-master"
 
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: true
-      matrix:
-        php: [7.2, 7.3, 7.4]
 
     steps:
       - name: Checkout code
@@ -96,14 +86,14 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: 7.4
           coverage: none
 
       - name: Cache dependencies
         uses: actions/cache@v1
         with:
           path: ~/.composer/cache/files
-          key: dev-master-${{ matrix.php }}-${{ hashFiles('composer.json') }}
+          key: dev-master-${{ hashFiles('composer.json') }}
 
       - name: Install dependencies
         run: |
