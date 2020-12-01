@@ -16,7 +16,7 @@ jobs:
       fail-fast: true
       matrix:
         php: [7.2, 7.3, 7.4, 8.0]
-        symfony: [4.4.*, 5.1.*]
+        symfony: [4.4.*, 5.1.*, 5.2.*]
 
     steps:
       - name: Checkout code
