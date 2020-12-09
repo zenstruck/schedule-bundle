@@ -28,7 +28,7 @@
         "symfony/lock": "^4.4|^5.0",
         "symfony/mailer": "^4.4|^5.0",
         "symfony/messenger": "^4.4|^5.0",
-        "symfony/phpunit-bridge": "^5.1.8",
+        "symfony/phpunit-bridge": "^5.2",
         "symfony/process": "^4.2|^5.0"
     },
     "suggest": {
