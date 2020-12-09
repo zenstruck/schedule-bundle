@@ -28,19 +28,18 @@ jobs:
           php-version: ${{ matrix.php }}
           coverage: none
 
-      - name: Cache dependencies
-        uses: actions/cache@v1
-        with:
-          path: ~/.composer/cache/files
-          key: dependencies-${{ matrix.php }}-${{ matrix.symfony }}-${{ hashFiles('composer.json') }}
+      - name: Install Symfony Flex
+        run: composer global require --no-progress --no-scripts --no-plugins symfony/flex dev-main
 
       - name: Install dependencies
-        run: |
-          composer global require --no-progress --no-scripts --no-plugins symfony/flex dev-main
-          composer update --prefer-dist --no-interaction --no-suggest
-          vendor/bin/simple-phpunit install
+        uses: ramsey/composer-install@v1
+        with:
+          composer-options: --prefer-dist
         env:
           SYMFONY_REQUIRE: ${{ matrix.symfony }}
+
+      - name: Install PHPUnit
+        run: vendor/bin/simple-phpunit install
 
       - name: Run tests
         run: vendor/bin/simple-phpunit -v
@@ -60,16 +59,14 @@ jobs:
           php-version: 7.2
           coverage: none
 
-      - name: Cache dependencies
-        uses: actions/cache@v1
-        with:
-          path: ~/.composer/cache/files
-          key: prefer-lowest-${{ hashFiles('composer.json') }}
-
       - name: Install dependencies
-        run: |
-          composer update --prefer-lowest --prefer-dist --no-interaction --no-suggest
-          vendor/bin/simple-phpunit install
+        uses: ramsey/composer-install@v1
+        with:
+          dependency-versions: lowest
+          composer-options: --prefer-dist
+
+      - name: Install PHPUnit
+        run: vendor/bin/simple-phpunit install
 
       - name: Run tests
         run: vendor/bin/simple-phpunit -v
@@ -89,17 +86,16 @@ jobs:
           php-version: 7.4
           coverage: none
 
-      - name: Cache dependencies
-        uses: actions/cache@v1
-        with:
-          path: ~/.composer/cache/files
-          key: dev-master-${{ hashFiles('composer.json') }}
+      - name: Configure composer
+        run: composer config minimum-stability dev
 
       - name: Install dependencies
-        run: |
-          composer config minimum-stability dev
-          composer update --prefer-dist --no-interaction --no-suggest
-          vendor/bin/simple-phpunit install
+        uses: ramsey/composer-install@v1
+        with:
+          composer-options: --prefer-dist
+
+      - name: Install PHPUnit
+        run: vendor/bin/simple-phpunit install
 
       - name: Run tests
         run: vendor/bin/simple-phpunit -v
@@ -117,16 +113,13 @@ jobs:
           php-version: 7.4
           coverage: xdebug
 
-      - name: Cache dependencies
-        uses: actions/cache@v1
-        with:
-          path: ~/.composer/cache/files
-          key: coverage-${{ hashFiles('composer.json') }}
-
       - name: Install dependencies
-        run: |
-          composer update --prefer-dist --no-interaction --no-suggest
-          vendor/bin/simple-phpunit install
+        uses: ramsey/composer-install@v1
+        with:
+          composer-options: --prefer-dist
+
+      - name: Install PHPUnit
+        run: vendor/bin/simple-phpunit install
 
       - name: Run code coverage
         run: vendor/bin/simple-phpunit -v --coverage-text --coverage-clover=coverage.clover
