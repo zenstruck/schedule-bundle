@@ -50,7 +50,7 @@ final class SelfSchedulingCommandTest extends TestCase
         };
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageRegExp('/is not a console command/');
+        $this->expectExceptionMessageMatches('/is not a console command/');
 
         (new MockScheduleBuilder())
             ->addSubscriber(new SelfSchedulingCommandSubscriber([$command]))
