@@ -156,7 +156,7 @@ EOF
                 $this->getHelper('formatter')->truncate($task->getDescription(), 50),
                 \count($task->getExtensions()),
                 $this->renderFrequency($task),
-                $task->getNextRun()->format(DATE_ATOM),
+                $task->getNextRun()->format(\DATE_ATOM),
             ];
         }
 

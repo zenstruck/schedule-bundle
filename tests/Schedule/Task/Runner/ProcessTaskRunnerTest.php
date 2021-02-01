@@ -20,7 +20,7 @@ final class ProcessTaskRunnerTest extends TestCase
 
         $this->assertTrue($result->isSuccessful());
         $this->assertStringContainsString('PHP', $result->getOutput());
-        $this->assertStringContainsString(PHP_VERSION, $result->getOutput());
+        $this->assertStringContainsString(\PHP_VERSION, $result->getOutput());
     }
 
     /**
