@@ -264,3 +264,31 @@ class ScheduleWithoutOverlappingSubscriber implements EventSubscriberInterface
 
 **NOTE:** If *autoconfiguration* is not enabled, add the `kernel.event_subscriber`
 tag to the service.
+
+## Using Task Config
+
+You can use [task config](define-tasks.md#task-config) to help with customization. These can be
+used in conjunction with events if you deem a [task extension](#custom-extensions) too *heavy*.
+Alternatively, you can use this config to aid in building some kind of UI for your tasks.
+
+In the following example, we'll assume your tasks have a *group* config parameter. We will use this
+to build an admin dashboard displaying all registered tasks. We want the UI to group each task under
+*tabs*:
+
+```php
+use Zenstruck\ScheduleBundle\Schedule;
+
+public function groupedTasks(Schedule $schedule): array
+{
+    $tasks = ['Default' => []]; // initial array with default group
+
+    foreach ($schedule->all() as $task) {
+        // Use the "Default" group if config option "group" is not set
+        $tasks[$task->config()->get('group', 'Default')] = $task;
+    }
+
+    return $tasks;
+}
+```
+
+The UI for this feature could now group the tasks under *tabs* named by the *Group*.
