@@ -86,6 +86,8 @@ $ composer require zenstruck/schedule-bundle
     ```php
     // src/Schedule/AppScheduleBuilder.php
 
+    namespace App\Schedule;
+
     use Zenstruck\ScheduleBundle\Schedule;
     use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
 
