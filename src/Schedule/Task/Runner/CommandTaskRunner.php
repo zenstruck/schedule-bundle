@@ -27,6 +27,7 @@ final class CommandTaskRunner implements TaskRunner
      */
     public function __invoke(Task $task): Result
     {
+        $shellVerbosityResetter = new ShellVerbosityResetter();
         $output = new BufferedOutput();
         $this->application->setCatchExceptions(false);
         $this->application->setAutoExit(false);
@@ -35,6 +36,8 @@ final class CommandTaskRunner implements TaskRunner
             $exitCode = $this->application->run($task->createCommandInput($this->application), $output);
         } catch (\Throwable $e) {
             return Result::exception($task, $e, $output->fetch());
+        } finally {
+            $shellVerbosityResetter->reset();
         }
 
         if (0 === $exitCode) {
