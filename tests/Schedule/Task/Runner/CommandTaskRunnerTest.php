@@ -67,6 +67,32 @@ final class CommandTaskRunnerTest extends TestCase
     /**
      * @test
      */
+    public function shell_verbosity_is_reset(): void
+    {
+        $preShellVerbosity = [
+            \getenv('SHELL_VERBOSITY'),
+            $_ENV['SHELL_VERBOSITY'] ?? false,
+            $_SERVER['SHELL_VERBOSITY'] ?? false,
+        ];
+
+        $application = new Application();
+        $application->add($this->createCommand());
+        $runner = new CommandTaskRunner($application);
+
+        $result = $runner(new CommandTask('my:command -vv'));
+
+        $this->assertTrue($result->isSuccessful());
+        $this->assertSame('some output... is very verbose', $result->getOutput());
+        $this->assertSame($preShellVerbosity, [
+            \getenv('SHELL_VERBOSITY'),
+            $_ENV['SHELL_VERBOSITY'] ?? false,
+            $_SERVER['SHELL_VERBOSITY'] ?? false,
+        ]);
+    }
+
+    /**
+     * @test
+     */
     public function supports_command_task()
     {
         $this->assertTrue((new CommandTaskRunner(new Application()))->supports(new CommandTask('my:command')));
@@ -88,6 +114,10 @@ final class CommandTaskRunnerTest extends TestCase
             protected function execute(InputInterface $input, OutputInterface $output)
             {
                 $output->write('some output...');
+
+                if ($output->isVeryVerbose()) {
+                    $output->write(' is very verbose');
+                }
 
                 if ($input->getOption('exception')) {
                     throw new \RuntimeException('exception message');
