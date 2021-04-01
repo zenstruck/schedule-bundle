@@ -112,11 +112,7 @@ jobs:
         with:
           php-version: 7.4
           coverage: none
-
-      - name: Install dependencies
-        run: |
-          wget https://cs.symfony.com/download/php-cs-fixer-v2.phar -O php-cs-fixer.phar
-          php php-cs-fixer.phar self-update
+          tools: php-cs-fixer:2.18.3
 
       - name: Check CS
-        run: php php-cs-fixer.phar fix -v --dry-run --diff-format=udiff
+        run: php-cs-fixer fix --dry-run --diff --diff-format=udiff
