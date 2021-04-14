@@ -34,4 +34,16 @@ final class ProcessTaskRunnerTest extends TestCase
         $this->assertSame('Exit 127: Command not found', $result->getDescription());
         $this->assertSame("sh: 1: sdfsdfsdf: not found\n", $result->getOutput());
     }
+
+    /**
+     * @test
+     */
+    public function failed_result_contains_non_error_output()
+    {
+        $result = (new ProcessTaskRunner())(new ProcessTask(\sprintf('$(which php) %s', __DIR__.'/../../../Fixture/script.sh')));
+
+        $this->assertTrue($result->isFailure());
+        $this->assertSame('Exit 1: General error', $result->getDescription());
+        $this->assertSame("non-error output\nerror output\n", $result->getOutput());
+    }
 }
