@@ -28,7 +28,7 @@ final class ProcessTaskRunner implements TaskRunner
         return Result::failure(
             $task,
             "Exit {$process->getExitCode()}: {$process->getExitCodeText()}",
-            $process->getErrorOutput()
+            $process->getOutput().$process->getErrorOutput()
         );
     }
 
