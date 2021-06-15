@@ -78,20 +78,20 @@ final class ScheduleConsoleOutputSubscriber implements EventSubscriberInterface
         $allTaskCount = \count($context->getSchedule()->all());
         $dueTaskCount = \count($context->dueTasks());
 
-        if (0 === $dueTaskCount) {
-            $this->io->note(\sprintf('No tasks due to run. (%s total tasks)', $allTaskCount));
-
-            return;
+        if ($dueTaskCount > 0) {
+            $this->io->comment(\sprintf(
+                '%sRunning <info>%s</info> %stask%s. (%s total tasks)',
+                $context->isForceRun() ? '<error>Force</error> ' : '',
+                $dueTaskCount,
+                $context->isForceRun() ? '' : 'due ',
+                $dueTaskCount > 1 ? 's' : '',
+                $allTaskCount
+            ));
         }
 
-        $this->io->comment(\sprintf(
-            '%sRunning <info>%s</info> %stask%s. (%s total tasks)',
-            $context->isForceRun() ? '<error>Force</error> ' : '',
-            $dueTaskCount,
-            $context->isForceRun() ? '' : 'due ',
-            $dueTaskCount > 1 ? 's' : '',
-            $allTaskCount
-        ));
+        if ($this->io->isDebug()) {
+            $this->io->note(\sprintf('No tasks due to run. (%s total tasks)', $allTaskCount));
+        }
     }
 
     public function beforeTask(BeforeTaskEvent $event): void
