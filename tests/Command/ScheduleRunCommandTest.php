@@ -20,13 +20,28 @@ final class ScheduleRunCommandTest extends TestCase
     /**
      * @test
      */
-    public function no_tasks_defined()
+    public function no_tasks_defined(): void
     {
         $dispatcher = new EventDispatcher();
         $runner = (new MockScheduleBuilder())->getRunner($dispatcher);
         $commandTester = new CommandTester(new ScheduleRunCommand($runner, $dispatcher));
 
         $exit = $commandTester->execute([]);
+
+        $this->assertSame(0, $exit);
+        $this->assertSame('', $commandTester->getDisplay());
+    }
+
+    /**
+     * @test
+     */
+    public function no_tasks_defined_debug()
+    {
+        $dispatcher = new EventDispatcher();
+        $runner = (new MockScheduleBuilder())->getRunner($dispatcher);
+        $commandTester = new CommandTester(new ScheduleRunCommand($runner, $dispatcher));
+
+        $exit = $commandTester->execute([], ['verbosity' => OutputInterface::VERBOSITY_DEBUG]);
 
         $this->assertSame(0, $exit);
         $this->assertStringContainsString('No tasks due to run. (0 total tasks)', $commandTester->getDisplay());
