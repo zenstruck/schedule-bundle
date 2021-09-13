@@ -14,15 +14,12 @@ jobs:
       fail-fast: true
       matrix:
         php: [7.2, 7.3, 7.4, 8.0]
-        symfony: [4.4.*, 5.2.*, 5.3.*]
+        symfony: [4.4.*, 5.2.*, 5.3.*, 5.4.*]
         stability: [hightest]
         include:
           - php: 7.2
             stability: lowest
             symfony: '*'
-          - php: 8.0
-            stability: highest
-            symfony: '@dev'
 
     steps:
       - name: Checkout code
@@ -33,13 +30,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
           coverage: none
-
-      - name: Install Symfony Flex
-        run: composer global require --no-progress --no-scripts --no-plugins symfony/flex dev-main
-
-      - name: Set minimum-stability to dev
-        run: composer config minimum-stability dev
-        if: ${{ matrix.symfony == '@dev' }}
+          tools: flex
 
       - name: Install dependencies
         uses: ramsey/composer-install@v1
