@@ -20,6 +20,9 @@ jobs:
           - php: 7.2
             stability: lowest
             symfony: '*'
+          - php: 8.0
+            stability: hightest
+            symfony: 6.0.*
 
     steps:
       - name: Checkout code
