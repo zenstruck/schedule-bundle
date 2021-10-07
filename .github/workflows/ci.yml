@@ -8,105 +8,36 @@ on:
 
 jobs:
   tests:
-    name: PHP ${{ matrix.php }}, SF ${{ matrix.symfony }} - ${{ matrix.stability }}
+    name: PHP ${{ matrix.php }}, SF ${{ matrix.symfony }} - ${{ matrix.deps }}
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: true
       matrix:
-        php: [7.2, 7.3, 7.4, 8.0]
-        symfony: [4.4.*, 5.2.*, 5.3.*, 5.4.*]
-        stability: [hightest]
+        php: [7.4, 8.0]
+        deps: [hightest]
+        symfony: [4.4.*, 5.3.*, 5.4.*]
         include:
           - php: 7.2
-            stability: lowest
+            deps: lowest
             symfony: '*'
           - php: 8.0
-            stability: hightest
+            deps: hightest
             symfony: 6.0.*
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - uses: zenstruck/.github@php-test-symfony
         with:
-          php-version: ${{ matrix.php }}
-          coverage: none
-          tools: flex
-
-      - name: Install dependencies
-        uses: ramsey/composer-install@v1
-        with:
-          dependency-versions: ${{ matrix.stability }}
-          composer-options: --prefer-dist
-        env:
-          SYMFONY_REQUIRE: ${{ matrix.symfony }}
-
-      - name: Install PHPUnit
-        run: vendor/bin/simple-phpunit install
-
-      - name: Run tests
-        run: vendor/bin/simple-phpunit -v
+          php: ${{ matrix.php }}
+          symfony: ${{ matrix.symfony }}
+          deps: ${{ matrix.deps }}
+          phpunit: simple-phpunit
 
   code-coverage:
-    name: Code Coverage
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.4
-          coverage: xdebug
-
-      - name: Install dependencies
-        uses: ramsey/composer-install@v1
-        with:
-          composer-options: --prefer-dist
-
-      - name: Install PHPUnit
-        run: vendor/bin/simple-phpunit install
-
-      - name: Run code coverage
-        run: vendor/bin/simple-phpunit -v --coverage-text --coverage-clover=coverage.xml
-
-      - name: Publish coverage report to Codecov
-        uses: codecov/codecov-action@v1
-        with:
-          file: ./coverage.xml
+    uses: zenstruck/.github/.github/workflows/php-coverage-codecov.yml@main
+    with:
+      php: 7.4
+      phpunit: simple-phpunit
 
   composer-validate:
-    name: Validate composer.json
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.4
-          coverage: none
-
-      - name: Validate composer.json
-        run: composer validate --strict --no-check-lock
+    uses: zenstruck/.github/.github/workflows/php-composer-validate.yml@main
 
   cs-check:
-    name: PHP Coding Standards
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 7.4
-          coverage: none
-          tools: php-cs-fixer
-
-      - name: Check CS
-        run: php-cs-fixer fix --dry-run --diff
+    uses: zenstruck/.github/.github/workflows/php-cs-fixer.yml@main
