@@ -81,7 +81,7 @@ final class CompoundTask extends Task implements \IteratorAggregate
     /**
      * @return Task[]
      */
-    public function getIterator(): iterable
+    public function getIterator(): \Traversable
     {
         foreach ($this->tasks as $task) {
             $task->cron($this->getExpression());
