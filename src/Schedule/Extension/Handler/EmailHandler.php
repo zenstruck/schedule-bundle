@@ -19,9 +19,16 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
  */
 final class EmailHandler extends ExtensionHandler
 {
+    /** @var MailerInterface */
     private $mailer;
+
+    /** @var string|null */
     private $defaultFrom;
+
+    /** @var string|null */
     private $defaultTo;
+
+    /** @var string|null */
     private $subjectPrefix;
 
     public function __construct(MailerInterface $mailer, ?string $defaultFrom = null, ?string $defaultTo = null, ?string $subjectPrefix = null)

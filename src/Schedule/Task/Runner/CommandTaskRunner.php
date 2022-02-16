@@ -15,6 +15,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunner;
  */
 final class CommandTaskRunner implements TaskRunner
 {
+    /** @var Application */
     private $application;
 
     public function __construct(Application $application)
@@ -23,7 +24,7 @@ final class CommandTaskRunner implements TaskRunner
     }
 
     /**
-     * @param CommandTask|Task $task
+     * @param CommandTask $task
      */
     public function __invoke(Task $task): Result
     {

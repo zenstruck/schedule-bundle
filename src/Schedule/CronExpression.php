@@ -42,9 +42,16 @@ final class CronExpression
         self::DOW => [0, 6],
     ];
 
+    /** @var string */
     private $value;
+
+    /** @var string[] */
     private $parts;
+
+    /** @var string */
     private $context;
+
+    /** @var string */
     private $parsedValue;
 
     public function __construct(string $value, string $context)
@@ -124,6 +131,6 @@ final class CronExpression
     {
         $possibleValues = \range($start, $end);
 
-        return $possibleValues[(int) \fmod(\hexdec(\mb_substr(\md5($this->context), 0, 10)), \count($possibleValues))];
+        return (string) $possibleValues[(int) \fmod(\hexdec(\mb_substr(\md5($this->context), 0, 10)), \count($possibleValues))];
     }
 }

@@ -13,11 +13,14 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
  */
 final class ExtensionHandlerRegistry
 {
+    /** @var iterable<ExtensionHandler> */
     private $handlers;
+
+    /** @var array<string,ExtensionHandler> */
     private $handlerCache;
 
     /**
-     * @param ExtensionHandler[] $handlers
+     * @param iterable<ExtensionHandler> $handlers
      */
     public function __construct(iterable $handlers)
     {

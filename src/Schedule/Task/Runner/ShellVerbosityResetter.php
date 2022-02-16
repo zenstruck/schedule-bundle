@@ -9,13 +9,20 @@ namespace Zenstruck\ScheduleBundle\Schedule\Task\Runner;
  */
 final class ShellVerbosityResetter
 {
+    /** @var false|string */
     private $var;
+
+    /** @var false|string */
     private $env;
+
+    /** @var false|string */
     private $server;
 
     public function __construct()
     {
-        $this->var = \getenv('SHELL_VERBOSITY');
+        $var = \getenv('SHELL_VERBOSITY');
+
+        $this->var = \is_string($var) ? $var : false;
         $this->env = $_ENV['SHELL_VERBOSITY'] ?? false;
         $this->server = $_SERVER['SHELL_VERBOSITY'] ?? false;
     }

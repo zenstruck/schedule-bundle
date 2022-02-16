@@ -17,6 +17,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
  */
 final class PingHandler extends ExtensionHandler
 {
+    /** @var HttpClientInterface */
     private $httpClient;
 
     public function __construct(?HttpClientInterface $httpClient = null)

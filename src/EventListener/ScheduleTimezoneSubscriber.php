@@ -10,6 +10,7 @@ use Zenstruck\ScheduleBundle\Event\BuildScheduleEvent;
  */
 final class ScheduleTimezoneSubscriber implements EventSubscriberInterface
 {
+    /** @var string */
     private $timezone;
 
     public function __construct(string $timezone)

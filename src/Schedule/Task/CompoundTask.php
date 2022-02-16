@@ -2,10 +2,14 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule\Task;
 
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Process\Process;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
+ *
+ * @implements \IteratorAggregate<Task>
  */
 final class CompoundTask extends Task implements \IteratorAggregate
 {
@@ -51,7 +55,8 @@ final class CompoundTask extends Task implements \IteratorAggregate
     /**
      * @see ProcessTask::__construct()
      *
-     * @param string|null $description optional description
+     * @param string|Process $process
+     * @param string|null    $description optional description
      */
     public function addProcess($process, ?string $description = null): self
     {
@@ -71,7 +76,8 @@ final class CompoundTask extends Task implements \IteratorAggregate
     /**
      * @see MessageTask::__construct()
      *
-     * @param string|null $description optional description
+     * @param object|Envelope $message
+     * @param string|null     $description optional description
      */
     public function addMessage(object $message, array $stamps = [], ?string $description = null): self
     {
@@ -79,7 +85,7 @@ final class CompoundTask extends Task implements \IteratorAggregate
     }
 
     /**
-     * @return Task[]
+     * @return \Traversable<Task>
      */
     public function getIterator(): \Traversable
     {

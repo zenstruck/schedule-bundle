@@ -13,7 +13,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunner;
 final class CallbackTaskRunner implements TaskRunner
 {
     /**
-     * @param CallbackTask|Task $task
+     * @param CallbackTask $task
      */
     public function __invoke(Task $task): Result
     {
@@ -37,7 +37,7 @@ final class CallbackTaskRunner implements TaskRunner
         }
 
         if (\is_scalar($value)) {
-            return $value;
+            return (string) $value;
         }
 
         if (\is_object($value) && \method_exists($value, '__toString')) {

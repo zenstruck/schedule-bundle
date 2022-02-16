@@ -19,6 +19,7 @@ final class TaskConfigurationSubscriber implements EventSubscriberInterface
     private const PROCESS_TASK_PREFIX = 'bash:';
     private const PING_TASK_PREFIX = 'ping:';
 
+    /** @var array */
     private $config;
 
     public function __construct(array $config)

@@ -12,17 +12,34 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
  */
 final class ScheduleRunContext extends RunContext
 {
+    /** @var Schedule */
     private $schedule;
+
+    /** @var Task[] */
     private $dueTasks;
+
+    /** @var bool */
     private $force;
 
+    /** @var TaskRunContext[] */
     private $taskRunContexts;
+
+    /** @var string */
     private $skipReason;
 
+    /** @var Result[]|null */
     private $results;
+
+    /** @var Result[]|null */
     private $successful;
+
+    /** @var Result[]|null */
     private $failures;
+
+    /** @var Result[]|null */
     private $skipped;
+
+    /** @var Result[]|null */
     private $run;
 
     public function __construct(Schedule $schedule, Task ...$forcedTasks)

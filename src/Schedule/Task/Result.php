@@ -13,10 +13,19 @@ final class Result
     public const FAILED = 'failed';
     public const SKIPPED = 'skipped';
 
+    /** @var Task */
     private $task;
+
+    /** @var string */
     private $type;
+
+    /** @var string */
     private $description;
+
+    /** @var string|null */
     private $output;
+
+    /** @var \Throwable|null */
     private $exception;
 
     private function __construct(Task $task, string $type, string $description)

@@ -10,6 +10,7 @@ use Zenstruck\ScheduleBundle\Schedule;
  */
 final class BuildScheduleEvent extends Event
 {
+    /** @var Schedule */
     private $schedule;
 
     public function __construct(Schedule $schedule)

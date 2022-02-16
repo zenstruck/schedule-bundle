@@ -11,6 +11,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
  */
 final class ProcessTask extends Task implements HasMissingDependencyMessage
 {
+    /** @var Process */
     private $process;
 
     /**
@@ -36,7 +37,7 @@ final class ProcessTask extends Task implements HasMissingDependencyMessage
     {
         return [
             'Command Line' => $this->process->getCommandLine(),
-            'Command Timeout' => $this->process->getTimeout(),
+            'Command Timeout' => (string) $this->process->getTimeout(),
         ];
     }
 

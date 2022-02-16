@@ -9,9 +9,16 @@ use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
  */
 final class BetweenTimeExtension
 {
+    /** @var string */
     private $startTime;
+
+    /** @var string */
     private $endTime;
+
+    /** @var bool */
     private $within;
+
+    /** @var bool */
     private $inclusive;
 
     private function __construct(string $startTime, string $endTime, bool $within, bool $inclusive)

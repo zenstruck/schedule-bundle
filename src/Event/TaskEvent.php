@@ -10,6 +10,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
  */
 abstract class TaskEvent extends Event
 {
+    /** @var TaskRunContext */
     private $runContext;
 
     final public function __construct(TaskRunContext $runContext)

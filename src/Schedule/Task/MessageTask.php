@@ -14,7 +14,10 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
  */
 final class MessageTask extends Task implements HasMissingDependencyMessage
 {
+    /** @var object|Envelope */
     private $message;
+
+    /** @var StampInterface[] */
     private $stamps;
 
     /**
@@ -52,7 +55,8 @@ final class MessageTask extends Task implements HasMissingDependencyMessage
             \array_map(static function(StampInterface $stamp) { return \get_class($stamp); }, $this->stamps)
         );
         $stamps = \array_map(
-            static function($stamp) {
+            static function(string $stamp) {
+                /** @var class-string $stamp */
                 return (new \ReflectionClass($stamp))->getShortName();
             },
             $stamps
