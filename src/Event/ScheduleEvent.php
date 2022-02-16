@@ -10,6 +10,7 @@ use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
  */
 abstract class ScheduleEvent extends Event
 {
+    /** @var ScheduleRunContext */
     private $runContext;
 
     final public function __construct(ScheduleRunContext $runContext)

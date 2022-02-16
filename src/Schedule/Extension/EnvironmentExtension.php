@@ -7,8 +7,12 @@ namespace Zenstruck\ScheduleBundle\Schedule\Extension;
  */
 final class EnvironmentExtension
 {
+    /** @var string[] */
     private $runEnvironments;
 
+    /**
+     * @param string[] $runEnvironments
+     */
     public function __construct(array $runEnvironments)
     {
         if (empty($runEnvironments)) {
@@ -23,6 +27,9 @@ final class EnvironmentExtension
         return \sprintf('Only run in [%s] environment%s', \implode(', ', $this->runEnvironments), \count($this->runEnvironments) > 1 ? 's' : '');
     }
 
+    /**
+     * @return string[]
+     */
     public function getRunEnvironments(): array
     {
         return $this->runEnvironments;

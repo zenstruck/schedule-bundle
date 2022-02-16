@@ -22,7 +22,10 @@ final class ScheduleListCommand extends Command
 {
     protected static $defaultName = 'schedule:list';
 
+    /** @var ScheduleRunner */
     private $scheduleRunner;
+
+    /** @var ExtensionHandlerRegistry */
     private $handlerRegistry;
 
     public function __construct(ScheduleRunner $scheduleRunner, ExtensionHandlerRegistry $handlerRegistry)
@@ -124,6 +127,8 @@ EOF
 
     /**
      * BC - Symfony 4.4 added SymfonyStyle::definitionList().
+     *
+     * @param array<string[]> $list
      */
     private function renderDefinitionList(SymfonyStyle $io, array $list): void
     {
@@ -143,7 +148,7 @@ EOF
 
     private function renderTable(Schedule $schedule, SymfonyStyle $io): int
     {
-        /** @var \Throwable[] $taskIssues */
+        /** @var array<\Throwable[]> $taskIssues */
         $taskIssues = [];
         $rows = [];
 
@@ -201,7 +206,7 @@ EOF
     }
 
     /**
-     * @return \Throwable[]
+     * @return \Traversable<\Throwable>
      */
     private function getScheduleIssues(Schedule $schedule): iterable
     {
@@ -233,6 +238,9 @@ EOF
         }
     }
 
+    /**
+     * @return array<string,string>
+     */
     private static function extensionHighlightMap(): array
     {
         return [
@@ -244,7 +252,7 @@ EOF
     }
 
     /**
-     * @return \Throwable[]
+     * @return \Traversable<\Throwable>
      */
     private function getTaskIssues(Task $task): iterable
     {
@@ -284,11 +292,17 @@ EOF
                 continue;
             }
 
+            if (!$application = $this->getApplication()) {
+                $io->error((string) $issue);
+
+                continue;
+            }
+
             // BC - Symfony 4.4 deprecated Application::renderException()
-            if (\method_exists($this->getApplication(), 'renderThrowable')) {
-                $this->getApplication()->renderThrowable($issue, $io);
+            if (\method_exists($application, 'renderThrowable')) {
+                $application->renderThrowable($issue, $io);
             } else {
-                $this->getApplication()->renderException($issue, $io);
+                $application->renderException($issue, $io);
             }
         }
     }

@@ -2,6 +2,7 @@
 
 namespace Zenstruck\ScheduleBundle\Schedule;
 
+use Symfony\Component\Mime\Address;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 use Zenstruck\ScheduleBundle\Schedule\Extension\BetweenTimeExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\CallbackExtension;
@@ -27,8 +28,13 @@ abstract class Task
 
     private const DEFAULT_EXPRESSION = '* * * * *';
 
+    /** @var string */
     private $description;
+
+    /** @var string */
     private $expression = self::DEFAULT_EXPRESSION;
+
+    /** @var \DateTimeZone|null */
     private $timezone;
 
     public function __construct(string $description)
@@ -56,6 +62,9 @@ abstract class Task
         return $this->description;
     }
 
+    /**
+     * @return array<string,string>
+     */
     public function getContext(): array
     {
         return [];
@@ -259,9 +268,9 @@ abstract class Task
      * Email task detail after run (on success or failure, not if skipped).
      * Be sure to configure `zenstruck_schedule.mailer`.
      *
-     * @param string|string[] $to       Email address(es)
-     * @param callable|null   $callback Add your own headers etc
-     *                                  Receives an instance of \Symfony\Component\Mime\Email
+     * @param string|Address|string[]|Address[]|null $to       Email address(es)
+     * @param callable|null                          $callback Add your own headers etc
+     *                                                         Receives an instance of \Symfony\Component\Mime\Email
      */
     final public function emailAfter($to = null, ?string $subject = null, ?callable $callback = null): self
     {
@@ -270,6 +279,8 @@ abstract class Task
 
     /**
      * Alias for emailAfter().
+     *
+     * @param string|Address|string[]|Address[]|null $to Email address(es)
      */
     final public function thenEmail($to = null, ?string $subject = null, ?callable $callback = null): self
     {
@@ -280,9 +291,9 @@ abstract class Task
      * Email task/failure details if failed (not if skipped).
      * Be sure to configure `zenstruck_schedule.mailer`.
      *
-     * @param string|string[] $to       Email address(es)
-     * @param callable|null   $callback Add your own headers etc
-     *                                  Receives an instance of \Symfony\Component\Mime\Email
+     * @param string|Address|string[]|Address[]|null $to       Email address(es)
+     * @param callable|null                          $callback Add your own headers etc
+     *                                                         Receives an instance of \Symfony\Component\Mime\Email
      */
     final public function emailOnFailure($to = null, ?string $subject = null, ?callable $callback = null): self
     {

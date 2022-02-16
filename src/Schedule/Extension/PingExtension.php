@@ -11,9 +11,16 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
  */
 final class PingExtension implements HasMissingDependencyMessage
 {
+    /** @var string */
     private $hook;
+
+    /** @var string */
     private $url;
+
+    /** @var string */
     private $method;
+
+    /** @var array */
     private $options;
 
     /**

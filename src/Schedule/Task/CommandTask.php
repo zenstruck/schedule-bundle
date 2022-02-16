@@ -14,8 +14,11 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
  */
 final class CommandTask extends Task
 {
+    /** @var string */
     private $name;
-    private $arguments;
+
+    /** @var string */
+    private $arguments = '';
 
     /**
      * @param string $name Command class or name (my:command)

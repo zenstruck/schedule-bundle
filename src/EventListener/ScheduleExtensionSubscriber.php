@@ -10,10 +10,11 @@ use Zenstruck\ScheduleBundle\Event\BuildScheduleEvent;
  */
 final class ScheduleExtensionSubscriber implements EventSubscriberInterface
 {
+    /** @var iterable<object> */
     private $extensions;
 
     /**
-     * @param object[] $extensions
+     * @param iterable<object> $extensions
      */
     public function __construct(iterable $extensions)
     {

@@ -13,7 +13,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunner;
 final class ProcessTaskRunner implements TaskRunner
 {
     /**
-     * @param ProcessTask|Task $task
+     * @param ProcessTask $task
      */
     public function __invoke(Task $task): Result
     {

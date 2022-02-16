@@ -13,10 +13,11 @@ use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
  */
 final class SelfSchedulingCommandSubscriber implements EventSubscriberInterface
 {
+    /** @var iterable<SelfSchedulingCommand> */
     private $commands;
 
     /**
-     * @param SelfSchedulingCommand[] $commands
+     * @param iterable<SelfSchedulingCommand> $commands
      */
     public function __construct(iterable $commands)
     {
@@ -35,7 +36,7 @@ final class SelfSchedulingCommandSubscriber implements EventSubscriberInterface
                 throw new \InvalidArgumentException(\sprintf('"%s" is not a console command. "%s" can only be used on commands.', \get_class($command), SelfSchedulingCommand::class));
             }
 
-            $task = new CommandTask($command->getName());
+            $task = new CommandTask((string) $command->getName());
 
             $command->schedule($task);
 

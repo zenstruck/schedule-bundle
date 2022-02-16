@@ -10,6 +10,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
  */
 final class CallbackTask extends Task
 {
+    /** @var callable */
     private $callback;
 
     /**

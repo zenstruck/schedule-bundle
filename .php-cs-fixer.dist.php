@@ -39,6 +39,7 @@ return $config
         ],
         'function_declaration' => ['closure_function_spacing' => 'none'],
         'nullable_type_declaration_for_default_null_value' => true,
+        'phpdoc_to_comment' => ['ignored_tags' => ['var']],
     ])
     ->setRiskyAllowed(true)
     ->setFinder($finder)

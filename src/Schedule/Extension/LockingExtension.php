@@ -10,6 +10,7 @@ use Symfony\Component\Lock\LockInterface;
  */
 abstract class LockingExtension
 {
+    /** @var int */
     private $ttl;
 
     /** @var LockInterface|null */

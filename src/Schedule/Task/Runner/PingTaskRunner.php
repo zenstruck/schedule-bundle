@@ -15,6 +15,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunner;
  */
 final class PingTaskRunner implements TaskRunner
 {
+    /** @var HttpClientInterface */
     private $httpClient;
 
     public function __construct(?HttpClientInterface $httpClient = null)
@@ -27,7 +28,7 @@ final class PingTaskRunner implements TaskRunner
     }
 
     /**
-     * @param PingTask|Task $task
+     * @param PingTask $task
      */
     public function __invoke(Task $task): Result
     {

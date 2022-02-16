@@ -26,9 +26,9 @@ final class ProcessTaskTest extends TestCase
     public function task_has_context()
     {
         $task = new ProcessTask('/foo/bar');
-        $this->assertSame(['Command Line' => '/foo/bar', 'Command Timeout' => 60.0], $task->getContext());
+        $this->assertSame(['Command Line' => '/foo/bar', 'Command Timeout' => '60'], $task->getContext());
 
         $task = new ProcessTask(Process::fromShellCommandline('/foo/bar')->setTimeout(30));
-        $this->assertSame(['Command Line' => '/foo/bar', 'Command Timeout' => 30.0], $task->getContext());
+        $this->assertSame(['Command Line' => '/foo/bar', 'Command Timeout' => '30'], $task->getContext());
     }
 }

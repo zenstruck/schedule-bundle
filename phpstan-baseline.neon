@@ -1,0 +1,252 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to an undefined method Symfony\\\\Component\\\\Console\\\\Application\\:\\:renderException\\(\\)\\.$#"
+			count: 1
+			path: src/Command/ScheduleListCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$str of function strtr expects string, object given\\.$#"
+			count: 1
+			path: src/Command/ScheduleListCommand.php
+
+		-
+			message: "#^Call to an undefined method Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\:\\:arrayPrototype\\(\\)\\.$#"
+			count: 1
+			path: src/DependencyInjection/Configuration.php
+
+		-
+			message: "#^Call to an undefined method Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\:\\:canBeEnabled\\(\\)\\.$#"
+			count: 2
+			path: src/DependencyInjection/Configuration.php
+
+		-
+			message: "#^Call to an undefined method Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\:\\:children\\(\\)\\.$#"
+			count: 1
+			path: src/DependencyInjection/Configuration.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:createEmailExtension\\(\\) should return Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition but returns Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\.$#"
+			count: 1
+			path: src/DependencyInjection/Configuration.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:createPingExtension\\(\\) should return Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition but returns Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\.$#"
+			count: 1
+			path: src/DependencyInjection/Configuration.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:taskConfiguration\\(\\) should return Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition but returns Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\.$#"
+			count: 1
+			path: src/DependencyInjection/Configuration.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\ZenstruckScheduleExtension\\:\\:loadInternal\\(\\) has parameter \\$mergedConfig with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/DependencyInjection/ZenstruckScheduleExtension.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\ZenstruckScheduleExtension\\:\\:registerScheduleExtensions\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/DependencyInjection/ZenstruckScheduleExtension.php
+
+		-
+			message: "#^Parameter \\#1 \\$message of method Symfony\\\\Component\\\\Console\\\\Style\\\\StyleInterface\\:\\:note\\(\\) expects array\\|string, string\\|null given\\.$#"
+			count: 1
+			path: src/EventListener/ScheduleConsoleOutputSubscriber.php
+
+		-
+			message: "#^Parameter \\#1 \\$message of method Psr\\\\Log\\\\LoggerInterface\\:\\:info\\(\\) expects string, string\\|null given\\.$#"
+			count: 1
+			path: src/EventListener/ScheduleLoggerSubscriber.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\EventListener\\\\TaskConfigurationSubscriber\\:\\:__construct\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EventListener/TaskConfigurationSubscriber.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\EventListener\\\\TaskConfigurationSubscriber\\:\\:addTask\\(\\) has parameter \\$config with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EventListener/TaskConfigurationSubscriber.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\EventListener\\\\TaskConfigurationSubscriber\\:\\:createTask\\(\\) has parameter \\$commands with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EventListener/TaskConfigurationSubscriber.php
+
+		-
+			message: "#^Property Zenstruck\\\\ScheduleBundle\\\\EventListener\\\\TaskConfigurationSubscriber\\:\\:\\$config type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/EventListener/TaskConfigurationSubscriber.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\:\\:addMessage\\(\\) has parameter \\$stamps with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\:\\:addPing\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\:\\:pingAfter\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\:\\:pingBefore\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\:\\:pingOnFailure\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\:\\:pingOnSuccess\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\:\\:thenPing\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule.php
+
+		-
+			message: "#^Parameter \\#3 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, object given\\.$#"
+			count: 1
+			path: src/Schedule/Exception/MissingDependency.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Extension\\\\PingExtension\\:\\:__construct\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Extension/PingExtension.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Extension\\\\PingExtension\\:\\:getOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Extension/PingExtension.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Extension\\\\PingExtension\\:\\:scheduleAfter\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Extension/PingExtension.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Extension\\\\PingExtension\\:\\:scheduleBefore\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Extension/PingExtension.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Extension\\\\PingExtension\\:\\:scheduleFailure\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Extension/PingExtension.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Extension\\\\PingExtension\\:\\:scheduleSuccess\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Extension/PingExtension.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Extension\\\\PingExtension\\:\\:taskAfter\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Extension/PingExtension.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Extension\\\\PingExtension\\:\\:taskBefore\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Extension/PingExtension.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Extension\\\\PingExtension\\:\\:taskFailure\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Extension/PingExtension.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Extension\\\\PingExtension\\:\\:taskSuccess\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Extension/PingExtension.php
+
+		-
+			message: "#^Property Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Extension\\\\PingExtension\\:\\:\\$options type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Extension/PingExtension.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\RunContext\\:\\:getDuration\\(\\) should return int but returns int\\|null\\.$#"
+			count: 1
+			path: src/Schedule/RunContext.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\RunContext\\:\\:getMemory\\(\\) should return int but returns int\\|null\\.$#"
+			count: 1
+			path: src/Schedule/RunContext.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Task\\:\\:pingAfter\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Task.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Task\\:\\:pingBefore\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Task.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Task\\:\\:pingOnFailure\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Task.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Task\\:\\:pingOnSuccess\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Task.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Task\\:\\:thenPing\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Task.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Task\\\\CompoundTask\\:\\:addCommand\\(\\) has parameter \\$arguments with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Task/CompoundTask.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Task\\\\CompoundTask\\:\\:addMessage\\(\\) has parameter \\$stamps with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Task/CompoundTask.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Task\\\\CompoundTask\\:\\:addPing\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Task/CompoundTask.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Task\\\\PingTask\\:\\:__construct\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Task/PingTask.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Task\\\\PingTask\\:\\:getContext\\(\\) should return array\\<string, string\\> but returns array\\<string, string\\|false\\>\\.$#"
+			count: 1
+			path: src/Schedule/Task/PingTask.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Task\\\\PingTask\\:\\:getOptions\\(\\) return type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Task/PingTask.php
+
+		-
+			message: "#^Property Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Task\\\\PingTask\\:\\:\\$options type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/Schedule/Task/PingTask.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\Task\\\\Runner\\\\CallbackTaskRunner\\:\\:stringify\\(\\) should return string\\|null but returns object\\.$#"
+			count: 1
+			path: src/Schedule/Task/Runner/CallbackTaskRunner.php
+

@@ -9,8 +9,13 @@ use Symfony\Component\Console\Helper\Helper;
  */
 abstract class RunContext
 {
+    /** @var \DateTimeImmutable */
     private $startTime;
+
+    /** @var int|null */
     private $duration;
+
+    /** @var int|null */
     private $memory;
 
     public function __construct()

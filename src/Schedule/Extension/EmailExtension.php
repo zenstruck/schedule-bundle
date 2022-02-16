@@ -13,7 +13,10 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
  */
 final class EmailExtension implements HasMissingDependencyMessage
 {
+    /** @var string */
     private $hook;
+
+    /** @var Email */
     private $email;
 
     /**
@@ -54,16 +57,25 @@ final class EmailExtension implements HasMissingDependencyMessage
         return "{$this->hook}, email output to \"{$to}\"";
     }
 
+    /**
+     * @param string|Address|string[]|Address[]|null $to
+     */
     public static function taskAfter($to = null, ?string $subject = null, ?callable $callback = null): self
     {
         return new self(Task::AFTER, $to, $subject, $callback);
     }
 
+    /**
+     * @param string|Address|string[]|Address[]|null $to
+     */
     public static function taskFailure($to = null, ?string $subject = null, ?callable $callback = null): self
     {
         return new self(Task::FAILURE, $to, $subject, $callback);
     }
 
+    /**
+     * @param string|Address|string[]|Address[]|null $to
+     */
     public static function scheduleFailure($to = null, ?string $subject = null, ?callable $callback = null): self
     {
         return new self(Schedule::FAILURE, $to, $subject, $callback);

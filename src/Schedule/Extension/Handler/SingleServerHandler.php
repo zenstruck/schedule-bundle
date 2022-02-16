@@ -15,6 +15,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
  */
 final class SingleServerHandler extends ExtensionHandler
 {
+    /** @var LockFactory */
     private $lockFactory;
 
     public function __construct(LockFactory $lockFactory)

@@ -22,10 +22,18 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunner;
  */
 final class ScheduleRunner
 {
+    /** @var iterable<TaskRunner> */
     private $taskRunners;
+
+    /** @var ExtensionHandlerRegistry */
     private $extensions;
+
+    /** @var EventDispatcherInterface */
     private $dispatcher;
 
+    /**
+     * @param iterable<TaskRunner> $taskRunners
+     */
     public function __construct(iterable $taskRunners, ExtensionHandlerRegistry $handlerRegistry, EventDispatcherInterface $dispatcher)
     {
         $this->taskRunners = $taskRunners;
@@ -117,6 +125,9 @@ final class ScheduleRunner
         }
     }
 
+    /**
+     * @param string[] $taskIds
+     */
     private function createRunContext(array $taskIds): ScheduleRunContext
     {
         $schedule = $this->buildSchedule();

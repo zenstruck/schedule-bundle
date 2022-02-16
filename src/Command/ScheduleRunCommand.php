@@ -18,7 +18,10 @@ final class ScheduleRunCommand extends Command
 {
     protected static $defaultName = 'schedule:run';
 
+    /** @var ScheduleRunner */
     private $scheduleRunner;
+
+    /** @var EventDispatcherInterface */
     private $dispatcher;
 
     public function __construct(ScheduleRunner $scheduleRunner, EventDispatcherInterface $dispatcher)

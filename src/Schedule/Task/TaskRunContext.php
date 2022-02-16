@@ -11,9 +11,13 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
  */
 final class TaskRunContext extends RunContext
 {
+    /** @var ScheduleRunContext */
     private $scheduleRunContext;
+
+    /** @var Task */
     private $task;
 
+    /** @var Result */
     private $result;
 
     public function __construct(ScheduleRunContext $scheduleRunContext, Task $task)

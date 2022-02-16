@@ -15,6 +15,7 @@ use Zenstruck\ScheduleBundle\Event\BeforeTaskEvent;
  */
 final class ScheduleLoggerSubscriber implements EventSubscriberInterface
 {
+    /** @var LoggerInterface */
     private $logger;
 
     public function __construct(LoggerInterface $logger)

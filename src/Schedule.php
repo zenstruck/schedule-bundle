@@ -2,6 +2,7 @@
 
 namespace Zenstruck\ScheduleBundle;
 
+use Symfony\Component\Process\Process;
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension\CallbackExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
@@ -31,9 +32,16 @@ final class Schedule
     public const SUCCESS = 'On Schedule Success';
     public const FAILURE = 'On Schedule Failure';
 
+    /** @var Task[] */
     private $tasks = [];
+
+    /** @var Task[]|null */
     private $allTasks;
+
+    /** @var Task[]|null */
     private $dueTasks;
+
+    /** @var \DateTimeZone|null */
     private $timezone;
 
     public function getId(): string
@@ -48,6 +56,13 @@ final class Schedule
         return \sha1(\implode('', $tasks));
     }
 
+    /**
+     * @template T of Task
+     *
+     * @param T $task
+     *
+     * @return T
+     */
     public function add(Task $task): Task
     {
         $this->resetCache();
@@ -73,6 +88,8 @@ final class Schedule
 
     /**
      * @see ProcessTask::__construct()
+     *
+     * @param string|Process $process
      */
     public function addProcess($process): ProcessTask
     {

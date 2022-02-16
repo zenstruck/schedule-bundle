@@ -12,6 +12,7 @@ use Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext;
  */
 final class EnvironmentHandler extends ExtensionHandler
 {
+    /** @var string */
     private $currentEnvironment;
 
     public function __construct(string $currentEnvironment)

@@ -10,8 +10,13 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
  */
 final class PingTask extends Task implements HasMissingDependencyMessage
 {
+    /** @var string */
     private $url;
+
+    /** @var string */
     private $method;
+
+    /** @var array */
     private $options;
 
     /**
