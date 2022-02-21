@@ -387,8 +387,9 @@ zenstruck_schedule:
     # config/packages/zenstruck_schedule.yaml
 
     zenstruck_schedule:
-        single_server_lock_factory: my_lock_factory_service # Be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)
+        single_server_lock_factory: lock.default.factory # Be sure to use a "remote store" (https://symfony.com/doc/current/components/lock.html#remote-stores)
     ```
+    If you want to use the default lock service configured in your `config/packages/lock.yaml` use `lock.default.factory`
 
 ### Limit to specific environment(s)
 
