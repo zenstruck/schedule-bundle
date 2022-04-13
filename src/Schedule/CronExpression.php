@@ -28,9 +28,13 @@ final class CronExpression
         '#hourly' => '# * * * *',
         '#daily' => '# # * * *',
         '#weekly' => '# # * * #',
+        '#weekly@midnight' => '# #(0-2) * * #',
         '#monthly' => '# # # * *',
+        '#monthly@midnight' => '# #(0-2) # * *',
         '#annually' => '# # # # *',
+        '#annually@midnight' => '# #(0-2) # # *',
         '#yearly' => '# # # # *',
+        '#yearly@midnight' => '# #(0-2) # # *',
         '#midnight' => '# #(0-2) * * *',
     ];
 
