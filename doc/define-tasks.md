@@ -407,15 +407,19 @@ is to account for February which has a minimum of 28 days.*
 
 The following *hash* aliases are provided:
 
-| Alias       | Converts to                                                            |
-| ----------- | ---------------------------------------------------------------------- |
-| `#hourly`   | `# * * * *` (at some minute every hour)                                |
-| `#daily`    | `# # * * *` (at some time every day)                                   |
-| `#midnight` | `# #(0-2) * * *` (at some time between midnight and 2:59am, every day) |
-| `#weekly`   | `# # * * #` (at some time every week)                                  |
-| `#monthly`  | `# # # * *` (at some time on some day, once per month)                 |
-| `#annually` | `# # # # *` (at some time on some day, once per year)                  |
-| `#yearly`   | `# # # # *` (at some time on some day, once per year)                  |
+| Alias                | Converts to                                                            |
+|----------------------|------------------------------------------------------------------------|
+| `#hourly`            | `# * * * *` (at some minute every hour)                                |
+| `#daily`             | `# # * * *` (at some time every day)                                   |
+| `#midnight`          | `# #(0-2) * * *` (at some time between midnight and 2:59am, every day) |
+| `#weekly`            | `# # * * #` (at some time every week)                                  |
+| `#weekly@midnight`   | `# #(0-2) * * #` (at `#midnight` one day every week)                   |
+| `#monthly`           | `# # # * *` (at some time on some day, once per month)                 |
+| `#monthly@midnight`  | `# #(0-2) # * *` (at `#midnight` on some day, once per month)          |
+| `#annually`          | `# # # # *` (at some time on some day, once per year)                  |
+| `#annually@midnight` | `# #(0-2) # # *` (at `#midnight` on some day, once per year)           |
+| `#yearly`            | _alias for `#annually`_                                                |
+| `#yearly@midnight`   | _alias for `#annually@midnight`_                                       |
 
 **Define in [PHP](define-schedule.md#schedulebuilder-service):**
 
