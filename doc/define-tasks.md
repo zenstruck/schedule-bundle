@@ -45,7 +45,7 @@ task *output*.
 
 $schedule->addCallback(function () {
     // do something
-    
+
     return 'task output';
 });
 ```
@@ -110,7 +110,7 @@ zenstruck_schedule:
 
     ```yaml
     # config/packages/zenstruck_schedule.yaml
-    
+
     zenstruck_schedule:
         tasks:
             -   task: 'bash:cd %kernel.project_dir% && bin/my-script'
@@ -148,10 +148,10 @@ $schedule->addMessage(new MyMessage('argument'), [new DelayStamp(10)]);
 
     ```yaml
     # config/packages/zenstruck_schedule.yaml
-    
+
     zenstruck_schedule:
         messenger: ~
-   
+
         # optionally configure the message bus (uses "message_bus" by default)
         messenger:
             message_bus: my_bus
@@ -698,7 +698,7 @@ zenstruck_schedule:
             default_from: webmaster@example.com # exclude only if a "global from" is defined for your application
             subject_prefix: "[Acme Inc]" # optional
     ```
-   
+
 3. Failed task emails have the subject `[Scheduled Task Failed] CommandTask: failed
    task description` (the subject can be configured). The email body has the following
    structure:
@@ -728,7 +728,7 @@ zenstruck_schedule:
 
     ## Task Output:
 
-    Task's output (if any) 
+    Task's output (if any)
     ```
 
 ### Prevent Overlap
@@ -763,7 +763,7 @@ zenstruck_schedule:
     ```console
     $ composer require symfony/lock
     ```
-   
+
 2. *Optionally* customize the `LockFactory` service in your configuration:
 
     ```yaml

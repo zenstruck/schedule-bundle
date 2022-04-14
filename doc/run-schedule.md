@@ -128,7 +128,7 @@ The following is an example log file (some context excluded):
 [2020-01-20 13:17:13] schedule.INFO: Successfully ran "CommandTask": my:command
 [2020-01-20 13:17:13] schedule.INFO: Running "ProcessTask": fdere -dsdfsd
 [2020-01-20 13:17:13] schedule.ERROR: Failure when running "ProcessTask": fdere -dsdfsd
-[2020-01-20 13:17:13] schedule.INFO: Running "CallbackTask": some callback 
+[2020-01-20 13:17:13] schedule.INFO: Running "CallbackTask": some callback
 [2020-01-20 13:17:13] schedule.CRITICAL: Exception thrown when running "CallbackTask": some callback
 [2020-01-20 13:24:11] schedule.INFO: Running "CommandTask": another:command
 [2020-01-20 13:24:11] schedule.INFO: Skipped "CommandTask": another:command {"reason":"the reason for skip..."}

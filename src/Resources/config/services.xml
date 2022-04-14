@@ -70,5 +70,9 @@
             <argument>%kernel.environment%</argument>
             <tag name="schedule.extension_handler" />
         </service>
+
+        <service id="zenstruck_schedule.service_builder" class="Zenstruck\ScheduleBundle\Schedule\Builder\ScheduledServiceBuilder">
+            <tag name="schedule.builder" />
+        </service>
     </services>
 </container>

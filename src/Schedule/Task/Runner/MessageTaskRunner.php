@@ -75,9 +75,9 @@ final class MessageTaskRunner implements TaskRunner
                 return '(none)';
 
             case \is_scalar($result):
-                return \sprintf('(%s) "%s"', get_debug_type($result), $result);
+                return \sprintf('(%s) "%s"', \get_debug_type($result), $result);
         }
 
-        return \sprintf('(%s)', get_debug_type($result));
+        return \sprintf('(%s)', \get_debug_type($result));
     }
 }

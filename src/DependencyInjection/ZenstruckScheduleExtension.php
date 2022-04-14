@@ -11,6 +11,7 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Process\Process;
+use Zenstruck\ScheduleBundle\Attribute\AsScheduledTask;
 use Zenstruck\ScheduleBundle\EventListener\ScheduleTimezoneSubscriber;
 use Zenstruck\ScheduleBundle\EventListener\TaskConfigurationSubscriber;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
@@ -131,6 +132,15 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
         }
 
         $this->registerScheduleExtensions($mergedConfig, $container);
+
+        if (\method_exists($container, 'registerAttributeForAutoconfiguration')) {
+            $container->registerAttributeForAutoconfiguration(
+                AsScheduledTask::class,
+                static function(Definition $definition, AsScheduledTask $attribute) {
+                    $definition->addTag('schedule.service', \get_object_vars($attribute));
+                }
+            );
+        }
     }
 
     private function registerScheduleExtensions(array $config, ContainerBuilder $container): void

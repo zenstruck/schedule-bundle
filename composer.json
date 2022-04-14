@@ -25,6 +25,7 @@
         "matthiasnoback/symfony-dependency-injection-test": "^4.1",
         "phpstan/phpstan": "^1.4",
         "psr/log": "^1.1",
+        "symfony/framework-bundle": "^4.4|^5.0|^6.0",
         "symfony/http-client": "^4.3|^5.0|^6.0",
         "symfony/lock": "^4.4|^5.0|^6.0",
         "symfony/mailer": "^4.4|^5.0|^6.0",
