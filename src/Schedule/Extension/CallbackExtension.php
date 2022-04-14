@@ -89,12 +89,20 @@ final class CallbackExtension
 
     public static function createDescriptionFromCallback(callable $callback): string
     {
+        if (\is_array($callback)) {
+            return \sprintf('%s::%s()', \is_object($callback[0]) ? \get_class($callback[0]) : $callback[0], $callback[1]);
+        }
+
+        if (\is_object($callback) && !$callback instanceof \Closure && \method_exists($callback, '__invoke')) {
+            return \sprintf('%s::__invoke()', \get_class($callback));
+        }
+
         $ref = new \ReflectionFunction(\Closure::fromCallable($callback));
 
         if ($class = $ref->getClosureScopeClass()) {
             return "{$class->getName()}:{$ref->getStartLine()}";
         }
 
-        return $ref->getName();
+        return $ref->getName().'()';
     }
 }

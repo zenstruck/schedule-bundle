@@ -33,7 +33,7 @@ final class ScheduledServiceTest extends KernelTestCase
         $this->assertCount(6, $tasks);
 
         $this->assertInstanceOf(CallbackTask::class, $tasks[0]);
-        $this->assertSame(\sprintf('(callable) %s:15', ScheduledService::class), $tasks[0]->getDescription());
+        $this->assertSame(\sprintf('(callable) %s::__invoke()', ScheduledService::class), $tasks[0]->getDescription());
         $this->assertSame('@daily', (string) $tasks[0]->getExpression());
 
         $this->assertInstanceOf(CallbackTask::class, $tasks[1]);
@@ -41,7 +41,7 @@ final class ScheduledServiceTest extends KernelTestCase
         $this->assertSame('@weekly', (string) $tasks[1]->getExpression());
 
         $this->assertInstanceOf(CallbackTask::class, $tasks[2]);
-        $this->assertSame(\sprintf('(callable) %s:19', ScheduledService::class), $tasks[2]->getDescription());
+        $this->assertSame(\sprintf('(callable) %s::someMethod()', ScheduledService::class), $tasks[2]->getDescription());
         $this->assertSame('@monthly', (string) $tasks[2]->getExpression());
 
         $this->assertInstanceOf(CommandTask::class, $tasks[3]);
