@@ -31,7 +31,7 @@ Consider the following schedule definition:
 zenstruck_schedule:
     schedule_extensions:
         on_single_server: ~
-    
+
     tasks:
         -   task: send-sales-report --hourly
             description: Send the hourly sales report
@@ -54,16 +54,16 @@ $ php bin/console schedule:list
 2 Scheduled Tasks Configured
 ============================
 
- ----------------- ------------------------------ ------------ ------------------------------------------------- --------------------------- 
-  Type              Description                    Extensions   Frequency                                         Next Run                   
- ----------------- ------------------------------ ------------ ------------------------------------------------- --------------------------- 
-  [!] CommandTask   Send the hourly sales report   2            15 * * * 1-5 (Once an hour 5 days a week)         2020-01-22T14:15:00-05:00  
-  CommandTask       Send the weekly sales report   1            0 1 * * 1-5 (Every day 5 days a week at 1:00am)   2020-01-23T01:00:00-05:00  
- ----------------- ------------------------------ ------------ ------------------------------------------------- --------------------------- 
+ ----------------- ------------------------------ ------------ ------------------------------------------------- ---------------------------
+  Type              Description                    Extensions   Frequency                                         Next Run
+ ----------------- ------------------------------ ------------ ------------------------------------------------- ---------------------------
+  [!] CommandTask   Send the hourly sales report   2            15 * * * 1-5 (Once an hour 5 days a week)         2020-01-22T14:15:00-05:00
+  CommandTask       Send the weekly sales report   1            0 1 * * 1-5 (Every day 5 days a week at 1:00am)   2020-01-23T01:00:00-05:00
+ ----------------- ------------------------------ ------------ ------------------------------------------------- ---------------------------
 
  [WARNING] 1 task issue:
 
- [ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.mailer").      
+ [ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.mailer").
 
  ! [NOTE] For more details, run php bin/console schedule:list --detail
 
@@ -90,13 +90,13 @@ $ php bin/console schedule:list --detail
 (1/2) CommandTask: Send the hourly sales report
 -----------------------------------------------
 
- ------------------- ---------------------------------------------------- 
-  ID                  9d2023944f540105dd47f7f314138fe92e40300c            
-  Class               Zenstruck\ScheduleBundle\Schedule\Task\CommandTask  
-  Command Arguments   --hourly                                            
-  Frequency           15 * * * 1-5 (Once an hour 5 days a week)           
-  Next Run            Wed, Jan 22, 2020 @ 2:15 (America/New_York -0500)   
- ------------------- ---------------------------------------------------- 
+ ------------------- ----------------------------------------------------
+  ID                  9d2023944f540105dd47f7f314138fe92e40300c
+  Class               Zenstruck\ScheduleBundle\Schedule\Task\CommandTask
+  Command Arguments   --hourly
+  Frequency           15 * * * 1-5 (Once an hour 5 days a week)
+  Next Run            Wed, Jan 22, 2020 @ 2:15 (America/New_York -0500)
+ ------------------- ----------------------------------------------------
 
  // 2 Task Extensions:
 
@@ -105,18 +105,18 @@ $ php bin/console schedule:list --detail
 
  [WARNING] 1 issue with this task:
 
- [ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.mailer").      
+ [ERROR] To use the email extension you must configure a mailer (config path: "zenstruck_schedule.mailer").
 
 (2/2) CommandTask: Send the weekly sales report
 -----------------------------------------------
 
- ------------------- ---------------------------------------------------- 
-  ID                  92e08f41a257b69fe877e132559fb7396e308309            
-  Class               Zenstruck\ScheduleBundle\Schedule\Task\CommandTask  
-  Command Arguments   --daily                                             
-  Frequency           0 1 * * 1-5 (Every day 5 days a week at 1:00am)     
-  Next Run            Thu, Jan 23, 2020 @ 1:00 (America/New_York -0500)   
- ------------------- ---------------------------------------------------- 
+ ------------------- ----------------------------------------------------
+  ID                  92e08f41a257b69fe877e132559fb7396e308309
+  Class               Zenstruck\ScheduleBundle\Schedule\Task\CommandTask
+  Command Arguments   --daily
+  Frequency           0 1 * * 1-5 (Every day 5 days a week at 1:00am)
+  Next Run            Thu, Jan 23, 2020 @ 1:00 (America/New_York -0500)
+ ------------------- ----------------------------------------------------
 
  // 1 Task Extension:
 
@@ -152,12 +152,12 @@ $ php bin/console schedule:list
 2 Scheduled Tasks Configured
 ============================
 
- ------------- ------------------------------ ------------ ------------------------------------------------- --------------------------- 
-  Type          Description                    Extensions   Frequency                                         Next Run                   
- ------------- ------------------------------ ------------ ------------------------------------------------- --------------------------- 
-  CommandTask   Send the hourly sales report   2            15 * * * 1-5 (Once an hour 5 days a week)         2020-01-22T14:15:00-05:00  
-  CommandTask   Send the weekly sales report   1            0 1 * * 1-5 (Every day 5 days a week at 1:00am)   2020-01-23T01:00:00-05:00  
- ------------- ------------------------------ ------------ ------------------------------------------------- --------------------------- 
+ ------------- ------------------------------ ------------ ------------------------------------------------- ---------------------------
+  Type          Description                    Extensions   Frequency                                         Next Run
+ ------------- ------------------------------ ------------ ------------------------------------------------- ---------------------------
+  CommandTask   Send the hourly sales report   2            15 * * * 1-5 (Once an hour 5 days a week)         2020-01-22T14:15:00-05:00
+  CommandTask   Send the weekly sales report   1            0 1 * * 1-5 (Every day 5 days a week at 1:00am)   2020-01-23T01:00:00-05:00
+ ------------- ------------------------------ ------------ ------------------------------------------------- ---------------------------
 
  ! [NOTE] For more details, run php bin/console schedule:list --detail
 
@@ -181,13 +181,13 @@ $ php bin/console schedule:list --detail
 (1/2) CommandTask: Send the hourly sales report
 -----------------------------------------------
 
- ------------------- ---------------------------------------------------- 
-  ID                  9d2023944f540105dd47f7f314138fe92e40300c            
-  Class               Zenstruck\ScheduleBundle\Schedule\Task\CommandTask  
-  Command Arguments   --hourly                                            
-  Frequency           15 * * * 1-5 (Once an hour 5 days a week)           
-  Next Run            Wed, Jan 22, 2020 @ 2:15 (America/New_York -0500)   
- ------------------- ---------------------------------------------------- 
+ ------------------- ----------------------------------------------------
+  ID                  9d2023944f540105dd47f7f314138fe92e40300c
+  Class               Zenstruck\ScheduleBundle\Schedule\Task\CommandTask
+  Command Arguments   --hourly
+  Frequency           15 * * * 1-5 (Once an hour 5 days a week)
+  Next Run            Wed, Jan 22, 2020 @ 2:15 (America/New_York -0500)
+ ------------------- ----------------------------------------------------
 
  // 2 Task Extensions:
 
@@ -197,13 +197,13 @@ $ php bin/console schedule:list --detail
 (2/2) CommandTask: Send the weekly sales report
 -----------------------------------------------
 
- ------------------- ---------------------------------------------------- 
-  ID                  92e08f41a257b69fe877e132559fb7396e308309            
-  Class               Zenstruck\ScheduleBundle\Schedule\Task\CommandTask  
-  Command Arguments   --daily                                             
-  Frequency           0 1 * * 1-5 (Every day 5 days a week at 1:00am)     
-  Next Run            Thu, Jan 23, 2020 @ 1:00 (America/New_York -0500)   
- ------------------- ---------------------------------------------------- 
+ ------------------- ----------------------------------------------------
+  ID                  92e08f41a257b69fe877e132559fb7396e308309
+  Class               Zenstruck\ScheduleBundle\Schedule\Task\CommandTask
+  Command Arguments   --daily
+  Frequency           0 1 * * 1-5 (Every day 5 days a week at 1:00am)
+  Next Run            Thu, Jan 23, 2020 @ 1:00 (America/New_York -0500)
+ ------------------- ----------------------------------------------------
 
  // 1 Task Extension:
 

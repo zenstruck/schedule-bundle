@@ -16,10 +16,10 @@ final class CallbackTaskTest extends TestCase
     public function has_default_description()
     {
         $this->assertMatchesRegularExpression('#^\(callable\) Zenstruck\\\\ScheduleBundle\\\\Tests\\\\Schedule\\\\Task\\\\CallbackTaskTest\:\d+$#', (new CallbackTask(function() {}))->getDescription());
-        $this->assertMatchesRegularExpression('#^\(callable\) Zenstruck\\\\ScheduleBundle\\\\Tests\\\\Schedule\\\\Task\\\\CallbackTaskTest\:\d+$#', (new CallbackTask([$this, __METHOD__]))->getDescription());
-        $this->assertMatchesRegularExpression('#^\(callable\) Zenstruck\\\\ScheduleBundle\\\\Tests\\\\Schedule\\\\Task\\\\FixtureForCallbackTaskTest\:\d+$#', (new CallbackTask(new FixtureForCallbackTaskTest()))->getDescription());
-        $this->assertMatchesRegularExpression('#^\(callable\) Zenstruck\\\\ScheduleBundle\\\\Tests\\\\Schedule\\\\Task\\\\FixtureForCallbackTaskTest\:\d+$#', (new CallbackTask([FixtureForCallbackTaskTest::class, 'staticMethod']))->getDescription());
-        $this->assertSame('(callable) '.__NAMESPACE__.'\callback_task_test_function', (new CallbackTask(__NAMESPACE__.'\callback_task_test_function'))->getDescription());
+        $this->assertSame(\sprintf('(callable) %s()', __METHOD__), (new CallbackTask([$this, __FUNCTION__]))->getDescription());
+        $this->assertSame(\sprintf('(callable) %s::__invoke()', FixtureForCallbackTaskTest::class), (new CallbackTask(new FixtureForCallbackTaskTest()))->getDescription());
+        $this->assertSame(\sprintf('(callable) %s::staticMethod()', FixtureForCallbackTaskTest::class), (new CallbackTask([FixtureForCallbackTaskTest::class, 'staticMethod']))->getDescription());
+        $this->assertSame('(callable) '.__NAMESPACE__.'\callback_task_test_function()', (new CallbackTask(__NAMESPACE__.'\callback_task_test_function'))->getDescription());
     }
 
     /**

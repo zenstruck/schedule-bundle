@@ -115,7 +115,7 @@ Below are some examples of custom extensions:
 ### Example: Skip Schedule if in maintenance mode
 
 Say your application has the concept of maintenance mode. You want to prevent the
-schedule from running in maintenance mode. 
+schedule from running in maintenance mode.
 
 This example assumes your `Kernel` has an `isInMaintenanceMode()` method.
 

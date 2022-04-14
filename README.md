@@ -21,9 +21,10 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
     1. [ScheduleBuilder Service](doc/define-schedule.md#schedulebuilder-service)
     2. [Your Kernel](doc/define-schedule.md#your-kernel)
     3. [Bundle Configuration](doc/define-schedule.md#bundle-configuration)
-    4. [Self-Scheduling Commands](doc/define-schedule.md#self-scheduling-commands)
-    5. [Timezone](doc/define-schedule.md#timezone)
-    6. [Schedule Extensions](doc/define-schedule.md#schedule-extensions)
+    4. [`AsScheduledTask` Attribute](doc/define-schedule.md#asscheduledtask-attribute)
+    5. [Self-Scheduling Commands](doc/define-schedule.md#self-scheduling-commands)
+    6. [Timezone](doc/define-schedule.md#timezone)
+    7. [Schedule Extensions](doc/define-schedule.md#schedule-extensions)
         1. [Filters](doc/define-schedule.md#filters)
         2. [Callbacks](doc/define-schedule.md#callbacks)
         3. [Ping Webhook](doc/define-schedule.md#ping-webhook)
@@ -104,7 +105,7 @@ $ composer require zenstruck/schedule-bundle
                 ->sundays()
                 ->at(1)
             ;
-   
+
             // ...
         }
     }
@@ -239,7 +240,7 @@ zenstruck_schedule:
     tasks:
 
         # Example:
-        - 
+        -
             task:                send:sales-report --detailed
             frequency:           '0 * * * *'
             description:         Send sales report hourly

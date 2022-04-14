@@ -74,7 +74,7 @@ and [schedule extensions](#schedule-extensions) can be configured:
 zenstruck_schedule:
     timezone: UTC
     ping_on_success: https://example.com/schedule-success
-    
+
     tasks:
         -   task: app:send-weekly-report --detailed
             frequency: '0 1 * * 0' # sundays @ 1am
@@ -85,10 +85,68 @@ zenstruck_schedule:
             unless_between: 11-13 # except at lunch
 ```
 
+## `AsScheduledTask` Attribute
+
+_**NOTE:** PHP 8+ and Symfony 5.4+ required to use this feature._
+
+You can mark [invokable services](#invokable-asscheduledtask-services) and
+[console commands](#asscheduledtask-console-commands) with the
+`Zenstruck\ScheduleBundle\Attribute\AsScheduledTask` attribute to _self-schedule_ them.
+
+### Invokable `AsScheduledTask` Services
+
+Services can be marked with `AsScheduledTask` to be scheduled (as a
+[`CallbackTask`](define-tasks.md#callbacktask)). These services must be _callable_
+(implement `__invoke()`) or have a custom method configured. The method must be
+public and have no required parameters.
+
+```php
+use Zenstruck\ScheduleBundle\Attribute\AsScheduledTask;
+
+#[AsScheduledTask('#daily')]
+#[AsScheduledTask('#weekly')] // can be scheduled multiple times
+#[AsScheduledTask('#monthly', description: 'some description')] // optionally set a description
+#[AsScheduledTask('#daily', method: 'someOtherMethod')] // use a different method
+class MyService
+{
+    public function __invoke(): void
+    {
+    }
+
+    public function someOtherMethod(): void
+    {
+    }
+}
+```
+
+### `AsScheduledTask` Console Commands
+
+Console commands can be marked with `AsScheduledTask` to _self-schedule_ them.
+
+**NOTE:** Use [Self-Scheduling Commands](#self-scheduling-commands) if you require more
+fine-grained options.
+
+```php
+use Symfony\Component\Console\Command;
+use Zenstruck\ScheduleBundle\Attribute\AsScheduledTask;
+
+#[AsScheduledTask('#daily')]
+#[AsScheduledTask('#weekly')] // can be scheduled multiple times
+#[AsScheduledTask('#monthly', description: 'some description')] // optionally set a description
+#[AsScheduledTask('#daily', arguments: '--no-interaction --verbose')] // optionally set arguments
+class MyCommand extends Command
+{
+    // ...
+}
+```
+
 ## Self-Scheduling Commands
 
 You can make your application's console commands schedule themselves. Have your command
 implement [`SelfSchedulingCommand`](../src/Schedule/SelfSchedulingCommand.php):
+
+**NOTE:** If using PHP 8+ and Symfony 5.4+, see [`AsScheduledTask` Console Commands](#asscheduledtask-console-commands)
+as a possible alternative.
 
 ```php
 // src/Command/WeeklyReportCommand.php
