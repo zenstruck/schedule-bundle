@@ -98,5 +98,8 @@ final class CommandTaskTest extends TestCase
 
 final class DummyCommand extends Command
 {
-    protected static $defaultName = 'dummy:command';
+    public static function getDefaultName(): string
+    {
+        return 'dummy:command';
+    }
 }

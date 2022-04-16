@@ -25,6 +25,9 @@ jobs:
           - php: 8.1
             deps: hightest
             symfony: 6.0.*
+          - php: 8.1
+            deps: hightest
+            symfony: 6.1.*
     steps:
       - uses: zenstruck/.github@php-test-symfony
         with:

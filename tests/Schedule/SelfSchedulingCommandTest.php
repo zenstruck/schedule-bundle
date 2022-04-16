@@ -20,7 +20,10 @@ final class SelfSchedulingCommandTest extends TestCase
     public function commands_can_self_schedule()
     {
         $command = new class() extends Command implements SelfSchedulingCommand {
-            protected static $defaultName = 'my:command';
+            public static function getDefaultName(): string
+            {
+                return 'my:command';
+            }
 
             public function schedule(CommandTask $task): void
             {
