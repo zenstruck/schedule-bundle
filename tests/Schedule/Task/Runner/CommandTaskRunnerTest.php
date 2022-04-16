@@ -101,7 +101,10 @@ final class CommandTaskRunnerTest extends TestCase
     private function createCommand(): Command
     {
         return new class() extends Command {
-            protected static $defaultName = 'my:command';
+            public static function getDefaultName(): string
+            {
+                return 'my:command';
+            }
 
             protected function configure()
             {

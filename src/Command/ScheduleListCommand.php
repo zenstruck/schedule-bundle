@@ -20,8 +20,6 @@ use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
  */
 final class ScheduleListCommand extends Command
 {
-    protected static $defaultName = 'schedule:list';
-
     /** @var ScheduleRunner */
     private $scheduleRunner;
 
@@ -36,10 +34,20 @@ final class ScheduleListCommand extends Command
         parent::__construct();
     }
 
+    public static function getDefaultName(): string
+    {
+        return 'schedule:list';
+    }
+
+    public static function getDefaultDescription(): string
+    {
+        return 'List configured scheduled tasks';
+    }
+
     protected function configure(): void
     {
         $this
-            ->setDescription('List configured scheduled tasks')
+            ->setDescription(self::getDefaultDescription()) // required for Symfony 4.4
             ->addOption('detail', null, null, 'Show detailed task list')
             ->setHelp(<<<EOF
 Exit code 0: no issues.

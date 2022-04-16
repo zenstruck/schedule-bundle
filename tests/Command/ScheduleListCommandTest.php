@@ -178,7 +178,10 @@ final class ScheduleListCommandTest extends TestCase
 
         $application = new Application();
         $application->add(new class() extends Command {
-            protected static $defaultName = 'my:command';
+            public static function getDefaultName(): string
+            {
+                return 'my:command';
+            }
 
             protected function configure()
             {

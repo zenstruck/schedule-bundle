@@ -13,5 +13,8 @@ use Zenstruck\ScheduleBundle\Attribute\AsScheduledTask;
 #[AsScheduledTask('@monthly', arguments: '-vv --no-interaction')]
 final class ScheduledCommand extends Command
 {
-    protected static $defaultName = 'my:command';
+    public static function getDefaultName(): string
+    {
+        return 'my:command';
+    }
 }
