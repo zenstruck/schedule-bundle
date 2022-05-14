@@ -63,8 +63,10 @@ final class BetweenTimeExtension
 
     private function isBetween(?\DateTimeZone $timezone): bool
     {
+        $utc = new \DateTime(\date('Y-m-d H:i:00'), new \DateTimeZone('UTC'));
+
         [$now, $startTime, $endTime] = [
-            new \DateTime(\date('Y-m-d H:i:00'), $timezone),
+            $utc->setTimezone($timezone),
             self::parseTime($this->startTime, $timezone),
             self::parseTime($this->endTime, $timezone),
         ];
