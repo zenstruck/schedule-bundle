@@ -4,6 +4,7 @@ namespace Zenstruck\ScheduleBundle\Schedule\Task;
 
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\LazyCommand;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\StringInput;
@@ -78,7 +79,11 @@ final class CommandTask extends Task
         }
 
         foreach ($registeredCommands as $command) {
-            if ($this->name === \get_class($command)) {
+            $className = \get_class($command);
+            if ($command instanceof LazyCommand) {
+                $className = \get_class($command->getCommand());
+            }
+            if ($this->name === $className) {
                 return $command;
             }
         }

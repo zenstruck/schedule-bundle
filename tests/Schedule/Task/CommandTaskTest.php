@@ -5,6 +5,7 @@ namespace Zenstruck\ScheduleBundle\Tests\Schedule\Task;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\LazyCommand;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 use Symfony\Component\Console\Input\StringInput;
 use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
@@ -94,6 +95,33 @@ final class CommandTaskTest extends TestCase
 
         $task->createCommandInput(new Application());
     }
+
+    /**
+     * @test
+     */
+    public function can_create_from_lazy_command()
+    {
+        if (!\class_exists(LazyCommand::class)) {
+            $this->markTestSkipped('Not available before Symfony 5.3.');
+
+            return;
+        }
+        $dummyCommand = new LazyDummyCommand();
+        $command = new LazyCommand($dummyCommand->getName(), $dummyCommand->getAliases(), $dummyCommand->getDescription(), $dummyCommand->isHidden(), function() use ($dummyCommand) {
+            return $dummyCommand;
+        });
+
+        $application = new Application();
+        $application->add($command);
+
+        $task = new CommandTask(LazyDummyCommand::class);
+
+        $command = $task->createCommand($application);
+
+        $this->assertInstanceOf(Command::class, $command);
+        $this->assertSame('lazy:dummy:command', (string) $command->getName());
+        $this->assertInstanceOf(LazyCommand::class, $application->all()['lazy:dummy:command']);
+    }
 }
 
 final class DummyCommand extends Command
@@ -101,5 +129,12 @@ final class DummyCommand extends Command
     public static function getDefaultName(): string
     {
         return 'dummy:command';
+    }
+}
+final class LazyDummyCommand extends Command
+{
+    public static function getDefaultName(): string
+    {
+        return 'lazy:dummy:command';
     }
 }
