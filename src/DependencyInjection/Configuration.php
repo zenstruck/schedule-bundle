@@ -328,7 +328,7 @@ final class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('options')
                     ->info('See HttpClientInterface::OPTIONS_DEFAULTS')
-                    ->scalarPrototype()->end()
+                    ->variablePrototype()->end()
                 ->end()
             ->end()
         ;
