@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [v1.4.2](https://github.com/zenstruck/schedule-bundle/releases/tag/v1.4.2)
+
+September 30th, 2022 - [v1.4.1...v1.4.2](https://github.com/zenstruck/schedule-bundle/compare/v1.4.1...v1.4.2)
+
+* 8af79f7 [bug] Change ping options to variablePrototype (#70) by @bpastukh
+
 ## [v1.4.1](https://github.com/zenstruck/schedule-bundle/releases/tag/v1.4.1)
 
 July 20th, 2022 - [v1.4.0...v1.4.1](https://github.com/zenstruck/schedule-bundle/compare/v1.4.0...v1.4.1)
