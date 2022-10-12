@@ -12,6 +12,7 @@ final class CronExpressionTest extends TestCase
 {
     /**
      * @test
+     *
      * @dataProvider standardExpressionProvider
      */
     public function can_handle_standard_expressions($expression)
@@ -45,6 +46,7 @@ final class CronExpressionTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider hashedExpressionProvider
      */
     public function can_handle_hashed_expressions($value, $expected)
@@ -91,6 +93,7 @@ final class CronExpressionTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider invalidExpressionProvider
      */
     public function cannot_set_invalid_cron_expression($value)

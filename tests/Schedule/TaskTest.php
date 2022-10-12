@@ -72,6 +72,7 @@ final class TaskTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider frequencyProvider
      */
     public function can_fluently_create_frequency(callable $createTask, string $expectedExpression)
@@ -158,6 +159,7 @@ final class TaskTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider emailAfterMethodProvider
      */
     public function can_add_email_after_extension($method)

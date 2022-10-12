@@ -61,6 +61,7 @@ final class CommandTaskTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider commandNameProvider
      */
     public function can_create_input($commandName)

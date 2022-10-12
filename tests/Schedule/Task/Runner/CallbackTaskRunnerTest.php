@@ -24,6 +24,7 @@ final class CallbackTaskRunnerTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider outputProvider
      */
     public function stringifies_output($output, $expectedOutput)

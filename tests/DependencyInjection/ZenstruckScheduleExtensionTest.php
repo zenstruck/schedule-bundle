@@ -285,6 +285,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
 
     /**
      * @test
+     *
      * @dataProvider pingScheduleExtensionProvider
      */
     public function can_enable_ping_schedule_extensions($key, $method)

@@ -13,6 +13,7 @@ final class BetweenTimeExtensionTest extends TestCase
 {
     /**
      * @test
+     *
      * @dataProvider onlyBetweenExtensionSkipProvider
      */
     public function only_between_extension_skip($start, $end, $inclusive)
@@ -39,6 +40,7 @@ final class BetweenTimeExtensionTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider onlyBetweenExtensionRunProvider
      */
     public function only_between_extension_run($start, $end, $inclusive)
@@ -64,6 +66,7 @@ final class BetweenTimeExtensionTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider unlessBetweenExtensionSkipProvider
      */
     public function unless_between_extension_skip($start, $end, $inclusive)
@@ -90,6 +93,7 @@ final class BetweenTimeExtensionTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider unlessBetweenExtensionRunProvider
      */
     public function unless_between_extension_run($start, $end, $inclusive)
