@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [v1.4.3](https://github.com/zenstruck/schedule-bundle/releases/tag/v1.4.3)
+
+October 30th, 2022 - [v1.4.2...v1.4.3](https://github.com/zenstruck/schedule-bundle/compare/v1.4.2...v1.4.3)
+
+* dd41eb6 [bug] `RunContext::$duration` can be negative under certain conditions (#71) by @gassan
+* 13a8671 [minor] fixcs by @kbond
+* e06431b [minor] remove branch alias by @kbond
+
 ## [v1.4.2](https://github.com/zenstruck/schedule-bundle/releases/tag/v1.4.2)
 
 September 30th, 2022 - [v1.4.1...v1.4.2](https://github.com/zenstruck/schedule-bundle/compare/v1.4.1...v1.4.2)
