@@ -100,6 +100,10 @@ final class CompoundTask extends Task implements \IteratorAggregate
                 $task->addExtension($extension);
             }
 
+            foreach ($this->config()->all() as $key => $value) {
+                $task->config()->set($key, $task->config()->get($key, $value));
+            }
+
             yield $task;
         }
     }

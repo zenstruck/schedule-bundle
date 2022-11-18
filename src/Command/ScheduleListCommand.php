@@ -115,6 +115,18 @@ EOF
             $details[] = ['Next Run' => $task->getNextRun()->format('D, M d, Y @ g:i (e O)')];
 
             $this->renderDefinitionList($io, $details);
+
+            $config = [];
+
+            foreach ($task->config()->humanized() as $key => $value) {
+                $config[] = [$key => $value];
+            }
+
+            if (\count($config)) {
+                $io->block('Additional Configuration:');
+                $this->renderDefinitionList($io, $config);
+            }
+
             $this->renderExtenstions($io, 'Task', $task->getExtensions());
 
             $issues = \iterator_to_array($this->getTaskIssues($task), false);

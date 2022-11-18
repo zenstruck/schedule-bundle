@@ -256,6 +256,10 @@ final class Configuration implements ConfigurationInterface
                     ->append(self::createPingExtension('ping_on_failure', 'Ping a url if the task failed'))
                     ->append(self::createEmailExtension('email_after', 'Send email after task runs'))
                     ->append(self::createEmailExtension('email_on_failure', 'Send email if task fails'))
+                    ->arrayNode('config')
+                        ->info('Additional Configuration/Metadata')
+                        ->scalarPrototype()->end()
+                    ->end()
                 ->end()
             ->end()
         ;

@@ -331,6 +331,43 @@ final class ScheduleListCommandTest extends TestCase
         $this->assertStringContainsString('[ERROR] Task "MockTask: task3" (* * * * *) is duplicated 3 times. Make their descriptions unique to fix.', $output);
     }
 
+    /**
+     * @test
+     */
+    public function shows_extra_configuration_in_detail_view(): void
+    {
+        $task = (new MockTask('my task'))->cron('@daily');
+        $task->config()->set('config1', 'config1 value');
+        $task->config()->set('config2', ['an', 'array']);
+        $task->config()->set('config3', true);
+        $task->config()->set('config4', false);
+        $task->config()->set('config5', new Schedule());
+        $runner = (new MockScheduleBuilder())
+            ->addTask($task)
+            ->getRunner()
+        ;
+
+        $command = new ScheduleListCommand($runner, new ExtensionHandlerRegistry([]));
+        $command->setHelperSet(new HelperSet([new FormatterHelper()]));
+        $command->setApplication(new Application());
+        $commandTester = new CommandTester($command);
+
+        $commandTester->execute(['--detail' => null]);
+        $output = $this->normalizeOutput($commandTester);
+
+        $this->assertStringContainsString('Additional Configuration', $output);
+        $this->assertStringContainsString('config1', $output);
+        $this->assertStringContainsString('config1 value', $output);
+        $this->assertStringContainsString('config2', $output);
+        $this->assertStringContainsString('(array)', $output);
+        $this->assertStringContainsString('config3', $output);
+        $this->assertStringContainsString('yes', $output);
+        $this->assertStringContainsString('config4', $output);
+        $this->assertStringContainsString('no', $output);
+        $this->assertStringContainsString('config5', $output);
+        $this->assertStringContainsString('('.Schedule::class.')', $output);
+    }
+
     private function normalizeOutput(CommandTester $tester): string
     {
         return \preg_replace('/\s+/', ' ', \str_replace("\n", '', $tester->getDisplay(true)));

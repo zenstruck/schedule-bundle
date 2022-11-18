@@ -850,3 +850,30 @@ zenstruck_schedule:
                 start: 21:30
                 end: 6:15
 ```
+
+## Task Config
+
+You can add parameters or metadata to your task. By itself, these parameters don't do anything (except
+show in the output of `schedule:list --detail`), but you can use these parameters in your
+[customizations](extending.md#using-task-config).
+
+**Define in [PHP](define-schedule.md#schedulebuilder-service):**
+
+```php
+/* @var \Zenstruck\ScheduleBundle\Schedule\Task $task */
+
+$task->config()->set('name', 'value');
+```
+
+**Define in [Configuration](define-schedule.md#bundle-configuration):**
+
+```yaml
+# config/packages/zenstruck_schedule.yaml
+
+zenstruck_schedule:
+    tasks:
+        -   task: my:command
+            frequency: '0 * * * *'
+            config:
+                name: value
+```

@@ -4,6 +4,7 @@ namespace Zenstruck\ScheduleBundle\Tests\Schedule;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Mime\Email;
+use Zenstruck\ScheduleBundle\Schedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
 use Zenstruck\ScheduleBundle\Schedule\Task;
 use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
@@ -207,6 +208,48 @@ final class TaskTest extends TestCase
         $task = self::task()->onSingleServer();
 
         $this->assertInstanceOf(SingleServerExtension::class, $task->getExtensions()[0]);
+    }
+
+    /**
+     * @test
+     */
+    public function can_add_and_retrieve_task_config(): void
+    {
+        $task = self::task();
+        $task->config()->set('foo', 'bar');
+        $task->config()->set('bar', 'baz')->set('baz', 'foo');
+
+        $this->assertSame('bar', $task->config()->get('foo'));
+        $this->assertSame('baz', $task->config()->get('bar'));
+        $this->assertSame('foo', $task->config()->get('baz'));
+        $this->assertNull($task->config()->get('invalid'));
+        $this->assertSame('default', $task->config()->get('invalid', 'default'));
+        $this->assertSame([
+            'foo' => 'bar',
+            'bar' => 'baz',
+            'baz' => 'foo',
+        ], $task->config()->all());
+    }
+
+    /**
+     * @test
+     */
+    public function can_get_humanized_config(): void
+    {
+        $task = self::task();
+        $task->config()->set('number', 2);
+        $task->config()->set('true', true);
+        $task->config()->set('false', false);
+        $task->config()->set('array', ['bar']);
+        $task->config()->set('object', new Schedule());
+
+        $this->assertSame([
+            'number' => 2,
+            'true' => 'yes',
+            'false' => 'no',
+            'array' => '(array)',
+            'object' => '('.Schedule::class.')',
+        ], $task->config()->humanized());
     }
 
     private static function task(string $description = 'task description'): Task

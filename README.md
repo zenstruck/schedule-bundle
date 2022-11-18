@@ -54,6 +54,7 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
         5. [Prevent Overlap](doc/define-tasks.md#prevent-overlap)
         6. [Run on Single Server](doc/define-tasks.md#run-on-single-server)
         7. [Between](doc/define-tasks.md#between)
+    7. [Task Config](doc/define-tasks.md#task-config)
 5. [Running the Schedule](doc/run-schedule.md)
     1. [Cron Job on Server](doc/run-schedule.md#cron-job-on-server)
     2. [Symfony Cloud](doc/run-schedule.md#symfony-cloud)
@@ -69,6 +70,7 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
     1. [Custom Tasks](doc/extending.md#custom-tasks)
     2. [Custom Extensions](doc/extending.md#custom-extensions)
     3. [Events](doc/extending.md#events)
+    4. [Using Task Config](doc/extending.md#using-task-config)
 8. [Full Configuration Reference](#full-configuration-reference)
 
 ## Installation
@@ -354,4 +356,7 @@ zenstruck_schedule:
 
                 # Email subject (leave blank to use extension default)
                 subject:              null
+
+            # Additional Configuration/Metadata
+            config:               []
 ```
