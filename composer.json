@@ -30,6 +30,7 @@
         "symfony/lock": "^4.4|^5.0|^6.0",
         "symfony/mailer": "^4.4|^5.0|^6.0",
         "symfony/messenger": "^4.4|^5.0|^6.0",
+        "symfony/notifier": "^5.0|^6.0",
         "symfony/phpunit-bridge": "^6.0",
         "symfony/process": "^4.2|^5.0|^6.0"
     },

@@ -18,9 +18,11 @@ use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EnvironmentExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\ExtensionHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\EmailHandler;
+use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\NotifierHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\PingHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\SingleServerHandler;
 use Zenstruck\ScheduleBundle\Schedule\Extension\Handler\WithoutOverlappingHandler;
+use Zenstruck\ScheduleBundle\Schedule\Extension\NotifierExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
 use Zenstruck\ScheduleBundle\Schedule\ScheduleBuilder;
@@ -131,6 +133,21 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
             ;
         }
 
+        if ($mergedConfig['notifier']['enabled']) {
+            $loader->load('notifier.xml');
+
+            $container
+                ->getDefinition(NotifierHandler::class)
+                ->setArguments([
+                    new Reference($mergedConfig['notifier']['service']),
+                    $mergedConfig['notifier']['default_channel'],
+                    $mergedConfig['notifier']['default_email'],
+                    $mergedConfig['notifier']['default_phone'],
+                    $mergedConfig['notifier']['subject_prefix'],
+                ])
+            ;
+        }
+
         $this->registerScheduleExtensions($mergedConfig, $container);
 
         if (\method_exists($container, 'registerAttributeForAutoconfiguration')) {
@@ -172,6 +189,19 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
             ]);
 
             $definitions[$idPrefix.'email_on_failure'] = $definition;
+        }
+
+        if ($config['schedule_extensions']['notify_on_failure']['enabled']) {
+            $definition = new Definition(NotifierExtension::class);
+            $definition->setFactory([NotifierExtension::class, 'scheduleFailure']);
+            $definition->setArguments([
+                $config['schedule_extensions']['notify_on_failure']['channel'],
+                $config['schedule_extensions']['notify_on_failure']['email'],
+                $config['schedule_extensions']['notify_on_failure']['phone'],
+                $config['schedule_extensions']['notify_on_failure']['subject'],
+            ]);
+
+            $definitions[$idPrefix.'notify_on_failure'] = $definition;
         }
 
         $pingMap = [

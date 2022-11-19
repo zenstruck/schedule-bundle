@@ -7,6 +7,7 @@ use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
 use Zenstruck\ScheduleBundle\Schedule\Extension\CallbackExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EnvironmentExtension;
+use Zenstruck\ScheduleBundle\Schedule\Extension\NotifierExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
 use Zenstruck\ScheduleBundle\Schedule\HasExtensions;
@@ -279,6 +280,21 @@ final class Schedule
     public function emailOnFailure($to = null, ?string $subject = null, ?callable $callback = null): self
     {
         return $this->addExtension(EmailExtension::scheduleFailure($to, $subject, $callback));
+    }
+
+    /**
+     * Send notification with failed task detail after tasks run if one or more tasks failed.
+     * Be sure to configure `zenstruck_schedule.notifier`.
+     *
+     * @param string|string[] $channel  Channel to send notification to (E.G "slack")
+     * @param string|null     $email    Email address for email notification
+     * @param string|null     $phone    Phone number for SMS notification
+     * @param callable|null   $callback Customise the notification
+     *                                  Receives an instance of \Symfony\Component\Notification\Notification
+     */
+    public function notifyOnFailure($channel = null, ?string $email = null, ?string $phone = null, ?string $subject = null, ?callable $callback = null): self
+    {
+        return $this->addExtension(NotifierExtension::scheduleFailure($channel, $email, $phone, $subject, $callback));
     }
 
     /**
