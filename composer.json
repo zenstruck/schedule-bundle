@@ -30,7 +30,7 @@
         "symfony/lock": "^4.4|^5.0|^6.0",
         "symfony/mailer": "^4.4|^5.0|^6.0",
         "symfony/messenger": "^4.4|^5.0|^6.0",
-        "symfony/notifier": "^5.0|^6.0",
+        "symfony/notifier": "^5.2|^6.0",
         "symfony/phpunit-bridge": "^6.0",
         "symfony/process": "^4.2|^5.0|^6.0"
     },
@@ -39,6 +39,7 @@
         "symfony/http-client": "Allows usage of ping* extensions",
         "symfony/lock": "Allows usage of withoutOverlapping and onSingleServer extensions (4.4+)",
         "symfony/mailer": "Allows usage of email* extensions (4.4+)",
+        "symfony/notifier": "Allows usage of notify* extensions (5.2+)",
         "symfony/process": "Allows usage of ProcessTask (4.2+)"
     },
     "config": {
