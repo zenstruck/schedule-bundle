@@ -335,7 +335,6 @@ final class Configuration implements ConfigurationInterface
         $node
             ->info($description.' (alternatively enable by passing a "channel")')
             ->canBeEnabled()
-
             ->children()
                 ->arrayNode('channel')
                     ->beforeNormalization()->castToArray()->end()

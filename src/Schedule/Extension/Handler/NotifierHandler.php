@@ -32,10 +32,10 @@ final class NotifierHandler extends ExtensionHandler
     /** @var string */
     private $defaultPhone;
 
-    /** @var string */
+    /** @var string|null */
     private $subjectPrefix;
 
-    /** @var string|string[]|null */
+    /** @var array<int, string> */
     private $defaultChannel;
 
     /**
@@ -47,7 +47,7 @@ final class NotifierHandler extends ExtensionHandler
         $this->defaultEmail = $defaultEmail ?? '';
         $this->defaultPhone = $defaultPhone ?? '';
         $this->subjectPrefix = $subjectPrefix;
-        $this->defaultChannel = $defaultChannel;
+        $this->defaultChannel = (array) $defaultChannel;
     }
 
     /**
