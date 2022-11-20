@@ -415,13 +415,13 @@ when tasks fail.
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
 
-$schedule->notifyOnFailure(['slack', 'sms', 'email'], 'admin@example.com', '123456789');
+$schedule->notifyOnFailure(['chat/slack', 'sms', 'email'], 'admin@example.com', '123456789');
 
 // default channel can be configured (see below)
 $schedule->notifyOnFailure();
 
 // customise the notification
-$schedule->notifyOnFailure('slack', null, null, null, function (\Symfony\Component\Notifier\Notification\Notification $notification) {
+$schedule->notifyOnFailure('chat/slack', null, null, null, function (\Symfony\Component\Notifier\Notification\Notification $notification) {
     $notification->emoji('user');
 });
 ```
@@ -434,7 +434,7 @@ $schedule->notifyOnFailure('slack', null, null, null, function (\Symfony\Compone
 zenstruck_schedule:
     schedule_extensions:
         notify_on_failure:
-           channel: slack; # optional if configured
+           channel: chat/slack; # optional if configured
            subject: my subject # optional, leave empty to use default
 ```
 
@@ -454,7 +454,7 @@ zenstruck_schedule:
     zenstruck_schedule:
         notifier:
             service: notifier # required
-            default_channel: slack # optional (exclude if defined in code/config)
+            default_channel: chat/slack # optional (exclude if defined in code/config)
             default_email: webmaster@example.com # optional
             default_phone: 1234567890 # optional
             subject_prefix: "[Acme Inc]" # optional

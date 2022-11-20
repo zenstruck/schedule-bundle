@@ -286,7 +286,7 @@ final class Schedule
      * Send notification with failed task detail after tasks run if one or more tasks failed.
      * Be sure to configure `zenstruck_schedule.notifier`.
      *
-     * @param string|string[] $channel  Channel to send notification to (E.G "slack")
+     * @param string|string[] $channel  Channel to send notification to (E.G "chat/slack")
      * @param string|null     $email    Email address for email notification
      * @param string|null     $phone    Phone number for SMS notification
      * @param callable|null   $callback Customise the notification

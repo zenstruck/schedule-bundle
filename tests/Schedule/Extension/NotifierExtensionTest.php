@@ -26,7 +26,7 @@ final class NotifierExtensionTest extends TestCase
         $notifier = $this->createNotifier();
 
         (new MockScheduleBuilder())
-            ->addHandler(new NotifierHandler($notifier, ['slack'], 'webmaster@example.com', '123456789'))
+            ->addHandler(new NotifierHandler($notifier, ['chat/slack'], 'webmaster@example.com', '123456789'))
             ->addBuilder(new class() implements ScheduleBuilder {
                 public function buildSchedule(Schedule $schedule): void
                 {
@@ -39,7 +39,7 @@ final class NotifierExtensionTest extends TestCase
             ->run()
         ;
 
-        $this->assertSame(['slack'], $notifier->lastNotification->getchannels(new NoRecipient()));
+        $this->assertSame(['chat/slack'], $notifier->lastNotification->getchannels(new NoRecipient()));
         $this->assertSame('webmaster@example.com', $notifier->recipients[0]->getEmail());
         $this->assertSame('123456789', $notifier->recipients[0]->getPhone());
         $this->assertSame('[Schedule Failure] 2 tasks failed', $notifier->lastNotification->getSubject());
@@ -62,7 +62,7 @@ final class NotifierExtensionTest extends TestCase
         $notifier = $this->createNotifier();
 
         (new MockScheduleBuilder())
-            ->addHandler(new NotifierHandler($notifier, ['slack'], 'webmaster@example.com', '127.0.0.1'))
+            ->addHandler(new NotifierHandler($notifier, ['chat/slack'], 'webmaster@example.com', '127.0.0.1'))
             ->addBuilder(new class() implements ScheduleBuilder {
                 public function buildSchedule(Schedule $schedule): void
                 {
@@ -90,7 +90,7 @@ final class NotifierExtensionTest extends TestCase
         $notifier = $this->createNotifier();
 
         (new MockScheduleBuilder())
-            ->addHandler(new NotifierHandler($notifier, ['slack'], 'webmaster@example.com', 'kevin@example.com', '[Acme Inc]'))
+            ->addHandler(new NotifierHandler($notifier, ['chat/slack'], 'webmaster@example.com', 'kevin@example.com', '[Acme Inc]'))
             ->addBuilder(new class() implements ScheduleBuilder {
                 public function buildSchedule(Schedule $schedule): void
                 {
@@ -114,7 +114,7 @@ final class NotifierExtensionTest extends TestCase
         $notifier = $this->createNotifier();
 
         (new MockScheduleBuilder())
-            ->addHandler(new NotifierHandler($notifier, ['slack'], 'webmaster@example.com', '123456789'))
+            ->addHandler(new NotifierHandler($notifier, ['chat/slack'], 'webmaster@example.com', '123456789'))
             ->addTask($task = MockTask::failure('Exit 127: Command not found', 'my task', 'sh: 1: sdsdsd: not found')
                 ->notifyOnFailure()
             )
@@ -139,7 +139,7 @@ final class NotifierExtensionTest extends TestCase
         $notifier = $this->createNotifier();
 
         (new MockScheduleBuilder())
-            ->addHandler(new NotifierHandler($notifier, ['slack'], 'webmaster@example.com', '123456789'))
+            ->addHandler(new NotifierHandler($notifier, ['chat/slack'], 'webmaster@example.com', '123456789'))
             ->addTask(MockTask::failure('Exit 127: Command not found', 'my task', 'sh: 1: sdsdsd: not found')
                 ->notifyOnFailure('teams', 'to@example.com', null, 'my subject', function(Notification $notification) {
                     $notification->emoji('alert');
@@ -161,7 +161,7 @@ final class NotifierExtensionTest extends TestCase
         $notifier = $this->createNotifier();
 
         (new MockScheduleBuilder())
-            ->addHandler(new NotifierHandler($notifier, ['slack'], null, null, '[Acme Inc]'))
+            ->addHandler(new NotifierHandler($notifier, ['chat/slack'], null, null, '[Acme Inc]'))
             ->addTask(MockTask::failure('Exit 127: Command not found', 'my task', 'sh: 1: sdsdsd: not found')
                 ->notifyOnFailure()
             )
@@ -179,12 +179,12 @@ final class NotifierExtensionTest extends TestCase
         $notifier = $this->createNotifier();
 
         (new MockScheduleBuilder())
-            ->addHandler(new NotifierHandler($notifier, ['slack'], 'webmaster@example.com'))
+            ->addHandler(new NotifierHandler($notifier, ['chat/slack'], 'webmaster@example.com'))
             ->addTask($task = MockTask::success('my task', 'my task output')->notifyAfter())
             ->run()
         ;
 
-        $this->assertSame(['slack'], $notifier->lastNotification->getchannels(new NoRecipient()));
+        $this->assertSame(['chat/slack'], $notifier->lastNotification->getchannels(new NoRecipient()));
         $this->assertSame('webmaster@example.com', $notifier->recipients[0]->getEmail());
         $this->assertSame('[Scheduled Task Succeeded] MockTask: my task', $notifier->lastNotification->getSubject());
         $this->assertStringContainsString('Successful', $notifier->lastNotification->getContent());
@@ -201,7 +201,7 @@ final class NotifierExtensionTest extends TestCase
         $notifier = $this->createNotifier();
 
         (new MockScheduleBuilder())
-            ->addHandler(new NotifierHandler($notifier, ['slack'], 'webmaster@example.com', '123456789'))
+            ->addHandler(new NotifierHandler($notifier, ['chat/slack'], 'webmaster@example.com', '123456789'))
             ->addTask(MockTask::success('my task', 'my task output')
                 ->notifyAfter(['teams'], 'to@example.com', '987654321', 'my subject', function(Notification $notification) {
                     $notification->emoji('alert');
@@ -225,7 +225,7 @@ final class NotifierExtensionTest extends TestCase
         $notifier = $this->createNotifier();
 
         (new MockScheduleBuilder())
-            ->addHandler(new NotifierHandler($notifier, ['slack'], 'webmaster@example.com', '123456789', '[Acme Inc]'))
+            ->addHandler(new NotifierHandler($notifier, ['chat/slack'], 'webmaster@example.com', '123456789', '[Acme Inc]'))
             ->addTask(MockTask::success('my task', 'my task output')->notifyAfter())
             ->run()
         ;
@@ -275,7 +275,7 @@ final class NotifierExtensionTest extends TestCase
         $notifier = $this->createNotifier();
 
         (new MockScheduleBuilder())
-            ->addHandler(new NotifierHandler($notifier, ['slack'], 'webmaster@example.com', '1234567890'))
+            ->addHandler(new NotifierHandler($notifier, ['chat/slack'], 'webmaster@example.com', '1234567890'))
             ->addTask($task = MockTask::success('my task', 'my task output')->notifyAfter())
             ->run($task->getId())
         ;

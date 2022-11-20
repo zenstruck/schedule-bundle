@@ -218,7 +218,7 @@ $schedule->addCompound()
     ->at('1:30')
     ->timezone('UTC')
     ->emailOnFailure('admin@example.com')
-    ->notifyOnFailure('slack')
+    ->notifyOnFailure('chat/slack')
 ;
 ```
 
@@ -744,21 +744,21 @@ regardless of the result (`notify_after`).
 ```php
 /* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
 
-$task->notifyAfter('slack');
+$task->notifyAfter('chat/slack');
 
-$task->thenNotify('slack'); // alias for ->notifyAfter()
+$task->thenNotify('chat/slack'); // alias for ->notifyAfter()
 
-$task->notifyOnFailure('slack');
+$task->notifyOnFailure('chat/slack');
 
 // default channel can be configured (see below)
 $task->notifyAfter();
 $task->notifyOnFailure();
 
 // customise notification
-$task->notifyAfter('slack', null, null, 'my subject', function (Symfony\Component\Notifier\Notification\Notification $notification) {
+$task->notifyAfter('chat/slack', null, null, 'my subject', function (Symfony\Component\Notifier\Notification\Notification $notification) {
     $notification->emoji('check');
 });
-$task->notifyOnFailure('slack', null, null, 'my subject', function (Symfony\Component\Notifier\Notification\Notification $email) {
+$task->notifyOnFailure('chat/slack', null, null, 'my subject', function (Symfony\Component\Notifier\Notification\Notification $email) {
     $notification->emoji('alert');
 });
 ```
@@ -772,13 +772,13 @@ zenstruck_schedule:
     tasks:
         -   task: my:command
             frequency: '0 * * * *'
-            notify_after: slack
+            notify_after: chat/slack
             notify_on_failure: ~ # default channel can be configured (see below)
 
         -   task: my:command
             frequency: '0 * * * *'
             notify_after:
-                channel: slack
+                channel: chat/slack
                 subject: my custom subject
 ```
 
@@ -798,7 +798,7 @@ zenstruck_schedule:
     zenstruck_schedule:
         notifier:
             service: notifier # required
-            default_channel: slack # optional (exclude if defined in code)
+            default_channel: chat/slack # optional (exclude if defined in code)
             default_email: admin@example.com # optional (exclude if defined in code)
             default_phone: webmaster@example.com # optional (exclude if defined in code)
             subject_prefix: "[Acme Inc]" # optional

@@ -201,7 +201,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     {
         $this->load(['notifier' => [
             'service' => 'my_notifier',
-            'default_channel' => 'slack',
+            'default_channel' => 'chat/slack',
             'default_email' => 'to@example.com',
             'default_phone' => '123456789',
             'subject_prefix' => '[Acme Inc]',
@@ -209,7 +209,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
 
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 0, 'my_notifier');
         $this->assertContainerBuilderHasServiceDefinitionWithTag(NotifierHandler::class, 'schedule.extension_handler');
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 1, ['slack']);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 1, ['chat/slack']);
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 2, 'to@example.com');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 3, '123456789');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 4, '[Acme Inc]');
@@ -222,7 +222,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     {
         $this->load(['notifier' => [
             'service' => 'my_notifier',
-            'default_channel' => ['slack', 'teams'],
+            'default_channel' => ['chat/slack', 'teams'],
             'default_email' => 'to@example.com',
             'default_phone' => '123456789',
             'subject_prefix' => '[Acme Inc]',
@@ -230,7 +230,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
 
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 0, 'my_notifier');
         $this->assertContainerBuilderHasServiceDefinitionWithTag(NotifierHandler::class, 'schedule.extension_handler');
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 1, ['slack', 'teams']);
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 1, ['chat/slack', 'teams']);
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 2, 'to@example.com');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 3, '123456789');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 4, '[Acme Inc]');
@@ -351,7 +351,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     {
         $this->load(['schedule_extensions' => [
             'notify_on_failure' => [
-                'channel' => 'slack',
+                'channel' => 'chat/slack',
                 'subject' => 'my subject',
             ],
         ]]);
@@ -362,7 +362,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $definition = $this->container->getDefinition('zenstruck_schedule.extension.notify_on_failure');
 
         $this->assertSame([NotifierExtension::class, 'scheduleFailure'], $definition->getFactory());
-        $this->assertSame([['slack'], null, null, 'my subject'], $definition->getArguments());
+        $this->assertSame([['chat/slack'], null, null, 'my subject'], $definition->getArguments());
 
         $extensionIterator = $this->container->getDefinition(ScheduleExtensionSubscriber::class)->getArgument(0);
 
@@ -724,7 +724,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
                     ],
                     'notify_after' => null,
                     'notify_on_failure' => [
-                        'channel' => 'slack',
+                        'channel' => 'chat/slack',
                         'email' => 'sales@example.com',
                         'phone' => '123456789',
                         'subject' => 'my subject',
@@ -771,7 +771,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
         $this->assertNull($config['notify_after']['phone']);
         $this->assertNull($config['notify_after']['subject']);
         $this->assertTrue($config['notify_on_failure']['enabled']);
-        $this->assertSame(['slack'], $config['notify_on_failure']['channel']);
+        $this->assertSame(['chat/slack'], $config['notify_on_failure']['channel']);
         $this->assertSame('sales@example.com', $config['notify_on_failure']['email']);
         $this->assertSame('123456789', $config['notify_on_failure']['phone']);
         $this->assertSame('my subject', $config['notify_on_failure']['subject']);

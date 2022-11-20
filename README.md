@@ -285,7 +285,7 @@ zenstruck_schedule:
             only_between:        9-17
             ping_on_success:     https://example.com/hourly-report-health-check
             email_on_failure:    sales@example.com
-            notify_on_failure:   slack
+            notify_on_failure:   chat/slack
 
         # Prototype
         -

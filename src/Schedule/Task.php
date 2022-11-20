@@ -282,7 +282,7 @@ abstract class Task
      * Send notification with task detail after run (on success or failure, not if skipped).
      * Be sure to configure `zenstruck_schedule.notifier`.
      *
-     * @param string|string[] $channel  Channel to send notification to (E.G "slack")
+     * @param string|string[] $channel  Channel to send notification to (E.G "chat/slack")
      * @param string|null     $email    Email address for email notification
      * @param string|null     $phone    Phone number for SMS notification
      * @param callable|null   $callback Customise the notification
@@ -306,7 +306,7 @@ abstract class Task
     /**
      * Alias for notifyAfter().
      *
-     * @param string|string[] $channel  Channel to send notification to (E.G "slack")
+     * @param string|string[] $channel  Channel to send notification to (E.G "chat/slack")
      * @param string|null     $email    Email address for email notification
      * @param string|null     $phone    Phone number for SMS notification
      * @param callable|null   $callback Customise the notification
@@ -334,7 +334,7 @@ abstract class Task
      * Send notification with task/failure details if failed (not if skipped).
      * Be sure to configure `zenstruck_schedule.notifier`.
      *
-     * @param string|string[] $channel  Channel to send notification to (E.G "slack")
+     * @param string|string[] $channel  Channel to send notification to (E.G "chat/slack")
      * @param string|null     $email    Email address for email notification
      * @param string|null     $phone    Phone number for SMS notification
      * @param callable|null   $callback Customise the notification
