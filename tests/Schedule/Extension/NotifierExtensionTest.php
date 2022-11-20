@@ -45,10 +45,10 @@ final class NotifierExtensionTest extends TestCase
         $this->assertSame('[Schedule Failure] 2 tasks failed', $notifier->lastNotification->getSubject());
         $this->assertStringContainsString('2 tasks failed', $notifier->lastNotification->getContent());
         $this->assertStringContainsString('# (Failure 1/2) MockTask: my task 1', $notifier->lastNotification->getContent());
-        $this->assertStringContainsString('## Exception', $notifier->lastNotification->getContent());
+        $this->assertStringNotContainsString('## Exception', $notifier->lastNotification->getContent());
         $this->assertStringContainsString('Exception: task 1 exception message', $notifier->lastNotification->getContent());
         $this->assertStringContainsString('# (Failure 2/2) MockTask: my task 3', $notifier->lastNotification->getContent());
-        $this->assertStringContainsString('## Exception', $notifier->lastNotification->getContent());
+        $this->assertStringNotContainsString('## Exception', $notifier->lastNotification->getContent());
         $this->assertStringContainsString('Exception: task 3 exception message', $notifier->lastNotification->getContent());
         $this->assertStringContainsString('Task ID: '.$task1->getId(), $notifier->lastNotification->getContent());
         $this->assertStringContainsString('Task ID: '.$task2->getId(), $notifier->lastNotification->getContent());

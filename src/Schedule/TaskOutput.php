@@ -8,7 +8,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task\Result;
 
 trait TaskOutput
 {
-    private function getTaskOutput(Result $result, ScheduleRunContext $context): string
+    private function getTaskOutput(Result $result, ScheduleRunContext $context, bool $includeException = true): string
     {
         $output = '';
 
@@ -22,7 +22,7 @@ trait TaskOutput
             $output .= "\n\n## Task Output:\n\n{$result->getOutput()}";
         }
 
-        if ($result->isException()) {
+        if ($result->isException() && $includeException) {
             $output .= "\n\n## Exception:\n\n{$result->getException()}";
         }
 

@@ -98,7 +98,7 @@ final class NotifierHandler extends ExtensionHandler
         foreach ($context->getFailures() as $i => $failure) {
             $task = $failure->getTask();
             $text .= \sprintf("\n\n# (Failure %d/%d) %s\n\n", $i + 1, $failureCount, $task);
-            $text .= $this->getTaskOutput($failure, $context);
+            $text .= $this->getTaskOutput($failure, $context, false);
 
             if ($i < $failureCount - 1) {
                 $text .= "\n\n---";
@@ -127,7 +127,7 @@ final class NotifierHandler extends ExtensionHandler
             $notification->importance(Notification::IMPORTANCE_HIGH);
         }
 
-        $notification->content($this->getTaskOutput($result, $context));
+        $notification->content($this->getTaskOutput($result, $context, false));
 
         if ([] === $notification->getChannels($this->getRecipient($extension))) {
             if (empty($this->defaultChannel)) {
