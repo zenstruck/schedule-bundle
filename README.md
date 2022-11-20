@@ -29,8 +29,9 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
         2. [Callbacks](doc/define-schedule.md#callbacks)
         3. [Ping Webhook](doc/define-schedule.md#ping-webhook)
         4. [Email On Failure](doc/define-schedule.md#email-on-failure)
-        5. [Run on Single Server](doc/define-schedule.md#run-on-single-server)
-        6. [Limit to specific environment(s)](doc/define-schedule.md#limit-to-specific-environments)
+        5. [Notify On Failure](doc/define-schedule.md#notify-on-failure)
+        6. [Run on Single Server](doc/define-schedule.md#run-on-single-server)
+        7. [Limit to specific environment(s)](doc/define-schedule.md#limit-to-specific-environments)
 4. [Defining Tasks](doc/define-tasks.md)
     1. [Task Types](doc/define-tasks.md#task-types)
         1. [CommandTask](doc/define-tasks.md#commandtask)
@@ -51,6 +52,7 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
         2. [Callbacks](doc/define-tasks.md#callbacks)
         3. [Ping Webhook](doc/define-tasks.md#ping-webhook)
         4. [Email Output](doc/define-tasks.md#email-output)
+        4. [Notify Output](doc/define-tasks.md#notify-output)
         5. [Prevent Overlap](doc/define-tasks.md#prevent-overlap)
         6. [Run on Single Server](doc/define-tasks.md#run-on-single-server)
         7. [Between](doc/define-tasks.md#between)
@@ -164,6 +166,24 @@ zenstruck_schedule:
         # The prefix to use for email subjects (use to distinguish between different application schedules)
         subject_prefix:       null # Example: "[Acme Inc Website]"
 
+    notifier:
+        enabled:              false
+
+        # The notifier service to use
+        service:              notifier
+
+        # The default channel (can use a string, or array of channels)
+        default_channel:      null
+
+        # The default email address for email notifications
+        default_email:        null
+
+        # The default phone number for SMS notifications (can be overridden by extension)
+        default_phone:        null
+
+        # The prefix to use for notification subjects (use to distinguish between different application schedules)
+        subject_prefix:       null # Example: "[Acme Inc Website]"
+
     schedule_extensions:
 
         # Set the environment(s) you only want the schedule to run in.
@@ -185,6 +205,23 @@ zenstruck_schedule:
 
             # Email subject (leave blank to use extension default)
             subject:              null
+              3600
+
+        # Send notification if schedule fails (alternatively enable by passing a channel)
+        notify_on_failure:
+            enabled:              false
+
+            # Channel to send notification to (leave blank to use "zenstruck_schedule.notifier.default_channel")
+            channel:              null
+
+            # Notification subject (leave blank to use extension default)
+            subject:              null
+
+            # Email address for email notifications  (leave blank to use extension default)
+            email:                null
+
+            # Phone number for SMS notifications (leave blank to use extension default)
+            phone:                null
 
         # Ping a url before schedule runs (alternatively enable by passing a url)
         ping_before:
@@ -248,6 +285,7 @@ zenstruck_schedule:
             only_between:        9-17
             ping_on_success:     https://example.com/hourly-report-health-check
             email_on_failure:    sales@example.com
+            notify_on_failure:   chat/slack
 
         # Prototype
         -
@@ -354,4 +392,36 @@ zenstruck_schedule:
 
                 # Email subject (leave blank to use extension default)
                 subject:              null
+
+            # Send notification after task runs (alternatively enable by passing a channel)
+            notify_after:
+                enabled:              false
+
+                # Channel to send notification to (leave blank to use "zenstruck_schedule.notifier.default_channel")
+                channel:              null
+
+                # Notification subject (leave blank to use extension default)
+                subject:              null
+
+                # Email to send email notifications to (leave blank to use extension default)
+                email:                null
+
+                # Phone number for SMS notifications (leave blank to use extension default)
+                phone:                null
+
+            # Send email if task fails (alternatively enable by passing a "to" email)
+            notify_on_failure:
+                enabled:              false
+
+                # Channel to send notification to (leave blank to use "zenstruck_schedule.notifier.default_channel")
+                channel:              null
+
+                # Notification subject (leave blank to use extension default)
+                subject:              null
+
+                # Email to send email notifications to (leave blank to use extension default)
+                email:                null
+
+                # Phone number for SMS notifications (leave blank to use extension default)
+                phone:                null
 ```

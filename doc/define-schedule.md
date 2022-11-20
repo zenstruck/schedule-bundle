@@ -405,6 +405,99 @@ zenstruck_schedule:
     Failed task's exception stack trace (if any)
     ```
 
+### Notify On Failure
+
+This extension can be used to notify site administrators via any notification
+when tasks fail.
+
+**Define in [PHP](#schedulebuilder-service):**
+
+```php
+/* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
+
+$schedule->notifyOnFailure(['chat/slack', 'sms', 'email'], 'admin@example.com', '123456789');
+
+// default channel can be configured (see below)
+$schedule->notifyOnFailure();
+
+// customise the notification
+$schedule->notifyOnFailure('chat/slack', null, null, null, function (\Symfony\Component\Notifier\Notification\Notification $notification) {
+    $notification->emoji('user');
+});
+```
+
+**Define in [Configuration](#bundle-configuration):**
+
+```yaml
+# config/packages/zenstruck_schedule.yaml
+
+zenstruck_schedule:
+    schedule_extensions:
+        notify_on_failure:
+           channel: chat/slack; # optional if configured
+           subject: my subject # optional, leave empty to use default
+```
+
+**Notes:**
+
+1. This extension **requires** `symfony/notifier`:
+
+    ```console
+    $ composer require symfony/notifier
+    ```
+
+2. This extension **requires** configuration:
+
+    ```yaml
+    # config/packages/zenstruck_schedule.yaml
+
+    zenstruck_schedule:
+        notifier:
+            service: notifier # required
+            default_channel: chat/slack # optional (exclude if defined in code/config)
+            default_email: webmaster@example.com # optional
+            default_phone: 1234567890 # optional
+            subject_prefix: "[Acme Inc]" # optional
+    ```
+
+3. The notification has the subject `[Schedule Failure] 2 tasks failed`
+   (assuming 2 tasks failed, the subject can be configured). The content
+   has the following structure:
+
+    ```
+    2 tasks failed
+
+    # (Failure 1/2) CommandTask: failed task 1 description
+
+    Result: "failure description (ie exception message)"
+
+    Task ID: <task ID>
+
+    ## Task Output
+
+    Failed task's output (if any)
+
+    ## Exception
+
+    Failed task's exception stack trace (if any)
+
+    ---
+
+    # (Failure 2/2) CommandTask: failed task 2 description
+
+    Result: "failure description (ie exception message)"
+
+    Task ID: <task ID>
+
+    ## Task Output
+
+    Failed task's output (if any)
+
+    ## Exception
+
+    Failed task's exception stack trace (if any)
+    ```
+
 ### Run on Single Server
 
 This extension *locks* the schedule so it only runs on one server. The server

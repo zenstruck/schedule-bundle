@@ -17,7 +17,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\:\\:canBeEnabled\\(\\)\\.$#"
-			count: 2
+			count: 3
 			path: src/DependencyInjection/Configuration.php
 
 		-
@@ -27,6 +27,11 @@ parameters:
 
 		-
 			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:createEmailExtension\\(\\) should return Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition but returns Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\.$#"
+			count: 1
+			path: src/DependencyInjection/Configuration.php
+
+		-
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:createNotifyExtension\\(\\) should return Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition but returns Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\.$#"
 			count: 1
 			path: src/DependencyInjection/Configuration.php
 
@@ -114,6 +119,16 @@ parameters:
 			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\Schedule\\:\\:thenPing\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/Schedule.php
+
+		-
+			message: "#^Parameter \\#1 \\$start of method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\CronExpression\\:\\:hashField\\(\\) expects int, int\\|string given\\.$#"
+			count: 1
+			path: src/Schedule/CronExpression.php
+
+		-
+			message: "#^Parameter \\#2 \\$end of method Zenstruck\\\\ScheduleBundle\\\\Schedule\\\\CronExpression\\:\\:hashField\\(\\) expects int, int\\|string given\\.$#"
+			count: 1
+			path: src/Schedule/CronExpression.php
 
 		-
 			message: "#^Parameter \\#3 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, object given\\.$#"

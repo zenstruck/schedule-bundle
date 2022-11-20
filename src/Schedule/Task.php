@@ -7,6 +7,7 @@ use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 use Zenstruck\ScheduleBundle\Schedule\Extension\BetweenTimeExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\CallbackExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\EmailExtension;
+use Zenstruck\ScheduleBundle\Schedule\Extension\NotifierExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\PingExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\SingleServerExtension;
 use Zenstruck\ScheduleBundle\Schedule\Extension\WithoutOverlappingExtension;
@@ -278,6 +279,21 @@ abstract class Task
     }
 
     /**
+     * Send notification with task detail after run (on success or failure, not if skipped).
+     * Be sure to configure `zenstruck_schedule.notifier`.
+     *
+     * @param string|string[] $channel  Channel to send notification to (E.G "chat/slack")
+     * @param string|null     $email    Email address for email notification
+     * @param string|null     $phone    Phone number for SMS notification
+     * @param callable|null   $callback Customise the notification
+     *                                  Receives an instance of \Symfony\Component\Notification\Notification
+     */
+    final public function notifyAfter($channel = null, ?string $email = null, ?string $phone = null, ?string $subject = null, ?callable $callback = null): self
+    {
+        return $this->addExtension(NotifierExtension::taskAfter($channel, $email, $phone, $subject, $callback));
+    }
+
+    /**
      * Alias for emailAfter().
      *
      * @param string|Address|string[]|Address[]|null $to Email address(es)
@@ -285,6 +301,20 @@ abstract class Task
     final public function thenEmail($to = null, ?string $subject = null, ?callable $callback = null): self
     {
         return $this->emailAfter($to, $subject, $callback);
+    }
+
+    /**
+     * Alias for notifyAfter().
+     *
+     * @param string|string[] $channel  Channel to send notification to (E.G "chat/slack")
+     * @param string|null     $email    Email address for email notification
+     * @param string|null     $phone    Phone number for SMS notification
+     * @param callable|null   $callback Customise the notification
+     *                                  Receives an instance of \Symfony\Component\Notification\Notification
+     */
+    final public function thenNotify($channel = null, ?string $email = null, ?string $phone = null, ?string $subject = null, ?callable $callback = null): self
+    {
+        return $this->notifyAfter($channel, $email, $phone, $subject, $callback);
     }
 
     /**
@@ -298,6 +328,21 @@ abstract class Task
     final public function emailOnFailure($to = null, ?string $subject = null, ?callable $callback = null): self
     {
         return $this->addExtension(EmailExtension::taskFailure($to, $subject, $callback));
+    }
+
+    /**
+     * Send notification with task/failure details if failed (not if skipped).
+     * Be sure to configure `zenstruck_schedule.notifier`.
+     *
+     * @param string|string[] $channel  Channel to send notification to (E.G "chat/slack")
+     * @param string|null     $email    Email address for email notification
+     * @param string|null     $phone    Phone number for SMS notification
+     * @param callable|null   $callback Customise the notification
+     *                                  Receives an instance of \Symfony\Component\Notification\Notification
+     */
+    final public function notifyOnFailure($channel = null, ?string $email = null, ?string $phone = null, ?string $subject = null, ?callable $callback = null): self
+    {
+        return $this->addExtension(NotifierExtension::taskFailure($channel, $email, $phone, $subject, $callback));
     }
 
     /**

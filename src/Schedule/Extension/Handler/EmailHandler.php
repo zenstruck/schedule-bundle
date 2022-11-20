@@ -19,6 +19,8 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
  */
 final class EmailHandler extends ExtensionHandler
 {
+    use Schedule\TaskOutput;
+
     /** @var MailerInterface */
     private $mailer;
 
@@ -97,27 +99,6 @@ final class EmailHandler extends ExtensionHandler
         $email->text($text);
 
         $this->mailer->send($email);
-    }
-
-    private function getTaskOutput(Result $result, ScheduleRunContext $context): string
-    {
-        $output = '';
-
-        if ($context->isForceRun()) {
-            $output = "!! This task was force run !!\n\n";
-        }
-
-        $output .= \sprintf("Result: \"%s\"\n\nTask ID: %s", $result, $result->getTask()->getId());
-
-        if ($result->getOutput()) {
-            $output .= "\n\n## Task Output:\n\n{$result->getOutput()}";
-        }
-
-        if ($result->isException()) {
-            $output .= "\n\n## Exception:\n\n{$result->getException()}";
-        }
-
-        return $output;
     }
 
     private function sendTaskEmail(EmailExtension $extension, Result $result, ScheduleRunContext $context): void

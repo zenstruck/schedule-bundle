@@ -218,6 +218,7 @@ $schedule->addCompound()
     ->at('1:30')
     ->timezone('UTC')
     ->emailOnFailure('admin@example.com')
+    ->notifyOnFailure('chat/slack')
 ;
 ```
 
@@ -234,6 +235,7 @@ zenstruck_schedule:
             frequency: '0 * * * *'
             timezone: UTC
             email_on_failure: ~
+            notify_on_failure: ~
 
         -   task: # optionally key by the desired task description
                 "run my command": my:command arg --option
@@ -719,6 +721,109 @@ zenstruck_schedule:
 
 4. Successful task emails (if using `email_after`) have the subject
    `[Scheduled Task Succeeded] CommandTask: task description`. The email body
+   has the following structure:
+
+    ```
+    Result: "Successful"
+
+    Task ID: <task ID>
+
+    ## Task Output:
+
+    Task's output (if any)
+    ```
+
+### Notify Output
+
+This extension can be used to notify site administrators via notification channels
+that the task ran. Either just if it failed (`notify_on_failure`) or
+regardless of the result (`notify_after`).
+
+**Define in [PHP](define-schedule.md#schedulebuilder-service):**
+
+```php
+/* @var $task \Zenstruck\ScheduleBundle\Schedule\Task */
+
+$task->notifyAfter('chat/slack');
+
+$task->thenNotify('chat/slack'); // alias for ->notifyAfter()
+
+$task->notifyOnFailure('chat/slack');
+
+// default channel can be configured (see below)
+$task->notifyAfter();
+$task->notifyOnFailure();
+
+// customise notification
+$task->notifyAfter('chat/slack', null, null, 'my subject', function (Symfony\Component\Notifier\Notification\Notification $notification) {
+    $notification->emoji('check');
+});
+$task->notifyOnFailure('chat/slack', null, null, 'my subject', function (Symfony\Component\Notifier\Notification\Notification $email) {
+    $notification->emoji('alert');
+});
+```
+
+**Define in [Configuration](define-schedule.md#bundle-configuration):**
+
+```yaml
+# config/packages/zenstruck_schedule.yaml
+
+zenstruck_schedule:
+    tasks:
+        -   task: my:command
+            frequency: '0 * * * *'
+            notify_after: chat/slack
+            notify_on_failure: ~ # default channel can be configured (see below)
+
+        -   task: my:command
+            frequency: '0 * * * *'
+            notify_after:
+                channel: chat/slack
+                subject: my custom subject
+```
+
+**Notes:**
+
+1. This extension **requires** `symfony/notifier`:
+
+    ```console
+    $ composer require symfony/notifier
+    ```
+
+2. This extension **requires** configuration:
+
+    ```yaml
+    # config/packages/zenstruck_schedule.yaml
+
+    zenstruck_schedule:
+        notifier:
+            service: notifier # required
+            default_channel: chat/slack # optional (exclude if defined in code)
+            default_email: admin@example.com # optional (exclude if defined in code)
+            default_phone: webmaster@example.com # optional (exclude if defined in code)
+            subject_prefix: "[Acme Inc]" # optional
+    ```
+
+3. Failed task notifications have the subject `[Scheduled Task Failed] CommandTask: failed
+   task description` (the subject can be configured). The content has the following
+   structure:
+
+    ```
+    Result: "failure description (ie exception message)"
+
+    Task ID: <task ID>
+
+    ## Task Output
+
+    Failed task's output (if any)
+
+    ## Exception
+
+    Failed task's exception stack trace (if any)
+    ```
+
+4. Successful task notifications (if using `notify_after`) have the subject
+   `[Scheduled Task Succeeded] CommandTask: task description`. The content
    has the following structure:
 
     ```
