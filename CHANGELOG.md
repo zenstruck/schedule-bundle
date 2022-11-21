@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [v1.5.0](https://github.com/zenstruck/schedule-bundle/releases/tag/v1.5.0)
+
+November 21st, 2022 - [v1.4.3...v1.5.0](https://github.com/zenstruck/schedule-bundle/compare/v1.4.3...v1.5.0)
+
+* 2063ad1 [feature] Add support for symfony/notifier. (#72) by @pierredup
+
 ## [v1.4.3](https://github.com/zenstruck/schedule-bundle/releases/tag/v1.4.3)
 
 October 30th, 2022 - [v1.4.2...v1.4.3](https://github.com/zenstruck/schedule-bundle/compare/v1.4.2...v1.4.3)
