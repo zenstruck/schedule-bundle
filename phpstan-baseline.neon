@@ -6,6 +6,11 @@ parameters:
 			path: src/Command/ScheduleListCommand.php
 
 		-
+			message: "#^Call to an undefined method Symfony\\\\Component\\\\Console\\\\Helper\\\\HelperInterface\\:\\:truncate\\(\\)\\.$#"
+			count: 1
+			path: src/Command/ScheduleListCommand.php
+
+		-
 			message: "#^Parameter \\#1 \\$str of function strtr expects string, object given\\.$#"
 			count: 1
 			path: src/Command/ScheduleListCommand.php
