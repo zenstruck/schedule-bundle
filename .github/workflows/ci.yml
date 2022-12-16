@@ -16,10 +16,25 @@ jobs:
   composer-validate:
     uses: zenstruck/.github/.github/workflows/php-composer-validate.yml@main
 
-  cs-check:
-    uses: zenstruck/.github/.github/workflows/php-cs-fixer.yml@main
-    with:
-      php: 8.0
-
   sca:
     uses: zenstruck/.github/.github/workflows/php-stan.yml@main
+
+  fixcs:
+    name: Run php-cs-fixer
+    needs: sync-with-template
+    if: ${{ github.event_name == 'push' || github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: zenstruck/.github@php-cs-fixer
+        with:
+          php: 8
+          key: ${{ secrets.GPG_PRIVATE_KEY }}
+
+  sync-with-template:
+    name: Sync meta files
+    if: ${{ github.event_name == 'push' || github.event_name == 'schedule' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: zenstruck/.github@sync-with-template
+        with:
+          key: ${{ secrets.GPG_PRIVATE_KEY }}
