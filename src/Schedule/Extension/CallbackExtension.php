@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the zenstruck/schedule-bundle package.
+ *
+ * (c) Kevin Bond <kevinbond@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
 use Zenstruck\ScheduleBundle\Schedule;
@@ -94,7 +103,7 @@ final class CallbackExtension
         }
 
         if (\is_object($callback) && !$callback instanceof \Closure && \method_exists($callback, '__invoke')) {
-            return \sprintf('%s::__invoke()', \get_class($callback));
+            return \sprintf('%s::__invoke()', $callback::class);
         }
 
         $ref = new \ReflectionFunction(\Closure::fromCallable($callback));

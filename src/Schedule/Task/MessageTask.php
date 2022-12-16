@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the zenstruck/schedule-bundle package.
+ *
+ * (c) Kevin Bond <kevinbond@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Zenstruck\ScheduleBundle\Schedule\Task;
 
 use Symfony\Component\Messenger\Envelope;
@@ -52,7 +61,7 @@ final class MessageTask extends Task implements HasMissingDependencyMessage
     {
         $stamps = \array_merge(
             $this->message instanceof Envelope ? \array_keys($this->message->all()) : [],
-            \array_map(static function(StampInterface $stamp) { return \get_class($stamp); }, $this->stamps)
+            \array_map(static fn(StampInterface $stamp) => $stamp::class, $this->stamps)
         );
         $stamps = \array_map(
             static function(string $stamp) {

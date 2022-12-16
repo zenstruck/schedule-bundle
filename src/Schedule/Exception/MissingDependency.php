@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the zenstruck/schedule-bundle package.
+ *
+ * (c) Kevin Bond <kevinbond@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Zenstruck\ScheduleBundle\Schedule\Exception;
 
 use Zenstruck\ScheduleBundle\Schedule\HasMissingDependencyMessage;
@@ -31,9 +40,9 @@ final class MissingDependency extends \LogicException
         }
 
         if (\method_exists($extension, '__toString')) {
-            return new self(\sprintf('No extension handler registered for "%s: %s".', \get_class($extension), $extension));
+            return new self(\sprintf('No extension handler registered for "%s: %s".', $extension::class, $extension));
         }
 
-        return new self(\sprintf('No extension handler registered for "%s".', \get_class($extension)));
+        return new self(\sprintf('No extension handler registered for "%s".', $extension::class));
     }
 }
