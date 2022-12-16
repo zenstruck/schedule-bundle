@@ -9,13 +9,9 @@ on:
 jobs:
   test:
     uses: zenstruck/.github/.github/workflows/php-test-symfony.yml@main
-    with:
-      phpunit: simple-phpunit
 
   code-coverage:
     uses: zenstruck/.github/.github/workflows/php-coverage-codecov.yml@main
-    with:
-      phpunit: simple-phpunit
 
   composer-validate:
     uses: zenstruck/.github/.github/workflows/php-composer-validate.yml@main
