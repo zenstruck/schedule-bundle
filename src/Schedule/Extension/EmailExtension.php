@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the zenstruck/schedule-bundle package.
+ *
+ * (c) Kevin Bond <kevinbond@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 
 use Symfony\Component\Mime\Address;
@@ -51,7 +60,7 @@ final class EmailExtension implements HasMissingDependencyMessage
             return "{$this->hook}, email output";
         }
 
-        $to = \array_map(function(Address $address) { return $address->toString(); }, $to);
+        $to = \array_map(fn(Address $address) => $address->toString(), $to);
         $to = \implode('; ', $to);
 
         return "{$this->hook}, email output to \"{$to}\"";

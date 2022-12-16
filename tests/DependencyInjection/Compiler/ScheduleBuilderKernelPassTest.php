@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the zenstruck/schedule-bundle package.
+ *
+ * (c) Kevin Bond <kevinbond@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Zenstruck\ScheduleBundle\Tests\DependencyInjection\Compiler;
 
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractCompilerPassTestCase;
@@ -25,7 +34,7 @@ final class ScheduleBuilderKernelPassTest extends AbstractCompilerPassTestCase
             }
         };
 
-        $this->setDefinition('kernel', new Definition(\get_class($class)));
+        $this->setDefinition('kernel', new Definition($class::class));
 
         $this->compile();
 
@@ -40,7 +49,7 @@ final class ScheduleBuilderKernelPassTest extends AbstractCompilerPassTestCase
         $class = new class() {
         };
 
-        $this->setDefinition('kernel', new Definition(\get_class($class)));
+        $this->setDefinition('kernel', new Definition($class::class));
 
         $this->compile();
 

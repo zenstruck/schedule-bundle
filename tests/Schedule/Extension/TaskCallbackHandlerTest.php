@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the zenstruck/schedule-bundle package.
+ *
+ * (c) Kevin Bond <kevinbond@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Zenstruck\ScheduleBundle\Tests\Schedule\Extension;
 
 use PHPUnit\Framework\TestCase;
@@ -33,7 +42,7 @@ final class TaskCallbackHandlerTest extends TestCase
      */
     public function callback_returning_false_when_filter_skips_task()
     {
-        $task = MockTask::success()->when('callback value', function() { return false; });
+        $task = MockTask::success()->when('callback value', fn() => false);
 
         $context = self::createRunContext($task);
 
@@ -62,7 +71,7 @@ final class TaskCallbackHandlerTest extends TestCase
      */
     public function callback_returning_true_when_filter_allows_task_to_run()
     {
-        $task = MockTask::success()->when('callback value', function() { return true; });
+        $task = MockTask::success()->when('callback value', fn() => true);
 
         $context = self::createRunContext($task);
 
@@ -91,7 +100,7 @@ final class TaskCallbackHandlerTest extends TestCase
      */
     public function callback_returning_true_skip_filter_skips_task()
     {
-        $task = MockTask::success()->skip('callback value', function() { return true; });
+        $task = MockTask::success()->skip('callback value', fn() => true);
 
         $context = self::createRunContext($task);
 
@@ -120,7 +129,7 @@ final class TaskCallbackHandlerTest extends TestCase
      */
     public function callback_returning_false_skip_filter_allows_task_to_run()
     {
-        $task = MockTask::success()->skip('callback value', function() { return false; });
+        $task = MockTask::success()->skip('callback value', fn() => false);
 
         $context = self::createRunContext($task);
 

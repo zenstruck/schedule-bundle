@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the zenstruck/schedule-bundle package.
+ *
+ * (c) Kevin Bond <kevinbond@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Zenstruck\ScheduleBundle;
 
 use Symfony\Component\Process\Process;
@@ -48,9 +57,7 @@ final class Schedule
     public function getId(): string
     {
         $tasks = \array_map(
-            function(Task $task) {
-                return $task->getId();
-            },
+            fn(Task $task) => $task->getId(),
             $this->all()
         );
 
@@ -136,9 +143,7 @@ final class Schedule
      */
     public function when(string $description, $callback): self
     {
-        $callback = \is_callable($callback) ? $callback : function() use ($callback) {
-            return (bool) $callback;
-        };
+        $callback = \is_callable($callback) ? $callback : fn() => (bool) $callback;
 
         return $this->filter(function(ScheduleRunContext $context) use ($callback, $description) {
             if (!$callback($context)) {
@@ -155,9 +160,7 @@ final class Schedule
      */
     public function skip(string $description, $callback): self
     {
-        $callback = \is_callable($callback) ? $callback : function() use ($callback) {
-            return (bool) $callback;
-        };
+        $callback = \is_callable($callback) ? $callback : fn() => (bool) $callback;
 
         return $this->filter(function(ScheduleRunContext $context) use ($callback, $description) {
             if ($callback($context)) {

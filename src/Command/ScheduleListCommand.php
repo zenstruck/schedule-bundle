@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the zenstruck/schedule-bundle package.
+ *
+ * (c) Kevin Bond <kevinbond@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Zenstruck\ScheduleBundle\Command;
 
 use Lorisleiva\CronTranslator\CronParsingException;
@@ -50,9 +59,9 @@ final class ScheduleListCommand extends Command
             ->setDescription(self::getDefaultDescription()) // required for Symfony 4.4
             ->addOption('detail', null, null, 'Show detailed task list')
             ->setHelp(<<<EOF
-Exit code 0: no issues.
-Exit code 1: some issues.
-EOF
+                Exit code 0: no issues.
+                Exit code 1: some issues.
+                EOF
             )
         ;
     }
@@ -104,7 +113,7 @@ EOF
             }
 
             $details[] = ['Task ID' => $task->getId()];
-            $details[] = ['Task Class' => \get_class($task)];
+            $details[] = ['Task Class' => $task::class];
 
             $details[] = [$task->getExpression()->isHashed() ? 'Calculated Frequency' : 'Frequency' => $this->renderFrequency($task)];
 
@@ -147,9 +156,7 @@ EOF
         }
 
         $io->listing(\array_map(
-            function(array $line) {
-                return \sprintf('<info>%s:</info> %s', \array_keys($line)[0], \array_values($line)[0]);
-            },
+            fn(array $line) => \sprintf('<info>%s:</info> %s', \array_keys($line)[0], \array_values($line)[0]),
             $list
         ));
     }
@@ -203,11 +210,11 @@ EOF
                 if (\method_exists($extension, '__toString')) {
                     return \sprintf('%s <comment>(%s)</comment>',
                         \strtr($extension, self::extensionHighlightMap()),
-                        \get_class($extension)
+                        $extension::class
                     );
                 }
 
-                return \get_class($extension);
+                return $extension::class;
             },
             $extensions
         ));

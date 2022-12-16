@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the zenstruck/schedule-bundle package.
+ *
+ * (c) Kevin Bond <kevinbond@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Zenstruck\ScheduleBundle\Tests\Schedule\Extension;
 
 use PHPUnit\Framework\TestCase;
@@ -33,7 +42,7 @@ final class ScheduleCallbackHandlerTest extends TestCase
     public function callback_returning_false_when_filter_skips_schedule()
     {
         $context = self::createBuilder(function(Schedule $schedule) {
-            $schedule->when('callback value', function() { return false; });
+            $schedule->when('callback value', fn() => false);
         })->run();
 
         $this->assertFalse($context->hasRun());
@@ -60,7 +69,7 @@ final class ScheduleCallbackHandlerTest extends TestCase
     public function callback_returning_true_when_filter_allows_schedule_to_run()
     {
         $context = self::createBuilder(function(Schedule $schedule) {
-            $schedule->when('callback value', function() { return true; });
+            $schedule->when('callback value', fn() => true);
         })->run();
 
         $this->assertTrue($context->hasRun());
@@ -87,7 +96,7 @@ final class ScheduleCallbackHandlerTest extends TestCase
     public function callback_returning_true_skip_filter_skips_schedule()
     {
         $context = self::createBuilder(function(Schedule $schedule) {
-            $schedule->skip('callback value', function() { return true; });
+            $schedule->skip('callback value', fn() => true);
         })->run();
 
         $this->assertFalse($context->hasRun());
@@ -114,7 +123,7 @@ final class ScheduleCallbackHandlerTest extends TestCase
     public function callback_returning_false_skip_filter_allows_schedule_to_run()
     {
         $context = self::createBuilder(function(Schedule $schedule) {
-            $schedule->skip('callback value', function() { return false; });
+            $schedule->skip('callback value', fn() => false);
         })->run();
 
         $this->assertTrue($context->hasRun());

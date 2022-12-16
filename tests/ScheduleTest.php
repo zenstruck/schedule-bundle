@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the zenstruck/schedule-bundle package.
+ *
+ * (c) Kevin Bond <kevinbond@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Zenstruck\ScheduleBundle\Tests;
 
 use PHPUnit\Framework\TestCase;
@@ -34,9 +43,7 @@ class ScheduleTest extends TestCase
 
         $this->assertCount(7, $schedule->all());
         $this->assertSame(['task1', 'task2', 'task3', 'task4', 'task5', 'task6', 'task7'], \array_map(
-            function(Task $task) {
-                return $task->getDescription();
-            },
+            fn(Task $task) => $task->getDescription(),
             $schedule->all()
         ));
 
@@ -156,9 +163,7 @@ class ScheduleTest extends TestCase
                 'task4',
                 'task5',
                 'task6',
-            ], \array_map(function(Task $task) {
-                return $task->getDescription();
-            }, $schedule->due(new \DateTime()))
+            ], \array_map(fn(Task $task) => $task->getDescription(), $schedule->due(new \DateTime()))
         );
     }
 

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the zenstruck/schedule-bundle package.
+ *
+ * (c) Kevin Bond <kevinbond@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Zenstruck\ScheduleBundle\Schedule;
 
 use Symfony\Component\Mime\Address;
@@ -135,9 +144,7 @@ abstract class Task
      */
     final public function when(string $description, $callback): self
     {
-        $callback = \is_callable($callback) ? $callback : function() use ($callback) {
-            return (bool) $callback;
-        };
+        $callback = \is_callable($callback) ? $callback : fn() => (bool) $callback;
 
         return $this->filter(function(TaskRunContext $context) use ($callback, $description) {
             if (!$callback($context)) {
@@ -154,9 +161,7 @@ abstract class Task
      */
     final public function skip(string $description, $callback): self
     {
-        $callback = \is_callable($callback) ? $callback : function() use ($callback) {
-            return (bool) $callback;
-        };
+        $callback = \is_callable($callback) ? $callback : fn() => (bool) $callback;
 
         return $this->filter(function(TaskRunContext $context) use ($callback, $description) {
             if ($callback($context)) {
