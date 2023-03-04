@@ -18,25 +18,20 @@ use Symfony\Component\Console\Helper\Helper;
  */
 abstract class RunContext
 {
-    /** @var int */
-    private $startTime;
-
-    /** @var int|null */
-    private $duration;
-
-    /** @var int|null */
-    private $memory;
+    private \DateTimeImmutable $startTime;
+    private ?int $duration = null;
+    private ?int $memory = null;
 
     public function __construct()
     {
-        $this->startTime = \time();
+        $this->startTime = new \DateTimeImmutable('now');
     }
 
     abstract public function __toString(): string;
 
     final public function getStartTime(): \DateTimeImmutable
     {
-        return new \DateTimeImmutable('@'.$this->startTime);
+        return $this->startTime;
     }
 
     final public function hasRun(): bool
@@ -70,7 +65,7 @@ abstract class RunContext
 
     final protected function markAsRun(int $memory): void
     {
-        $this->duration = \time() - $this->startTime;
+        $this->duration = \time() - $this->startTime->getTimestamp();
         $this->memory = $memory;
     }
 
