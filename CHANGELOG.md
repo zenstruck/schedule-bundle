@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## [v1.6.0](https://github.com/zenstruck/schedule-bundle/releases/tag/v1.6.0)
+
+March 4th, 2023 - [v1.5.0...v1.6.0](https://github.com/zenstruck/schedule-bundle/compare/v1.5.0...v1.6.0)
+
+* 8565e22 minor: ensure task always provides a timezone (#76) by @kbond
+* 6616591 fix: ensure start time is in current timezone (#76) by @kbond
+* 50e9293 fix(ci): add token by @kbond
+* 84831f0 chore(ci): fix by @kbond
+* 2046951 chore(cs): fix (#74) by @kbond
+* 950db75 chore(cs): update php-cs-fixer config (#74) by @kbond
+* 0b996a7 chore(ci): update (#74) by @kbond
+* b31ca9f feat(deps): require PHP 8+ (#74) by @kbond
+* 347f6fb ci: fix (#73) by @kbond
+
 ## [v1.5.0](https://github.com/zenstruck/schedule-bundle/releases/tag/v1.5.0)
 
 November 21st, 2022 - [v1.4.3...v1.5.0](https://github.com/zenstruck/schedule-bundle/compare/v1.4.3...v1.5.0)
