@@ -38,18 +38,11 @@ abstract class Task
 
     private const DEFAULT_EXPRESSION = '* * * * *';
 
-    /** @var string */
-    private $description;
+    private string $expression = self::DEFAULT_EXPRESSION;
+    private ?\DateTimeZone $timezone = null;
 
-    /** @var string */
-    private $expression = self::DEFAULT_EXPRESSION;
-
-    /** @var \DateTimeZone|null */
-    private $timezone;
-
-    public function __construct(string $description)
+    public function __construct(private string $description)
     {
-        $this->description = $description;
     }
 
     final public function __toString(): string
@@ -749,8 +742,8 @@ abstract class Task
         return $this->cron(\implode(' ', $segments));
     }
 
-    private function getTimezoneValue(): ?string
+    private function getTimezoneValue(): string
     {
-        return $this->getTimezone() ? $this->getTimezone()->getName() : null;
+        return ($this->getTimezone() ?? new \DateTimeZone(\date_default_timezone_get()))->getName();
     }
 }
