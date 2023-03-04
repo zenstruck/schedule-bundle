@@ -23,6 +23,30 @@ use Zenstruck\ScheduleBundle\Tests\Fixture\MockTask;
  */
 final class ScheduleRunContextTest extends TestCase
 {
+    private string $timezone;
+
+    protected function setUp(): void
+    {
+        $this->timezone = \date_default_timezone_get();
+    }
+
+    protected function tearDown(): void
+    {
+        \date_default_timezone_set($this->timezone);
+    }
+
+    /**
+     * @test
+     */
+    public function start_time_timezone(): void
+    {
+        \date_default_timezone_set('America/New_York');
+
+        $context = new ScheduleRunContext(new Schedule());
+
+        $this->assertSame('America/New_York', $context->getStartTime()->getTimezone()->getName());
+    }
+
     /**
      * @test
      */
