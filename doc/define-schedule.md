@@ -73,7 +73,8 @@ and [schedule extensions](#schedule-extensions) can be configured:
 
 zenstruck_schedule:
     timezone: UTC
-    ping_on_success: https://example.com/schedule-success
+    schedule_extensions:
+        ping_on_success: https://example.com/schedule-success
 
     tasks:
         -   task: app:send-weekly-report --detailed
