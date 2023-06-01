@@ -48,7 +48,7 @@ final class NotifierHandler extends ExtensionHandler
     private $defaultChannel;
 
     /**
-     * @param string|string[]$defaultChannel
+     * @param string|string[] $defaultChannel
      */
     public function __construct(NotifierInterface $notifier, $defaultChannel = null, ?string $defaultEmail = null, ?string $defaultPhone = null, ?string $subjectPrefix = null)
     {
