@@ -19,21 +19,20 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
  */
 final class CallbackExtension
 {
-    /** @var string */
-    private $hook;
-
     /** @var callable */
     private $callback;
 
-    private function __construct(string $hook, callable $callback)
+    private function __construct(
+        private string $hook,
+        callable $callback,
+        private ?string $description = null)
     {
-        $this->hook = $hook;
         $this->callback = $callback;
     }
 
     public function __toString(): string
     {
-        return \sprintf('%s callback: %s', $this->hook, self::createDescriptionFromCallback($this->callback));
+        return \sprintf('%s callback: %s', $this->hook, $this->description ?? self::createDescriptionFromCallback($this->callback));
     }
 
     public function getHook(): string
@@ -46,54 +45,59 @@ final class CallbackExtension
         return $this->callback;
     }
 
-    public static function taskFilter(callable $callback): self
+    public function getDescription(): ?string
     {
-        return new self(Task::FILTER, $callback);
+        return $this->description;
     }
 
-    public static function taskBefore(callable $callback): self
+    public static function taskFilter(callable $callback, ?string $description = null): self
     {
-        return new self(Task::BEFORE, $callback);
+        return new self(Task::FILTER, $callback, $description);
     }
 
-    public static function taskAfter(callable $callback): self
+    public static function taskBefore(callable $callback, ?string $description = null): self
     {
-        return new self(Task::AFTER, $callback);
+        return new self(Task::BEFORE, $callback, $description);
     }
 
-    public static function taskSuccess(callable $callback): self
+    public static function taskAfter(callable $callback, ?string $description = null): self
     {
-        return new self(Task::SUCCESS, $callback);
+        return new self(Task::AFTER, $callback, $description);
     }
 
-    public static function taskFailure(callable $callback): self
+    public static function taskSuccess(callable $callback, ?string $description = null): self
     {
-        return new self(Task::FAILURE, $callback);
+        return new self(Task::SUCCESS, $callback, $description);
     }
 
-    public static function scheduleFilter(callable $callback): self
+    public static function taskFailure(callable $callback, ?string $description = null): self
     {
-        return new self(Schedule::FILTER, $callback);
+        return new self(Task::FAILURE, $callback, $description);
     }
 
-    public static function scheduleBefore(callable $callback): self
+    public static function scheduleFilter(callable $callback, ?string $description = null): self
     {
-        return new self(Schedule::BEFORE, $callback);
+        return new self(Schedule::FILTER, $callback, $description);
     }
 
-    public static function scheduleAfter(callable $callback): self
+    public static function scheduleBefore(callable $callback, ?string $description = null): self
     {
-        return new self(Schedule::AFTER, $callback);
+        return new self(Schedule::BEFORE, $callback, $description);
     }
 
-    public static function scheduleSuccess(callable $callback): self
+    public static function scheduleAfter(callable $callback, ?string $description = null): self
     {
-        return new self(Schedule::SUCCESS, $callback);
+        return new self(Schedule::AFTER, $callback, $description);
     }
 
-    public static function scheduleFailure(callable $callback): self
+    public static function scheduleSuccess(callable $callback, ?string $description = null): self
     {
-        return new self(Schedule::FAILURE, $callback);
+        return new self(Schedule::SUCCESS, $callback, $description);
+    }
+
+    public static function scheduleFailure(callable $callback, ?string $description = null): self
+    {
+        return new self(Schedule::FAILURE, $callback, $description);
     }
 
     public static function createDescriptionFromCallback(callable $callback): string

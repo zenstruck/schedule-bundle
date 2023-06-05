@@ -89,9 +89,9 @@ final class Schedule
     /**
      * @see CallbackTask::__construct()
      */
-    public function addCallback(callable $callback): CallbackTask
+    public function addCallback(callable $callback, ?string $description = null): CallbackTask
     {
-        return $this->add(new CallbackTask($callback));
+        return $this->add(new CallbackTask($callback, $description));
     }
 
     /**
@@ -130,9 +130,9 @@ final class Schedule
      *
      * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext
      */
-    public function filter(callable $callback): self
+    public function filter(callable $callback, ?string $description = null): self
     {
-        return $this->addExtension(CallbackExtension::scheduleFilter($callback));
+        return $this->addExtension(CallbackExtension::scheduleFilter($callback, $description));
     }
 
     /**
@@ -166,7 +166,7 @@ final class Schedule
             if ($callback($context)) {
                 throw new SkipSchedule($description);
             }
-        });
+        }, $description);
     }
 
     /**
@@ -174,9 +174,9 @@ final class Schedule
      *
      * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext
      */
-    public function before(callable $callback): self
+    public function before(callable $callback, ?string $description = null): self
     {
-        return $this->addExtension(CallbackExtension::scheduleBefore($callback));
+        return $this->addExtension(CallbackExtension::scheduleBefore($callback, $description));
     }
 
     /**
@@ -184,9 +184,9 @@ final class Schedule
      *
      * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext
      */
-    public function after(callable $callback): self
+    public function after(callable $callback, ?string $description = null): self
     {
-        return $this->addExtension(CallbackExtension::scheduleAfter($callback));
+        return $this->addExtension(CallbackExtension::scheduleAfter($callback, $description));
     }
 
     /**
@@ -204,9 +204,9 @@ final class Schedule
      *
      * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext
      */
-    public function onSuccess(callable $callback): self
+    public function onSuccess(callable $callback, ?string $description = null): self
     {
-        return $this->addExtension(CallbackExtension::scheduleSuccess($callback));
+        return $this->addExtension(CallbackExtension::scheduleSuccess($callback, $description));
     }
 
     /**
@@ -215,9 +215,9 @@ final class Schedule
      *
      * @param callable $callback Receives an instance of \Zenstruck\ScheduleBundle\Schedule\ScheduleRunContext
      */
-    public function onFailure(callable $callback): self
+    public function onFailure(callable $callback, ?string $description = null): self
     {
-        return $this->addExtension(CallbackExtension::scheduleFailure($callback));
+        return $this->addExtension(CallbackExtension::scheduleFailure($callback, $description));
     }
 
     /**
