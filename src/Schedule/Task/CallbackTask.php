@@ -25,9 +25,9 @@ final class CallbackTask extends Task
     /**
      * @param callable $callback Return value is considered "output"
      */
-    public function __construct(callable $callback)
+    public function __construct(callable $callback, ?string $description = null)
     {
-        parent::__construct('(callable) '.CallbackExtension::createDescriptionFromCallback($callback));
+        parent::__construct($description ?? '(callable) '.CallbackExtension::createDescriptionFromCallback($callback));
 
         $this->callback = $callback;
     }
