@@ -49,7 +49,7 @@ abstract class Task
     final public function __toString(): string
     {
         if ($this->customId) {
-            return "{$this->getType()} `$this->customId`: {$this->getDescription()}";
+            return "{$this->getType()} `{$this->customId}`: {$this->getDescription()}";
         }
 
         return "{$this->getType()}: {$this->getDescription()}";
@@ -67,7 +67,7 @@ abstract class Task
 
     final public function hasCustomIdentifier(): bool
     {
-        return $this->customId !== null;
+        return null !== $this->customId;
     }
 
     final public function getDescription(): string
