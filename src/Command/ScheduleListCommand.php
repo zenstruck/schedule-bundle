@@ -184,7 +184,7 @@ final class ScheduleListCommand extends Command
             if ($withIds) {
                 $rows[] = [ // Additional row to prevent new line
                     null,
-                    new TableCell($this->getHelper('formatter')->truncate($task->getDescription(), 120), ['colspan' => 4])
+                    new TableCell($this->getHelper('formatter')->truncate($task->getDescription(), 120), ['colspan' => 4]),
                 ];
                 $rows[] = new TableSeparator();
             }
@@ -192,7 +192,7 @@ final class ScheduleListCommand extends Command
 
         if ($withIds) {
             // Remove last table separator
-            array_pop($rows);
+            \array_pop($rows);
         }
 
         $taskIssues = \array_merge([], ...$taskIssues);
