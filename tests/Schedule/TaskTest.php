@@ -166,6 +166,12 @@ final class TaskTest extends TestCase
         })->getId(), self::task('task')->getId());
     }
 
+    public function uses_custom_id_when_set()
+    {
+        $this->assertSame('task', self::task()->identifiedBy('task1')->getId());
+        $this->assertNotSame(self::task()->identifiedBy('task1')->getId(), self::task()->getId());
+    }
+
     /**
      * @test
      *

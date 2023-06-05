@@ -40,6 +40,7 @@ abstract class Task
 
     private string $expression = self::DEFAULT_EXPRESSION;
     private ?\DateTimeZone $timezone = null;
+    private ?string $customId = null;
 
     public function __construct(private string $description)
     {
@@ -47,6 +48,10 @@ abstract class Task
 
     final public function __toString(): string
     {
+        if ($this->customId) {
+            return "{$this->getType()} `$this->customId`: {$this->getDescription()}";
+        }
+
         return "{$this->getType()}: {$this->getDescription()}";
     }
 
@@ -57,7 +62,12 @@ abstract class Task
 
     final public function getId(): string
     {
-        return \sha1(static::class.$this->getExpression().$this->getDescription());
+        return $this->customId ?? \sha1(static::class.$this->getExpression().$this->getDescription());
+    }
+
+    final public function hasCustomIdentifier(): bool
+    {
+        return $this->customId !== null;
     }
 
     final public function getDescription(): string
@@ -91,6 +101,16 @@ abstract class Task
     final public function isDue(\DateTimeInterface $timestamp): bool
     {
         return $this->getExpression()->isDue($timestamp, $this->getTimezoneValue());
+    }
+
+    /**
+     * Set a unique identifier for this task.
+     */
+    final public function identifiedBy(string $id): self
+    {
+        $this->customId = $id;
+
+        return $this;
     }
 
     /**
