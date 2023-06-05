@@ -323,6 +323,8 @@ final class ScheduleListCommandTest extends TestCase
             ->addTask(new MockTask('task3'))
             ->addTask(new MockTask('task3'))
             ->addTask(new MockTask('task3'))
+            ->addTask((new MockTask('task4'))->identifiedBy('task4_id'))
+            ->addTask((new MockTask('task4'))->identifiedBy('task4_id'))
             ->getRunner()
         ;
 
@@ -335,9 +337,10 @@ final class ScheduleListCommandTest extends TestCase
         $output = $this->normalizeOutput($commandTester);
 
         $this->assertSame(1, $commandTester->getStatusCode());
-        $this->assertStringContainsString('[WARNING] 2 issues with schedule:', $output);
-        $this->assertStringContainsString('[ERROR] Task "MockTask: task2" (* * * * *) is duplicated 2 times. Make their descriptions unique to fix.', $output);
-        $this->assertStringContainsString('[ERROR] Task "MockTask: task3" (* * * * *) is duplicated 3 times. Make their descriptions unique to fix.', $output);
+        $this->assertStringContainsString('[WARNING] 3 issues with schedule:', $output);
+        $this->assertStringContainsString('[ERROR] Task "MockTask: task2" (* * * * *) is duplicated 2 times.', $output);
+        $this->assertStringContainsString('[ERROR] Task "MockTask: task3" (* * * * *) is duplicated 3 times.', $output);
+        $this->assertStringContainsString('[ERROR] Task "MockTask `task4_id`: task4" (* * * * *) is duplicated 2 times.', $output);
     }
 
     private function normalizeOutput(CommandTester $tester): string
