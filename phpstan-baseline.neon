@@ -7,7 +7,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Console\\\\Helper\\\\HelperInterface\\:\\:truncate\\(\\)\\.$#"
-			count: 1
+			count: 2
 			path: src/Command/ScheduleListCommand.php
 
 		-

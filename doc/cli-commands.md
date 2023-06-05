@@ -18,7 +18,8 @@ Help:
 ```
 
 This command lists your currently defined schedule. It displays useful information
-and potential issues. The `--detail` option gives even more detail.
+and potential issues. The `--detail` option gives even more detail. Or add `--with-id`
+to add the task ids to the table output.
 
 It is advisable to run this command as a CI build step to ensure your schedule does
 not make it to production with issues (has exit code `1` if there are issues).
