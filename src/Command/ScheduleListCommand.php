@@ -249,7 +249,14 @@ final class ScheduleListCommand extends Command
 
             $task = $taskGroup[0];
 
-            yield new \LogicException(\sprintf('Task "%s" (%s) is duplicated %d times. Make their descriptions unique to fix.', $task, $task->getExpression(), $count));
+            $description = \sprintf('Task "%s" (%s) is duplicated %d times. ', $task, $task->getExpression(), $count);
+            if ($task->hasCustomIdentifier()) {
+                $description .= 'Make sure to use unique identifiers.';
+            } else {
+                $description .= 'Make their descriptions unique to fix, or set a custom identifier with `identifiedBy`.';
+            }
+
+            yield new \LogicException($description);
         }
     }
 
