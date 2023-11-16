@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [v1.8.0](https://github.com/zenstruck/schedule-bundle/releases/tag/v1.8.0)
+
+November 16th, 2023 - [v1.7.0...v1.8.0](https://github.com/zenstruck/schedule-bundle/compare/v1.7.0...v1.8.0)
+
+* eaeac48 feat: Symfony 7 support (#84) by @kbond
+* 9e78eca feat: drop support for Symfony 4.4 (#84) by @kbond
+
 ## [v1.7.0](https://github.com/zenstruck/schedule-bundle/releases/tag/v1.7.0)
 
 June 5th, 2023 - [v1.6.0...v1.7.0](https://github.com/zenstruck/schedule-bundle/compare/v1.6.0...v1.7.0)
