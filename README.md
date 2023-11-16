@@ -1,6 +1,6 @@
 # The ScheduleBundle
 
-[![CI](https://github.com/zenstruck/schedule-bundle/workflows/CI/badge.svg)](https://github.com/zenstruck/schedule-bundle/actions?query=workflow%3ACI)
+[![CI](https://github.com/zenstruck/schedule-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/zenstruck/schedule-bundle/actions/workflows/ci.yml)
 [![Code Coverage](https://codecov.io/gh/zenstruck/schedule-bundle/branch/master/graph/badge.svg?token=SZE54O8YST)](https://codecov.io/gh/zenstruck/schedule-bundle)
 [![Latest Version](https://img.shields.io/packagist/v/zenstruck/schedule-bundle.svg)](https://packagist.org/packages/zenstruck/schedule-bundle)
 [![Total Downloads](https://img.shields.io/packagist/dt/zenstruck/schedule-bundle.svg)](https://packagist.org/packages/zenstruck/schedule-bundle)
