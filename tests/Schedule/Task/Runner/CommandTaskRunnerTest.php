@@ -115,7 +115,7 @@ final class CommandTaskRunnerTest extends TestCase
                 return 'my:command';
             }
 
-            protected function configure()
+            protected function configure(): void
             {
                 $this
                     ->addOption('fail')
@@ -123,7 +123,7 @@ final class CommandTaskRunnerTest extends TestCase
                 ;
             }
 
-            protected function execute(InputInterface $input, OutputInterface $output)
+            protected function execute(InputInterface $input, OutputInterface $output): int
             {
                 $output->write('some output...');
 
