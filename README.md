@@ -76,7 +76,7 @@ Task Scheduling feature](https://laravel.com/docs/master/scheduling).
 ## Installation
 
 ```console
-$ composer require zenstruck/schedule-bundle
+composer require zenstruck/schedule-bundle
 ```
 
 *If not using Symfony Flex, be sure to enable the bundle.*
