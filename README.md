@@ -116,7 +116,7 @@ composer require zenstruck/schedule-bundle
 2. List your tasks to diagnose any problems:
 
     ```console
-    $ php bin/console schedule:list
+    php bin/console schedule:list
     ```
 
 3. Add the following Cron job on your server running every minute:
