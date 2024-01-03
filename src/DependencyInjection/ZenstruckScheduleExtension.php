@@ -164,7 +164,7 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
                 AsScheduledTask::class,
                 static function(Definition $definition, AsScheduledTask $attribute) {
                     $definition->addTag('schedule.service', \get_object_vars($attribute));
-                }
+                },
             );
         }
     }
@@ -178,14 +178,14 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
         if (!empty($config['schedule_extensions']['environments'])) {
             $definitions[$idPrefix.'environments'] = new Definition(
                 EnvironmentExtension::class,
-                [$config['schedule_extensions']['environments']]
+                [$config['schedule_extensions']['environments']],
             );
         }
 
         if ($config['schedule_extensions']['on_single_server']['enabled']) {
             $definitions[$idPrefix.'on_single_server'] = new Definition(
                 SingleServerExtension::class,
-                [$config['schedule_extensions']['on_single_server']['ttl']]
+                [$config['schedule_extensions']['on_single_server']['ttl']],
             );
         }
 

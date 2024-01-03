@@ -129,7 +129,7 @@ final class NotifierHandler extends ExtensionHandler
 
         $this->prefixSubject($notification, \sprintf('[Scheduled Task %s] %s',
             $result->isFailure() ? 'Failed' : 'Succeeded',
-            $result->getTask()
+            $result->getTask(),
         ));
 
         if ($result->isFailure()) {

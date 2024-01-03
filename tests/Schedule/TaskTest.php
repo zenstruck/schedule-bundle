@@ -67,7 +67,7 @@ final class TaskTest extends TestCase
     {
         $this->assertSame(
             (new \DateTime('1st Jan next year'))->getTimestamp(),
-            self::task()->yearly()->getNextRun()->getTimestamp()
+            self::task()->yearly()->getNextRun()->getTimestamp(),
         );
     }
 

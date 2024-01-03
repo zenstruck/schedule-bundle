@@ -59,7 +59,7 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
             $context->isForceRun() ? 'Force running' : 'Running',
             $dueTaskCount,
             $context->isForceRun() ? '' : 'due ',
-            $dueTaskCount > 1 ? 's' : ''
+            $dueTaskCount > 1 ? 's' : '',
         );
 
         $this->logger->info($message, [
@@ -107,7 +107,7 @@ final class ScheduleLoggerSubscriber implements EventSubscriberInterface
 
         $this->logger->info(\sprintf('%s "%s"',
             $context->getScheduleRunContext()->isForceRun() ? 'Force running' : 'Running',
-            $task
+            $task,
         ), ['id' => $task->getId()]);
     }
 

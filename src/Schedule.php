@@ -58,7 +58,7 @@ final class Schedule
     {
         $tasks = \array_map(
             fn(Task $task) => $task->getId(),
-            $this->all()
+            $this->all(),
         );
 
         return \sha1(\implode('', $tasks));

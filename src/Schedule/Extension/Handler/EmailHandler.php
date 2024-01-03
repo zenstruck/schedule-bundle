@@ -116,7 +116,7 @@ final class EmailHandler extends ExtensionHandler
 
         $this->prefixSubject($email, \sprintf('[Scheduled Task %s] %s',
             $result->isFailure() ? 'Failed' : 'Succeeded',
-            $result->getTask()
+            $result->getTask(),
         ));
 
         if ($result->isFailure()) {

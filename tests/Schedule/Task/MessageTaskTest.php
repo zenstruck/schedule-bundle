@@ -41,14 +41,14 @@ final class MessageTaskTest extends TestCase
                 'Message' => self::class,
                 'Stamps' => '(none)',
             ],
-            (new MessageTask($this))->getContext()
+            (new MessageTask($this))->getContext(),
         );
         $this->assertSame(
             [
                 'Message' => self::class,
                 'Stamps' => '(none)',
             ],
-            (new MessageTask(new Envelope($this)))->getContext()
+            (new MessageTask(new Envelope($this)))->getContext(),
         );
     }
 
@@ -62,14 +62,14 @@ final class MessageTaskTest extends TestCase
                 'Message' => self::class,
                 'Stamps' => 'DelayStamp, ValidationStamp',
             ],
-            (new MessageTask($this, [new DelayStamp(4), new ValidationStamp([])]))->getContext()
+            (new MessageTask($this, [new DelayStamp(4), new ValidationStamp([])]))->getContext(),
         );
         $this->assertSame(
             [
                 'Message' => self::class,
                 'Stamps' => 'DelayStamp, ValidationStamp',
             ],
-            (new MessageTask(new Envelope($this, [new DelayStamp(4)]), [new ValidationStamp([]), new DelayStamp(4)]))->getContext()
+            (new MessageTask(new Envelope($this, [new DelayStamp(4)]), [new ValidationStamp([]), new DelayStamp(4)]))->getContext(),
         );
     }
 }

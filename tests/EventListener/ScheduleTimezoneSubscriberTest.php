@@ -32,7 +32,7 @@ final class ScheduleTimezoneSubscriberTest extends TestCase
             ->addTask((new MockTask())->timezone('America/Edmonton'))
             ->addTask((new CompoundTask())
                 ->add(new MockTask())
-                ->add((new MockTask())->timezone(new \DateTimeZone('America/Edmonton')))
+                ->add((new MockTask())->timezone(new \DateTimeZone('America/Edmonton'))),
             )
             ->addSubscriber(new ScheduleTimezoneSubscriber('America/Toronto'))
             ->getRunner()

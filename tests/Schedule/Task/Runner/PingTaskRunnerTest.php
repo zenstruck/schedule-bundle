@@ -37,7 +37,7 @@ final class PingTaskRunnerTest extends TestCase
                         'HTTP/1.1 200 OK',
                         'Server: Foo',
                     ],
-                ])
+                ]),
             ))
             ->addTask(new PingTask('https://example.com'))
             ->run()
@@ -60,7 +60,7 @@ final class PingTaskRunnerTest extends TestCase
                         'HTTP/1.1 404 Not Found',
                         'Server: Foo',
                     ],
-                ])
+                ]),
             ))
             ->addTask(new PingTask('https://example.com'))
             ->run()
@@ -87,7 +87,7 @@ final class PingTaskRunnerTest extends TestCase
                         'HTTP/1.1 500 Internal Server Error',
                         'Server: Foo',
                     ],
-                ])
+                ]),
             ))
             ->addTask(new PingTask('https://example.com'))
             ->run()

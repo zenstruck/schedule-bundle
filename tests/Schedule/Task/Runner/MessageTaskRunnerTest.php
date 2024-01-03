@@ -92,7 +92,7 @@ final class MessageTaskRunnerTest extends TestCase
                 'Handled by: "handler 3", return: (string) "bar"',
                 'Handled by: "handler 3", return: (int) "17"',
             ]),
-            $context->getSuccessful()[0]->getOutput()
+            $context->getSuccessful()[0]->getOutput(),
         );
     }
 
@@ -139,7 +139,7 @@ final class MessageTaskRunnerTest extends TestCase
                 'Sent to: "transport 1"',
                 'Sent to: "transport 2"',
             ]),
-            $context->getSuccessful()[0]->getOutput()
+            $context->getSuccessful()[0]->getOutput(),
         );
     }
 
@@ -167,7 +167,7 @@ final class MessageTaskRunnerTest extends TestCase
                 'Handled by: "handler", return: (none)',
                 'Sent to: "transport"',
             ]),
-            $context->getSuccessful()[0]->getOutput()
+            $context->getSuccessful()[0]->getOutput(),
         );
     }
 

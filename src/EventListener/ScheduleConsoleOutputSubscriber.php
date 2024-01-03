@@ -96,7 +96,7 @@ final class ScheduleConsoleOutputSubscriber implements EventSubscriberInterface
                 $dueTaskCount,
                 $context->isForceRun() ? '' : 'due ',
                 $dueTaskCount > 1 ? 's' : '',
-                $allTaskCount
+                $allTaskCount,
             ));
         }
 
@@ -114,7 +114,7 @@ final class ScheduleConsoleOutputSubscriber implements EventSubscriberInterface
             '%s<comment>Running %s:</comment> %s',
             $context->getScheduleRunContext()->isForceRun() ? '<error>Force</error> ' : '',
             $task->getType(),
-            $task->getDescription()
+            $task->getDescription(),
         ));
     }
 
@@ -131,7 +131,7 @@ final class ScheduleConsoleOutputSubscriber implements EventSubscriberInterface
         $this->io->text(\sprintf('%s (<comment>Duration:</comment> %s, <comment>Memory:</comment> %s)',
             $this->afterTaskMessage($context->getResult()),
             $context->getFormattedDuration(),
-            $context->getFormattedMemory()
+            $context->getFormattedMemory(),
         ));
         $this->io->newLine();
     }

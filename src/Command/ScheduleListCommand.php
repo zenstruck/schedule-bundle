@@ -160,7 +160,7 @@ final class ScheduleListCommand extends Command
 
         $io->listing(\array_map(
             fn(array $line) => \sprintf('<info>%s:</info> %s', \array_keys($line)[0], \array_values($line)[0]),
-            $list
+            $list,
         ));
     }
 
@@ -225,13 +225,13 @@ final class ScheduleListCommand extends Command
                 if (\method_exists($extension, '__toString')) {
                     return \sprintf('%s <comment>(%s)</comment>',
                         \strtr($extension, self::extensionHighlightMap()),
-                        $extension::class
+                        $extension::class,
                     );
                 }
 
                 return $extension::class;
             },
-            $extensions
+            $extensions,
         ));
     }
 

@@ -133,7 +133,7 @@ final class CronExpression
         if (\preg_match('#^\#(\((\d+)-(\d+)\))?$#', $value, $matches)) {
             $value = $this->hashField(
                 $matches[2] ?? self::RANGES[$position][0],
-                $matches[3] ?? self::RANGES[$position][1]
+                $matches[3] ?? self::RANGES[$position][1],
             );
         }
 

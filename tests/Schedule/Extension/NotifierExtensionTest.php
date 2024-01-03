@@ -125,7 +125,7 @@ final class NotifierExtensionTest extends TestCase
         (new MockScheduleBuilder())
             ->addHandler(new NotifierHandler($notifier, ['chat/slack'], 'webmaster@example.com', '123456789'))
             ->addTask($task = MockTask::failure('Exit 127: Command not found', 'my task', 'sh: 1: sdsdsd: not found')
-                ->notifyOnFailure()
+                ->notifyOnFailure(),
             )
             ->run()
         ;
@@ -152,7 +152,7 @@ final class NotifierExtensionTest extends TestCase
             ->addTask(MockTask::failure('Exit 127: Command not found', 'my task', 'sh: 1: sdsdsd: not found')
                 ->notifyOnFailure('teams', 'to@example.com', null, 'my subject', function(Notification $notification) {
                     $notification->emoji('alert');
-                })
+                }),
             )
             ->run()
         ;
@@ -172,7 +172,7 @@ final class NotifierExtensionTest extends TestCase
         (new MockScheduleBuilder())
             ->addHandler(new NotifierHandler($notifier, ['chat/slack'], null, null, '[Acme Inc]'))
             ->addTask(MockTask::failure('Exit 127: Command not found', 'my task', 'sh: 1: sdsdsd: not found')
-                ->notifyOnFailure()
+                ->notifyOnFailure(),
             )
             ->run()
         ;
@@ -214,7 +214,7 @@ final class NotifierExtensionTest extends TestCase
             ->addTask(MockTask::success('my task', 'my task output')
                 ->notifyAfter(['teams'], 'to@example.com', '987654321', 'my subject', function(Notification $notification) {
                     $notification->emoji('alert');
-                })
+                }),
             )
             ->run()
         ;

@@ -44,7 +44,7 @@ class ScheduleTest extends TestCase
         $this->assertCount(7, $schedule->all());
         $this->assertSame(['task1', 'task2', 'task3', 'task4', 'task5', 'task6', 'task7'], \array_map(
             fn(Task $task) => $task->getDescription(),
-            $schedule->all()
+            $schedule->all(),
         ));
 
         $this->assertCount(7, $schedule->all(), 'Caches the tasks');
@@ -70,7 +70,7 @@ class ScheduleTest extends TestCase
             ->add((new CommandTask('yet:another:command'))
                 ->description('task6')
                 ->sundays()
-                ->timezone('America/Los_Angeles')
+                ->timezone('America/Los_Angeles'),
             )
             ->addPing('https://example.com', 'GET', [], 'task7')
             ->addMessage(new \stdClass(), [], 'task8')
@@ -163,7 +163,7 @@ class ScheduleTest extends TestCase
                 'task4',
                 'task5',
                 'task6',
-            ], \array_map(fn(Task $task) => $task->getDescription(), $schedule->due(new \DateTime()))
+            ], \array_map(fn(Task $task) => $task->getDescription(), $schedule->due(new \DateTime())),
         );
     }
 

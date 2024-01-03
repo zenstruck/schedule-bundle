@@ -124,7 +124,7 @@ final class EmailExtensionTest extends TestCase
         (new MockScheduleBuilder())
             ->addHandler(new EmailHandler($mailer, 'webmaster@example.com', 'kevin@example.com'))
             ->addTask($task = MockTask::failure('Exit 127: Command not found', 'my task', 'sh: 1: sdsdsd: not found')
-                ->emailOnFailure()
+                ->emailOnFailure(),
             )
             ->run()
         ;
@@ -150,7 +150,7 @@ final class EmailExtensionTest extends TestCase
             ->addTask(MockTask::failure('Exit 127: Command not found', 'my task', 'sh: 1: sdsdsd: not found')
                 ->emailOnFailure('to@example.com', 'my subject', function(Email $email) {
                     $email->cc('cc@example.com');
-                })
+                }),
             )
             ->run()
         ;
@@ -170,7 +170,7 @@ final class EmailExtensionTest extends TestCase
         (new MockScheduleBuilder())
             ->addHandler(new EmailHandler($mailer, 'webmaster@example.com', 'kevin@example.com', '[Acme Inc]'))
             ->addTask(MockTask::failure('Exit 127: Command not found', 'my task', 'sh: 1: sdsdsd: not found')
-                ->emailOnFailure()
+                ->emailOnFailure(),
             )
             ->run()
         ;
@@ -212,7 +212,7 @@ final class EmailExtensionTest extends TestCase
             ->addTask(MockTask::success('my task', 'my task output')
                 ->emailAfter('to@example.com', 'my subject', function(Email $email) {
                     $email->cc('cc@example.com');
-                })
+                }),
             )
             ->run()
         ;

@@ -37,7 +37,7 @@ final class PingExtensionTest extends TestCase
             [$this->equalTo('GET'), $this->equalTo('task-after.com'), $this->isType('array')],
             [$this->equalTo('GET'), $this->equalTo('task-success.com'), $this->isType('array')],
             [$this->equalTo('GET'), $this->equalTo('schedule-after.com'), $this->isType('array')],
-            [$this->equalTo('GET'), $this->equalTo('schedule-success.com'), $this->isType('array')]
+            [$this->equalTo('GET'), $this->equalTo('schedule-success.com'), $this->isType('array')],
         );
 
         (new MockScheduleBuilder())
@@ -59,7 +59,7 @@ final class PingExtensionTest extends TestCase
             [$this->equalTo('GET'), $this->equalTo('task-after.com'), $this->isType('array')],
             [$this->equalTo('GET'), $this->equalTo('task-failure.com'), $this->isType('array')],
             [$this->equalTo('GET'), $this->equalTo('schedule-after.com'), $this->isType('array')],
-            [$this->equalTo('GET'), $this->equalTo('schedule-failure.com'), $this->isType('array')]
+            [$this->equalTo('GET'), $this->equalTo('schedule-failure.com'), $this->isType('array')],
         );
 
         (new MockScheduleBuilder())
