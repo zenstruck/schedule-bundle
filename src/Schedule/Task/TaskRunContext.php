@@ -26,7 +26,7 @@ final class TaskRunContext extends RunContext
     /** @var Task */
     private $task;
 
-    /** @var Result */
+    /** @var Task\Result */
     private $result;
 
     public function __construct(ScheduleRunContext $scheduleRunContext, Task $task)
@@ -55,14 +55,14 @@ final class TaskRunContext extends RunContext
     /**
      * @throws \LogicException if has not yet run
      */
-    public function getResult(): Result
+    public function getResult(): Task\Result
     {
         $this->ensureHasRun();
 
         return $this->result;
     }
 
-    public function setResult(Result $result): void
+    public function setResult(Task\Result $result): void
     {
         $resultTask = $result->getTask();
 

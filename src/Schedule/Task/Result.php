@@ -31,7 +31,7 @@ final class Result
     /** @var string */
     private $description;
 
-    /** @var string|null */
+    /** @var Task\string|null */
     private $output;
 
     /** @var \Throwable|null */
