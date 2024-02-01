@@ -44,53 +44,53 @@ final class CompoundTask extends Task implements \IteratorAggregate
     /**
      * @see CommandTask::__construct()
      *
-     * @param Task\string|null $description optional description
+     * @param string|null $description optional description
      */
     public function addCommand(string $name, array $arguments = [], ?string $description = null): self
     {
-        return $this->addWithDescription(new Task\CommandTask($name, ...$arguments), $description);
+        return $this->addWithDescription(new CommandTask($name, ...$arguments), $description);
     }
 
     /**
      * @see CallbackTask::__construct()
      *
-     * @param Task\string|null $description optional description
+     * @param string|null $description optional description
      */
     public function addCallback(callable $callback, ?string $description = null): self
     {
-        return $this->addWithDescription(new Task\CallbackTask($callback), $description);
+        return $this->addWithDescription(new CallbackTask($callback), $description);
     }
 
     /**
      * @see ProcessTask::__construct()
      *
-     * @param string|Process   $process
-     * @param Task\string|null $description optional description
+     * @param string|Process $process
+     * @param string|null    $description optional description
      */
     public function addProcess($process, ?string $description = null): self
     {
-        return $this->addWithDescription(new Task\ProcessTask($process), $description);
+        return $this->addWithDescription(new ProcessTask($process), $description);
     }
 
     /**
      * @see PingTask::__construct()
      *
-     * @param Task\string|null $description optional description
+     * @param string|null $description optional description
      */
     public function addPing(string $url, string $method = 'GET', array $options = [], ?string $description = null): self
     {
-        return $this->addWithDescription(new Task\PingTask($url, $method, $options), $description);
+        return $this->addWithDescription(new PingTask($url, $method, $options), $description);
     }
 
     /**
      * @see MessageTask::__construct()
      *
-     * @param object|Envelope  $message
-     * @param Task\string|null $description optional description
+     * @param object|Envelope $message
+     * @param string|null     $description optional description
      */
     public function addMessage(object $message, array $stamps = [], ?string $description = null): self
     {
-        return $this->addWithDescription(new Task\MessageTask($message, $stamps), $description);
+        return $this->addWithDescription(new MessageTask($message, $stamps), $description);
     }
 
     /**

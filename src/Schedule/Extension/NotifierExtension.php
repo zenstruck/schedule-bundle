@@ -30,10 +30,10 @@ final class NotifierExtension implements HasMissingDependencyMessage
     /** @var Notification */
     private $notification;
 
-    /** @var Schedule\Extension\string|null */
+    /** @var string|null */
     private $email;
 
-    /** @var Schedule\Extension\string|null */
+    /** @var string|null */
     private $phone;
 
     /**

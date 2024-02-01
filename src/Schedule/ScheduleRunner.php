@@ -53,7 +53,7 @@ final class ScheduleRunner
     /**
      * @param string ...$taskIds Task ID's to force run
      */
-    public function __invoke(string ...$taskIds): Schedule\ScheduleRunContext
+    public function __invoke(string ...$taskIds): ScheduleRunContext
     {
         $scheduleRunContext = $this->createRunContext($taskIds);
 
@@ -99,7 +99,7 @@ final class ScheduleRunner
         return $schedule;
     }
 
-    public function runnerFor(Schedule\Task $task): TaskRunner
+    public function runnerFor(Task $task): TaskRunner
     {
         foreach ($this->taskRunners as $runner) {
             if ($runner->supports($task)) {
@@ -137,12 +137,12 @@ final class ScheduleRunner
     /**
      * @param string[] $taskIds
      */
-    private function createRunContext(array $taskIds): Schedule\ScheduleRunContext
+    private function createRunContext(array $taskIds): ScheduleRunContext
     {
         $schedule = $this->buildSchedule();
 
         $tasks = \array_map(fn(string $id) => $schedule->getTask($id), $taskIds);
 
-        return new Schedule\ScheduleRunContext($schedule, ...$tasks);
+        return new ScheduleRunContext($schedule, ...$tasks);
     }
 }

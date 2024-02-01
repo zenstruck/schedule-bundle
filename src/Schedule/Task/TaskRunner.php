@@ -18,7 +18,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
  */
 interface TaskRunner
 {
-    public function __invoke(Task $task): Task\Result;
+    public function __invoke(Task $task): Result;
 
     public function supports(Task $task): bool;
 }

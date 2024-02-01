@@ -19,7 +19,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class ScheduleRunContext extends Schedule\RunContext
+final class ScheduleRunContext extends RunContext
 {
     /** @var Schedule */
     private $schedule;
@@ -51,7 +51,7 @@ final class ScheduleRunContext extends Schedule\RunContext
     /** @var Result[]|null */
     private $run;
 
-    public function __construct(Schedule $schedule, Schedule\Task ...$forcedTasks)
+    public function __construct(Schedule $schedule, Task ...$forcedTasks)
     {
         parent::__construct();
 
