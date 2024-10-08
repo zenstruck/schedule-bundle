@@ -14,6 +14,7 @@ namespace Zenstruck\ScheduleBundle\Tests\DependencyInjection;
 use Matthias\SymfonyDependencyInjectionTest\PhpUnit\AbstractExtensionTestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
+use Symfony\Component\DependencyInjection\Reference;
 use Zenstruck\ScheduleBundle\Command\ScheduleListCommand;
 use Zenstruck\ScheduleBundle\Command\ScheduleRunCommand;
 use Zenstruck\ScheduleBundle\DependencyInjection\ZenstruckScheduleExtension;
@@ -134,7 +135,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     {
         $this->load(['single_server_lock_factory' => 'my_factory']);
 
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(SingleServerHandler::class, 0, 'my_factory');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(SingleServerHandler::class, 0, new Reference('my_factory'));
         $this->assertContainerBuilderHasServiceDefinitionWithTag(SingleServerHandler::class, 'schedule.extension_handler');
     }
 
@@ -145,7 +146,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     {
         $this->load(['without_overlapping_lock_factory' => 'my_factory']);
 
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(WithoutOverlappingHandler::class, 0, 'my_factory');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(WithoutOverlappingHandler::class, 0, new Reference('my_factory'));
         $this->assertContainerBuilderHasServiceDefinitionWithTag(WithoutOverlappingHandler::class, 'schedule.extension_handler');
     }
 
@@ -156,9 +157,9 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     {
         $this->load(['http_client' => 'my_client']);
 
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(PingHandler::class, 0, 'my_client');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(PingHandler::class, 0, new Reference('my_client'));
         $this->assertContainerBuilderHasServiceDefinitionWithTag(PingHandler::class, 'schedule.extension_handler');
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(PingTaskRunner::class, 0, 'my_client');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(PingTaskRunner::class, 0, new Reference('my_client'));
         $this->assertContainerBuilderHasServiceDefinitionWithTag(PingTaskRunner::class, 'schedule.task_runner');
     }
 
@@ -169,7 +170,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     {
         $this->load(['messenger' => null]);
 
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(MessageTaskRunner::class, 0, 'message_bus');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(MessageTaskRunner::class, 0, new Reference('message_bus'));
         $this->assertContainerBuilderHasServiceDefinitionWithTag(MessageTaskRunner::class, 'schedule.task_runner');
     }
 
@@ -180,7 +181,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
     {
         $this->load(['messenger' => ['message_bus' => 'my_bus']]);
 
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(MessageTaskRunner::class, 0, 'my_bus');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(MessageTaskRunner::class, 0, new Reference('my_bus'));
         $this->assertContainerBuilderHasServiceDefinitionWithTag(MessageTaskRunner::class, 'schedule.task_runner');
     }
 
@@ -196,7 +197,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
             'subject_prefix' => '[Acme Inc]',
         ]]);
 
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 0, 'my_mailer');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 0, new Reference('my_mailer'));
         $this->assertContainerBuilderHasServiceDefinitionWithTag(EmailHandler::class, 'schedule.extension_handler');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 1, 'from@example.com');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 2, 'to@example.com');
@@ -216,7 +217,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
             'subject_prefix' => '[Acme Inc]',
         ]]);
 
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 0, 'my_notifier');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 0, new Reference('my_notifier'));
         $this->assertContainerBuilderHasServiceDefinitionWithTag(NotifierHandler::class, 'schedule.extension_handler');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 1, ['chat/slack']);
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 2, 'to@example.com');
@@ -237,7 +238,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
             'subject_prefix' => '[Acme Inc]',
         ]]);
 
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 0, 'my_notifier');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 0, new Reference('my_notifier'));
         $this->assertContainerBuilderHasServiceDefinitionWithTag(NotifierHandler::class, 'schedule.extension_handler');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 1, ['chat/slack', 'teams']);
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 2, 'to@example.com');
@@ -254,7 +255,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
             'service' => 'my_mailer',
         ]]);
 
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 0, 'my_mailer');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 0, new Reference('my_mailer'));
         $this->assertContainerBuilderHasServiceDefinitionWithTag(EmailHandler::class, 'schedule.extension_handler');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 1, null);
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(EmailHandler::class, 2, null);
@@ -270,7 +271,7 @@ final class ZenstruckScheduleExtensionTest extends AbstractExtensionTestCase
             'service' => 'my_notifier',
         ]]);
 
-        $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 0, 'my_notifier');
+        $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 0, new Reference('my_notifier'));
         $this->assertContainerBuilderHasServiceDefinitionWithTag(NotifierHandler::class, 'schedule.extension_handler');
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 1, []);
         $this->assertContainerBuilderHasServiceDefinitionWithArgument(NotifierHandler::class, 2, null);
