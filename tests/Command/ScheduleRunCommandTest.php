@@ -64,7 +64,7 @@ final class ScheduleRunCommandTest extends TestCase
         $dispatcher = new EventDispatcher();
         $runner = (new MockScheduleBuilder())
             ->addTask(MockTask::success('my task 1'))
-            ->addBuilder(new class() implements ScheduleBuilder {
+            ->addBuilder(new class implements ScheduleBuilder {
                 public function buildSchedule(Schedule $schedule): void
                 {
                     $schedule->skip('This schedule was skipped.', true);

@@ -36,7 +36,7 @@ final class NotifierExtensionTest extends TestCase
 
         (new MockScheduleBuilder())
             ->addHandler(new NotifierHandler($notifier, ['chat/slack'], 'webmaster@example.com', '123456789'))
-            ->addBuilder(new class() implements ScheduleBuilder {
+            ->addBuilder(new class implements ScheduleBuilder {
                 public function buildSchedule(Schedule $schedule): void
                 {
                     $schedule->notifyOnFailure();
@@ -72,7 +72,7 @@ final class NotifierExtensionTest extends TestCase
 
         (new MockScheduleBuilder())
             ->addHandler(new NotifierHandler($notifier, ['chat/slack'], 'webmaster@example.com', '127.0.0.1'))
-            ->addBuilder(new class() implements ScheduleBuilder {
+            ->addBuilder(new class implements ScheduleBuilder {
                 public function buildSchedule(Schedule $schedule): void
                 {
                     $schedule->notifyOnFailure('teams', null, null, 'my subject', function(Notification $notification) {
@@ -100,7 +100,7 @@ final class NotifierExtensionTest extends TestCase
 
         (new MockScheduleBuilder())
             ->addHandler(new NotifierHandler($notifier, ['chat/slack'], 'webmaster@example.com', 'kevin@example.com', '[Acme Inc]'))
-            ->addBuilder(new class() implements ScheduleBuilder {
+            ->addBuilder(new class implements ScheduleBuilder {
                 public function buildSchedule(Schedule $schedule): void
                 {
                     $schedule->notifyOnFailure();
@@ -251,7 +251,7 @@ final class NotifierExtensionTest extends TestCase
         $this->expectExceptionMessage('To use the notifier extension you must configure a notifier (config path: "zenstruck_schedule.notifier").');
 
         (new MockScheduleBuilder())
-            ->addBuilder(new class() implements ScheduleBuilder {
+            ->addBuilder(new class implements ScheduleBuilder {
                 public function buildSchedule(Schedule $schedule): void
                 {
                     $schedule->notifyOnFailure();
@@ -294,7 +294,7 @@ final class NotifierExtensionTest extends TestCase
 
     private function createNotifier(): NotifierInterface
     {
-        return new class() implements NotifierInterface {
+        return new class implements NotifierInterface {
             /** @var Notification */
             public $lastNotification;
 

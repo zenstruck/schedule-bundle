@@ -36,7 +36,7 @@ final class EmailExtensionTest extends TestCase
 
         (new MockScheduleBuilder())
             ->addHandler(new EmailHandler($mailer, 'webmaster@example.com', 'kevin@example.com'))
-            ->addBuilder(new class() implements ScheduleBuilder {
+            ->addBuilder(new class implements ScheduleBuilder {
                 public function buildSchedule(Schedule $schedule): void
                 {
                     $schedule->emailOnFailure();
@@ -71,7 +71,7 @@ final class EmailExtensionTest extends TestCase
 
         (new MockScheduleBuilder())
             ->addHandler(new EmailHandler($mailer, 'webmaster@example.com', 'kevin@example.com'))
-            ->addBuilder(new class() implements ScheduleBuilder {
+            ->addBuilder(new class implements ScheduleBuilder {
                 public function buildSchedule(Schedule $schedule): void
                 {
                     $schedule->emailOnFailure('to@example.com', 'my subject', function(Email $email) {
@@ -99,7 +99,7 @@ final class EmailExtensionTest extends TestCase
 
         (new MockScheduleBuilder())
             ->addHandler(new EmailHandler($mailer, 'webmaster@example.com', 'kevin@example.com', '[Acme Inc]'))
-            ->addBuilder(new class() implements ScheduleBuilder {
+            ->addBuilder(new class implements ScheduleBuilder {
                 public function buildSchedule(Schedule $schedule): void
                 {
                     $schedule->emailOnFailure();
@@ -247,7 +247,7 @@ final class EmailExtensionTest extends TestCase
         $this->expectExceptionMessage('To use the email extension you must configure a mailer (config path: "zenstruck_schedule.mailer").');
 
         (new MockScheduleBuilder())
-            ->addBuilder(new class() implements ScheduleBuilder {
+            ->addBuilder(new class implements ScheduleBuilder {
                 public function buildSchedule(Schedule $schedule): void
                 {
                     $schedule->emailOnFailure();
@@ -290,7 +290,7 @@ final class EmailExtensionTest extends TestCase
 
     private function createMailer(): MailerInterface
     {
-        return new class() implements MailerInterface {
+        return new class implements MailerInterface {
             /** @var RawMessage */
             public $lastMessage;
 

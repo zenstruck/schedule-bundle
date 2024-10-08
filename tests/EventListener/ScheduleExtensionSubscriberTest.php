@@ -25,7 +25,7 @@ final class ScheduleExtensionSubscriberTest extends TestCase
      */
     public function can_configure_schedule_with_subscriber()
     {
-        $extension = new class() {
+        $extension = new class {
         };
 
         $schedule = (new MockScheduleBuilder())

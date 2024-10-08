@@ -28,7 +28,7 @@ final class ScheduleBuilderKernelPassTest extends AbstractCompilerPassTestCase
      */
     public function adds_tag_if_kernel_implement_interface()
     {
-        $class = new class() implements ScheduleBuilder {
+        $class = new class implements ScheduleBuilder {
             public function buildSchedule(Schedule $schedule): void
             {
             }
@@ -46,7 +46,7 @@ final class ScheduleBuilderKernelPassTest extends AbstractCompilerPassTestCase
      */
     public function does_not_add_tag_if_kernel_does_not_implement_interface()
     {
-        $class = new class() {
+        $class = new class {
         };
 
         $this->setDefinition('kernel', new Definition($class::class));
