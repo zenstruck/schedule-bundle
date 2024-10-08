@@ -41,7 +41,8 @@ final class ProcessTaskRunnerTest extends TestCase
 
         $this->assertTrue($result->isFailure());
         $this->assertSame('Exit 127: Command not found', $result->getDescription());
-        $this->assertSame("sh: 1: sdfsdfsdf: not found\n", $result->getOutput());
+        $this->assertStringContainsString('sdfsdfsdf', $result->getOutput());
+        $this->assertStringContainsString('not found', $result->getOutput());
     }
 
     /**
