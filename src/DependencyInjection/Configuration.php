@@ -311,13 +311,11 @@ final class Configuration implements ConfigurationInterface
             ->canBeEnabled()
             ->beforeNormalization()
                 ->ifString()
-                ->then(function($v) {
-                    return [
-                        'enabled' => true,
-                        'to' => $v,
-                        'subject' => null,
-                    ];
-                })
+                ->then(fn($v) => [
+                    'enabled' => true,
+                    'to' => $v,
+                    'subject' => null,
+                ])
             ->end()
             ->children()
                 ->scalarNode('to')
@@ -376,14 +374,12 @@ final class Configuration implements ConfigurationInterface
             ->canBeEnabled()
             ->beforeNormalization()
                 ->ifString()
-                ->then(function($v) {
-                    return [
-                        'enabled' => true,
-                        'url' => $v,
-                        'method' => 'GET',
-                        'options' => [],
-                    ];
-                })
+                ->then(fn($v) => [
+                    'enabled' => true,
+                    'url' => $v,
+                    'method' => 'GET',
+                    'options' => [],
+                ])
             ->end()
             ->children()
                 ->scalarNode('url')
