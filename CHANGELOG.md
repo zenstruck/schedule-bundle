@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [v1.8.1](https://github.com/zenstruck/schedule-bundle/releases/tag/v1.8.1)
+
+April 27th, 2025 - [v1.8.0...v1.8.1](https://github.com/zenstruck/schedule-bundle/compare/v1.8.0...v1.8.1)
+
+* dd46bf3 minor: fix deprecations (#92) by @kbond
+* 9acfbe4 minor: add `tests/bootstrap.php` (#92) by @kbond
+* 23512eb minor: fix tests (#89) by @kbond
+* d843e46 doc: Update README.md (#88) by @Chris53897
+* ea16a26 doc: remove $ so gitclip works (#86) by @tacman
+* d6d493e doc: remove `$` so gitclip works (#85) by @tacman
+* f40e90e doc: adjust gha badge by @kbond
+
 ## [v1.8.0](https://github.com/zenstruck/schedule-bundle/releases/tag/v1.8.0)
 
 November 16th, 2023 - [v1.7.0...v1.8.0](https://github.com/zenstruck/schedule-bundle/compare/v1.7.0...v1.8.0)
