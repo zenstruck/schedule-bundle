@@ -13,6 +13,7 @@ namespace Zenstruck\ScheduleBundle\Tests\Schedule\Task;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\LazyCommand;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
@@ -132,17 +133,12 @@ final class CommandTaskTest extends TestCase
     }
 }
 
+#[AsCommand('dummy:command')]
 final class DummyCommand extends Command
 {
-    public static function getDefaultName(): string
-    {
-        return 'dummy:command';
-    }
 }
+
+#[AsCommand('lazy:dummy:command')]
 final class LazyDummyCommand extends Command
 {
-    public static function getDefaultName(): string
-    {
-        return 'lazy:dummy:command';
-    }
 }

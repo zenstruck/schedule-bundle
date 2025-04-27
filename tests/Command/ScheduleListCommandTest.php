@@ -186,17 +186,14 @@ final class ScheduleListCommandTest extends TestCase
         ;
 
         $application = new Application();
-        $application->add(new class extends Command {
-            public static function getDefaultName(): string
-            {
-                return 'my:command';
+        $application->add(
+            new class('my:command') extends Command {
+                protected function configure()
+                {
+                    $this->addArgument('arg1');
+                }
             }
-
-            protected function configure()
-            {
-                $this->addArgument('arg1');
-            }
-        });
+        );
         $command = new ScheduleListCommand($runner, new ExtensionHandlerRegistry([]));
         $command->setHelperSet(new HelperSet([new FormatterHelper()]));
         $command->setApplication($application);

@@ -109,12 +109,7 @@ final class CommandTaskRunnerTest extends TestCase
 
     private function createCommand(): Command
     {
-        return new class extends Command {
-            public static function getDefaultName(): string
-            {
-                return 'my:command';
-            }
-
+        return new class('my:command') extends Command {
             protected function configure(): void
             {
                 $this
