@@ -13,6 +13,7 @@ namespace Zenstruck\ScheduleBundle\Command;
 
 use Lorisleiva\CronTranslator\CronParsingException;
 use Lorisleiva\CronTranslator\CronTranslator;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableSeparator;
@@ -29,6 +30,10 @@ use Zenstruck\ScheduleBundle\Schedule\Task\CommandTask;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
+#[AsCommand(
+    name: 'schedule:list',
+    description: 'List configured scheduled tasks',
+)]
 final class ScheduleListCommand extends Command
 {
     /** @var ScheduleRunner */
@@ -45,20 +50,9 @@ final class ScheduleListCommand extends Command
         parent::__construct();
     }
 
-    public static function getDefaultName(): string
-    {
-        return 'schedule:list';
-    }
-
-    public static function getDefaultDescription(): string
-    {
-        return 'List configured scheduled tasks';
-    }
-
     protected function configure(): void
     {
         $this
-            ->setDescription(self::getDefaultDescription()) // required for Symfony 4.4
             ->addOption('detail', null, null, 'Show detailed task list')
             ->addOption('with-ids', null, null, 'Show task ids in non-detailed list')
             ->setHelp(<<<EOF
