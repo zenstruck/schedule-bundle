@@ -18,7 +18,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class TaskRunContext extends RunContext
+final class TaskRunContext extends RunContext implements \Stringable
 {
     /** @var ScheduleRunContext */
     private $scheduleRunContext;

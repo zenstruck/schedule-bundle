@@ -16,7 +16,7 @@ use Symfony\Component\Console\Helper\Helper;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-abstract class RunContext
+abstract class RunContext implements \Stringable
 {
     private \DateTimeImmutable $startTime;
     private ?int $duration = null;

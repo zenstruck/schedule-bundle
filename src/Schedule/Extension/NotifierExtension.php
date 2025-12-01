@@ -22,7 +22,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
 /**
  * @author Pierre du Plessis <pdples@gmail.com>
  */
-final class NotifierExtension implements HasMissingDependencyMessage
+final class NotifierExtension implements \Stringable, HasMissingDependencyMessage
 {
     /** @var string */
     private $hook;

@@ -16,7 +16,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class Result
+final class Result implements \Stringable
 {
     public const SUCCESSFUL = 'successful';
     public const FAILED = 'failed';

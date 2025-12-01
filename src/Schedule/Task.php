@@ -26,7 +26,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task\TaskRunContext;
  * @author Taylor Otwell <taylor@laravel.com>
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-abstract class Task
+abstract class Task implements \Stringable
 {
     use HasExtensions;
 

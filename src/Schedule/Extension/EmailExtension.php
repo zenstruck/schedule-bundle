@@ -20,7 +20,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class EmailExtension implements HasMissingDependencyMessage
+final class EmailExtension implements \Stringable, HasMissingDependencyMessage
 {
     /** @var string */
     private $hook;

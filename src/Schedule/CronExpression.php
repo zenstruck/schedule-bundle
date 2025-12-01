@@ -16,7 +16,7 @@ use Cron\CronExpression as CronSchedule;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class CronExpression
+final class CronExpression implements \Stringable
 {
     public const MINUTE = 0;
     public const HOUR = 1;

@@ -16,7 +16,7 @@ use Zenstruck\ScheduleBundle\Schedule\Exception\SkipTask;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class BetweenTimeExtension
+final class BetweenTimeExtension implements \Stringable
 {
     /** @var string */
     private $startTime;

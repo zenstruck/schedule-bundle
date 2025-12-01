@@ -17,7 +17,7 @@ use Zenstruck\ScheduleBundle\Schedule\Task;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class CallbackExtension
+final class CallbackExtension implements \Stringable
 {
     /** @var callable */
     private $callback;

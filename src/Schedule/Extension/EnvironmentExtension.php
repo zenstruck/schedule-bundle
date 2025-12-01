@@ -14,7 +14,7 @@ namespace Zenstruck\ScheduleBundle\Schedule\Extension;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class EnvironmentExtension
+final class EnvironmentExtension implements \Stringable
 {
     /** @var string[] */
     private $runEnvironments;

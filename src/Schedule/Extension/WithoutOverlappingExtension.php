@@ -16,7 +16,7 @@ use Zenstruck\ScheduleBundle\Schedule\HasMissingDependencyMessage;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class WithoutOverlappingExtension extends LockingExtension implements HasMissingDependencyMessage
+final class WithoutOverlappingExtension extends LockingExtension implements \Stringable, HasMissingDependencyMessage
 {
     public const DEFAULT_TTL = 86400;
 

@@ -46,7 +46,7 @@ final class CallbackTaskRunnerTest extends TestCase
 
     public static function outputProvider()
     {
-        $stringClass = new class {
+        $stringClass = new class implements \Stringable {
             public function __toString(): string
             {
                 return 'as string';
