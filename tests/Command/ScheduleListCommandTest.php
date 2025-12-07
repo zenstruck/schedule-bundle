@@ -188,7 +188,7 @@ final class ScheduleListCommandTest extends TestCase
         $application = new Application();
         $application->addCommands([
             new class('my:command') extends Command {
-                protected function configure()
+                protected function configure(): void
                 {
                     $this->addArgument('arg1');
                 }
