@@ -192,7 +192,7 @@ final class ScheduleListCommandTest extends TestCase
                 {
                     $this->addArgument('arg1');
                 }
-            }
+            },
         ]);
         $command = new ScheduleListCommand($runner, new ExtensionHandlerRegistry([]));
         $command->setHelperSet(new HelperSet([new FormatterHelper()]));
