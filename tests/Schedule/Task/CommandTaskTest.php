@@ -77,7 +77,7 @@ final class CommandTaskTest extends TestCase
     public function can_create_input($commandName)
     {
         $application = new Application();
-        $application->add(new DummyCommand());
+        $application->addCommands([new DummyCommand()]);
 
         $task = new CommandTask($commandName, '--option');
         $input = $task->createCommandInput($application);
@@ -121,7 +121,7 @@ final class CommandTaskTest extends TestCase
         $command = new LazyCommand($dummyCommand->getName(), $dummyCommand->getAliases(), $dummyCommand->getDescription(), $dummyCommand->isHidden(), fn() => $dummyCommand);
 
         $application = new Application();
-        $application->add($command);
+        $application->addCommands([$command]);
 
         $task = new CommandTask(LazyDummyCommand::class);
 

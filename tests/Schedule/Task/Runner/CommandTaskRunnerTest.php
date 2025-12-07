@@ -30,7 +30,7 @@ final class CommandTaskRunnerTest extends TestCase
     public function creates_successful_result()
     {
         $application = new Application();
-        $application->add($this->createCommand());
+        $application->addCommands([$this->createCommand()]);
         $runner = new CommandTaskRunner($application);
 
         $result = $runner(new CommandTask('my:command'));
@@ -45,7 +45,7 @@ final class CommandTaskRunnerTest extends TestCase
     public function creates_exception_result()
     {
         $application = new Application();
-        $application->add($this->createCommand());
+        $application->addCommands([$this->createCommand()]);
         $runner = new CommandTaskRunner($application);
 
         $result = $runner(new CommandTask('my:command --exception'));
@@ -63,7 +63,7 @@ final class CommandTaskRunnerTest extends TestCase
     public function creates_failure_result()
     {
         $application = new Application();
-        $application->add($this->createCommand());
+        $application->addCommands([$this->createCommand()]);
         $runner = new CommandTaskRunner($application);
 
         $result = $runner(new CommandTask('my:command --fail'));
@@ -85,7 +85,7 @@ final class CommandTaskRunnerTest extends TestCase
         ];
 
         $application = new Application();
-        $application->add($this->createCommand());
+        $application->addCommands([$this->createCommand()]);
         $runner = new CommandTaskRunner($application);
 
         $result = $runner(new CommandTask('my:command -vv'));

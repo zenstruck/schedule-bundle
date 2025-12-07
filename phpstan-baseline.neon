@@ -16,37 +16,27 @@ parameters:
 			path: src/Command/ScheduleListCommand.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\:\\:arrayPrototype\\(\\)\\.$#"
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:createEmailExtension\\(\\) return type with generic class Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition does not specify its types\\: TParent$#"
 			count: 1
 			path: src/DependencyInjection/Configuration.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\:\\:canBeEnabled\\(\\)\\.$#"
-			count: 3
-			path: src/DependencyInjection/Configuration.php
-
-		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\:\\:children\\(\\)\\.$#"
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:createNotifyExtension\\(\\) return type with generic class Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition does not specify its types\\: TParent$#"
 			count: 1
 			path: src/DependencyInjection/Configuration.php
 
 		-
-			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:createEmailExtension\\(\\) should return Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition but returns Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\.$#"
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:createPingExtension\\(\\) return type with generic class Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition does not specify its types\\: TParent$#"
 			count: 1
 			path: src/DependencyInjection/Configuration.php
 
 		-
-			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:createNotifyExtension\\(\\) should return Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition but returns Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\.$#"
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:getConfigTreeBuilder\\(\\) return type with generic class Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\TreeBuilder does not specify its types\\: T$#"
 			count: 1
 			path: src/DependencyInjection/Configuration.php
 
 		-
-			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:createPingExtension\\(\\) should return Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition but returns Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\.$#"
-			count: 1
-			path: src/DependencyInjection/Configuration.php
-
-		-
-			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:taskConfiguration\\(\\) should return Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition but returns Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeDefinition\\.$#"
+			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:taskConfiguration\\(\\) return type with generic class Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition does not specify its types\\: TParent$#"
 			count: 1
 			path: src/DependencyInjection/Configuration.php
 

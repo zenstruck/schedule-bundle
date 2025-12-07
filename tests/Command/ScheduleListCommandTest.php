@@ -186,14 +186,14 @@ final class ScheduleListCommandTest extends TestCase
         ;
 
         $application = new Application();
-        $application->add(
+        $application->addCommands([
             new class('my:command') extends Command {
-                protected function configure()
+                protected function configure(): void
                 {
                     $this->addArgument('arg1');
                 }
             }
-        );
+        ]);
         $command = new ScheduleListCommand($runner, new ExtensionHandlerRegistry([]));
         $command->setHelperSet(new HelperSet([new FormatterHelper()]));
         $command->setApplication($application);
