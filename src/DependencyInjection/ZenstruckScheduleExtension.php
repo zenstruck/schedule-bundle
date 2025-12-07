@@ -14,7 +14,7 @@ namespace Zenstruck\ScheduleBundle\DependencyInjection;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
@@ -63,11 +63,11 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
             ->addTag('schedule.extension_handler')
         ;
 
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
-        $loader->load('services.xml');
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader->load('services.php');
 
         if (\class_exists(Process::class)) {
-            $loader->load('process.xml');
+            $loader->load('process.php');
         }
 
         $container
@@ -76,7 +76,7 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
         ;
 
         if ($mergedConfig['without_overlapping_lock_factory'] || \class_exists(LockFactory::class)) {
-            $loader->load('without_overlapping.xml');
+            $loader->load('without_overlapping.php');
         }
 
         if ($mergedConfig['without_overlapping_lock_factory']) {
@@ -87,7 +87,7 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
         }
 
         if ($mergedConfig['single_server_lock_factory']) {
-            $loader->load('single_server.xml');
+            $loader->load('single_server.php');
 
             $container
                 ->getDefinition(SingleServerHandler::class)
@@ -96,7 +96,7 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
         }
 
         if ($mergedConfig['http_client'] || \class_exists(HttpClient::class)) {
-            $loader->load('http.xml');
+            $loader->load('http.php');
         }
 
         if ($mergedConfig['http_client']) {
@@ -112,7 +112,7 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
         }
 
         if ($mergedConfig['timezone']) {
-            $loader->load('timezone.xml');
+            $loader->load('timezone.php');
             $container
                 ->getDefinition(ScheduleTimezoneSubscriber::class)
                 ->setArgument(0, $mergedConfig['timezone'])
@@ -120,7 +120,7 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
         }
 
         if ($mergedConfig['messenger']['enabled']) {
-            $loader->load('messenger.xml');
+            $loader->load('messenger.php');
 
             $container
                 ->getDefinition(MessageTaskRunner::class)
@@ -129,7 +129,7 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
         }
 
         if ($mergedConfig['mailer']['enabled']) {
-            $loader->load('mailer.xml');
+            $loader->load('mailer.php');
 
             $container
                 ->getDefinition(EmailHandler::class)
@@ -143,7 +143,7 @@ final class ZenstruckScheduleExtension extends ConfigurableExtension
         }
 
         if ($mergedConfig['notifier']['enabled']) {
-            $loader->load('notifier.xml');
+            $loader->load('notifier.php');
 
             $container
                 ->getDefinition(NotifierHandler::class)

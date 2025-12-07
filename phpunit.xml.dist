@@ -12,7 +12,7 @@
         <ini name="error_reporting" value="-1" />
         <server name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0&amp;max[direct]=0&amp;quiet[]=indirect&amp;quiet[]=other"/>
         <server name="KERNEL_CLASS" value="Zenstruck\ScheduleBundle\Tests\Fixture\Kernel" />
-        <server name="SHELL_VERBOSITY" value="-1" />
+        <server name="SHELL_VERBOSITY" value="0" />
     </php>
 
     <testsuites>
