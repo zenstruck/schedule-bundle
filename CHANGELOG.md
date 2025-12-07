@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [v1.9.0](https://github.com/zenstruck/schedule-bundle/releases/tag/v1.9.0)
+
+December 7th, 2025 - [v1.8.1...v1.9.0](https://github.com/zenstruck/schedule-bundle/compare/v1.8.1...v1.9.0)
+
+* 2188fed minor: adjust dev deps (#94) by @kbond
+* fc62bde minor: update phpstan baseline (#94) by @kbond
+* 3caa7b5 feat: Symfony 8 support (#94) by @kbond
+* 7793a41 fix: fix deprecations (#94) by @kbond
+
 ## [v1.8.1](https://github.com/zenstruck/schedule-bundle/releases/tag/v1.8.1)
 
 April 27th, 2025 - [v1.8.0...v1.8.1](https://github.com/zenstruck/schedule-bundle/compare/v1.8.0...v1.8.1)
