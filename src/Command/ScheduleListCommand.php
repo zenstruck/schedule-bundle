@@ -153,7 +153,7 @@ final class ScheduleListCommand extends Command
         }
 
         $io->listing(\array_map(
-            fn(array $line) => \sprintf('<info>%s:</info> %s', \array_keys($line)[0], \array_values($line)[0]),
+            static fn(array $line) => \sprintf('<info>%s:</info> %s', \array_keys($line)[0], \array_values($line)[0]),
             $list,
         ));
     }
@@ -215,7 +215,7 @@ final class ScheduleListCommand extends Command
 
         $io->comment(\sprintf('<info>%d</info> %s Extension%s:', $count, $type, $count > 1 ? 's' : ''));
         $io->listing(\array_map(
-            function(object $extension) {
+            static function(object $extension) {
                 if (\method_exists($extension, '__toString')) {
                     return \sprintf('%s <comment>(%s)</comment>',
                         \strtr($extension, self::extensionHighlightMap()),

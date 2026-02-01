@@ -141,7 +141,7 @@ final class ScheduleRunner
     {
         $schedule = $this->buildSchedule();
 
-        $tasks = \array_map(fn(string $id) => $schedule->getTask($id), $taskIds);
+        $tasks = \array_map(static fn(string $id) => $schedule->getTask($id), $taskIds);
 
         return new ScheduleRunContext($schedule, ...$tasks);
     }

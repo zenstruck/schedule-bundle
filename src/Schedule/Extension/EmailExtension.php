@@ -60,7 +60,7 @@ final class EmailExtension implements \Stringable, HasMissingDependencyMessage
             return "{$this->hook}, email output";
         }
 
-        $to = \array_map(fn(Address $address) => $address->toString(), $to);
+        $to = \array_map(static fn(Address $address) => $address->toString(), $to);
         $to = \implode('; ', $to);
 
         return "{$this->hook}, email output to \"{$to}\"";

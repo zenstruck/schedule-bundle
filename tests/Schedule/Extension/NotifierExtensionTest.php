@@ -75,7 +75,7 @@ final class NotifierExtensionTest extends TestCase
             ->addBuilder(new class implements ScheduleBuilder {
                 public function buildSchedule(Schedule $schedule): void
                 {
-                    $schedule->notifyOnFailure('teams', null, null, 'my subject', function(Notification $notification) {
+                    $schedule->notifyOnFailure('teams', null, null, 'my subject', static function(Notification $notification) {
                         $notification->emoji('alert');
                     });
                 }
@@ -150,7 +150,7 @@ final class NotifierExtensionTest extends TestCase
         (new MockScheduleBuilder())
             ->addHandler(new NotifierHandler($notifier, ['chat/slack'], 'webmaster@example.com', '123456789'))
             ->addTask(MockTask::failure('Exit 127: Command not found', 'my task', 'sh: 1: sdsdsd: not found')
-                ->notifyOnFailure('teams', 'to@example.com', null, 'my subject', function(Notification $notification) {
+                ->notifyOnFailure('teams', 'to@example.com', null, 'my subject', static function(Notification $notification) {
                     $notification->emoji('alert');
                 }),
             )
@@ -212,7 +212,7 @@ final class NotifierExtensionTest extends TestCase
         (new MockScheduleBuilder())
             ->addHandler(new NotifierHandler($notifier, ['chat/slack'], 'webmaster@example.com', '123456789'))
             ->addTask(MockTask::success('my task', 'my task output')
-                ->notifyAfter(['teams'], 'to@example.com', '987654321', 'my subject', function(Notification $notification) {
+                ->notifyAfter(['teams'], 'to@example.com', '987654321', 'my subject', static function(Notification $notification) {
                     $notification->emoji('alert');
                 }),
             )

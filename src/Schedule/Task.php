@@ -157,9 +157,9 @@ abstract class Task implements \Stringable
      */
     final public function when(string $description, $callback): self
     {
-        $callback = \is_callable($callback) ? $callback : fn() => (bool) $callback;
+        $callback = \is_callable($callback) ? $callback : static fn() => (bool) $callback;
 
-        return $this->filter(function(TaskRunContext $context) use ($callback, $description) {
+        return $this->filter(static function(TaskRunContext $context) use ($callback, $description) {
             if (!$callback($context)) {
                 throw new SkipTask($description);
             }
@@ -174,9 +174,9 @@ abstract class Task implements \Stringable
      */
     final public function skip(string $description, $callback): self
     {
-        $callback = \is_callable($callback) ? $callback : fn() => (bool) $callback;
+        $callback = \is_callable($callback) ? $callback : static fn() => (bool) $callback;
 
-        return $this->filter(function(TaskRunContext $context) use ($callback, $description) {
+        return $this->filter(static function(TaskRunContext $context) use ($callback, $description) {
             if ($callback($context)) {
                 throw new SkipTask($description);
             }

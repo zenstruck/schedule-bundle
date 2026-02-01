@@ -33,8 +33,8 @@ class ScheduleTest extends TestCase
     {
         $schedule = new Schedule();
 
-        $schedule->add(new CallbackTask(function() {}))->description('task1');
-        $schedule->addCallback(function() {})->description('task2');
+        $schedule->add(new CallbackTask(static function() {}))->description('task1');
+        $schedule->addCallback(static function() {})->description('task2');
         $schedule->addProcess('php -v')->description('task3');
         $schedule->addProcess(new Process(['php -v']))->description('task4');
         $schedule->addCommand('my:command')->description('task5');
@@ -43,7 +43,7 @@ class ScheduleTest extends TestCase
 
         $this->assertCount(7, $schedule->all());
         $this->assertSame(['task1', 'task2', 'task3', 'task4', 'task5', 'task6', 'task7'], \array_map(
-            fn(Task $task) => $task->getDescription(),
+            static fn(Task $task) => $task->getDescription(),
             $schedule->all(),
         ));
 
@@ -64,7 +64,7 @@ class ScheduleTest extends TestCase
         $schedule->addCommand('my:command')->description('task1')->tuesdays();
         $schedule->addCompound()
             ->addCommand('another:command', [], 'task2')
-            ->addCallback(function() {}, 'task3')
+            ->addCallback(static function() {}, 'task3')
             ->addProcess('php -v', 'task4')
             ->addProcess(new Process(['php -v']), 'task5')
             ->add((new CommandTask('yet:another:command'))
@@ -121,7 +121,7 @@ class ScheduleTest extends TestCase
     {
         $schedule = new Schedule();
 
-        $schedule->addCallback(function() {})->description('task1');
+        $schedule->addCallback(static function() {})->description('task1');
         $notDueTask = $schedule->addProcess('php -v')->description('task2')->sundays();
 
         if ('Sun' === \date('D')) {
@@ -148,7 +148,7 @@ class ScheduleTest extends TestCase
         $schedule->addCommand('my:command')->description('task1');
         $schedule->addCompound()
             ->addCommand('another:command', [], 'task2')
-            ->addCallback(function() {}, 'task3')
+            ->addCallback(static function() {}, 'task3')
             ->addProcess('php -v', 'task4')
             ->addProcess(new Process(['php -v']), 'task5')
             ->onSingleServer()
@@ -163,7 +163,7 @@ class ScheduleTest extends TestCase
                 'task4',
                 'task5',
                 'task6',
-            ], \array_map(fn(Task $task) => $task->getDescription(), $schedule->due(new \DateTime())),
+            ], \array_map(static fn(Task $task) => $task->getDescription(), $schedule->due(new \DateTime())),
         );
     }
 
@@ -206,7 +206,7 @@ class ScheduleTest extends TestCase
     public function can_add_email_on_failure_extension()
     {
         $schedule = new Schedule();
-        $schedule->emailOnFailure('kevin@example.com', 'my subject', function(Email $email) {
+        $schedule->emailOnFailure('kevin@example.com', 'my subject', static function(Email $email) {
             $email->cc('emily@example.com');
         });
 

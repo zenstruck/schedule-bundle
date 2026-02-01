@@ -42,7 +42,7 @@ final class TaskCallbackHandlerTest extends TestCase
      */
     public function callback_returning_false_when_filter_skips_task()
     {
-        $task = MockTask::success()->when('callback value', fn() => false);
+        $task = MockTask::success()->when('callback value', static fn() => false);
 
         $context = self::createRunContext($task);
 
@@ -71,7 +71,7 @@ final class TaskCallbackHandlerTest extends TestCase
      */
     public function callback_returning_true_when_filter_allows_task_to_run()
     {
-        $task = MockTask::success()->when('callback value', fn() => true);
+        $task = MockTask::success()->when('callback value', static fn() => true);
 
         $context = self::createRunContext($task);
 
@@ -100,7 +100,7 @@ final class TaskCallbackHandlerTest extends TestCase
      */
     public function callback_returning_true_skip_filter_skips_task()
     {
-        $task = MockTask::success()->skip('callback value', fn() => true);
+        $task = MockTask::success()->skip('callback value', static fn() => true);
 
         $context = self::createRunContext($task);
 
@@ -129,7 +129,7 @@ final class TaskCallbackHandlerTest extends TestCase
      */
     public function callback_returning_false_skip_filter_allows_task_to_run()
     {
-        $task = MockTask::success()->skip('callback value', fn() => false);
+        $task = MockTask::success()->skip('callback value', static fn() => false);
 
         $context = self::createRunContext($task);
 
@@ -145,12 +145,12 @@ final class TaskCallbackHandlerTest extends TestCase
     {
         $calls = [];
         $task = MockTask::success()
-            ->filter(function() use (&$calls) { $calls[] = 'filter'; })
-            ->before(function() use (&$calls) { $calls[] = 'before'; })
-            ->after(function() use (&$calls) { $calls[] = 'after'; })
-            ->then(function() use (&$calls) { $calls[] = 'then'; })
-            ->onSuccess(function() use (&$calls) { $calls[] = 'onSuccess'; })
-            ->onFailure(function() use (&$calls) { $calls[] = 'onFailure'; })
+            ->filter(static function() use (&$calls) { $calls[] = 'filter'; })
+            ->before(static function() use (&$calls) { $calls[] = 'before'; })
+            ->after(static function() use (&$calls) { $calls[] = 'after'; })
+            ->then(static function() use (&$calls) { $calls[] = 'then'; })
+            ->onSuccess(static function() use (&$calls) { $calls[] = 'onSuccess'; })
+            ->onFailure(static function() use (&$calls) { $calls[] = 'onFailure'; })
         ;
 
         self::createRunContext($task);
@@ -171,12 +171,12 @@ final class TaskCallbackHandlerTest extends TestCase
     {
         $calls = [];
         $task = MockTask::failure()
-            ->filter(function() use (&$calls) { $calls[] = 'filter'; })
-            ->before(function() use (&$calls) { $calls[] = 'before'; })
-            ->after(function() use (&$calls) { $calls[] = 'after'; })
-            ->then(function() use (&$calls) { $calls[] = 'then'; })
-            ->onSuccess(function() use (&$calls) { $calls[] = 'onSuccess'; })
-            ->onFailure(function() use (&$calls) { $calls[] = 'onFailure'; })
+            ->filter(static function() use (&$calls) { $calls[] = 'filter'; })
+            ->before(static function() use (&$calls) { $calls[] = 'before'; })
+            ->after(static function() use (&$calls) { $calls[] = 'after'; })
+            ->then(static function() use (&$calls) { $calls[] = 'then'; })
+            ->onSuccess(static function() use (&$calls) { $calls[] = 'onSuccess'; })
+            ->onFailure(static function() use (&$calls) { $calls[] = 'onFailure'; })
         ;
 
         self::createRunContext($task);
@@ -197,12 +197,12 @@ final class TaskCallbackHandlerTest extends TestCase
     {
         $calls = [];
         $task = MockTask::skipped()
-            ->filter(function() use (&$calls) { $calls[] = 'filter'; })
-            ->before(function() use (&$calls) { $calls[] = 'before'; })
-            ->after(function() use (&$calls) { $calls[] = 'after'; })
-            ->then(function() use (&$calls) { $calls[] = 'then'; })
-            ->onSuccess(function() use (&$calls) { $calls[] = 'onSuccess'; })
-            ->onFailure(function() use (&$calls) { $calls[] = 'onFailure'; })
+            ->filter(static function() use (&$calls) { $calls[] = 'filter'; })
+            ->before(static function() use (&$calls) { $calls[] = 'before'; })
+            ->after(static function() use (&$calls) { $calls[] = 'after'; })
+            ->then(static function() use (&$calls) { $calls[] = 'then'; })
+            ->onSuccess(static function() use (&$calls) { $calls[] = 'onSuccess'; })
+            ->onFailure(static function() use (&$calls) { $calls[] = 'onFailure'; })
         ;
 
         self::createRunContext($task);

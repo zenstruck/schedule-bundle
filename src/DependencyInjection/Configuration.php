@@ -167,7 +167,7 @@ final class Configuration implements ConfigurationInterface
             ])
             ->arrayPrototype()
                 ->validate()
-                    ->ifTrue(fn($v) => [null] === $v['task'] && !$v['description'])
+                    ->ifTrue(static fn($v) => [null] === $v['task'] && !$v['description'])
                     ->thenInvalid('"null" tasks must have a description.')
                 ->end()
                 ->children()
@@ -175,7 +175,7 @@ final class Configuration implements ConfigurationInterface
                         ->info('Defaults to CommandTask, prefix with "bash:" to create ProcessTask, prefix url with "ping:" to create PingTask, pass array of commands to create CompoundTask (optionally keyed by description)')
                         ->example('"my:command arg1 --option1=value", "bash:/bin/my-script" or "ping:https://example.com"')
                         ->validate()
-                            ->ifTrue(function($v) {
+                            ->ifTrue(static function($v) {
                                 foreach ($v as $item) {
                                     if ('' === (string) $item) {
                                         return true;
@@ -199,7 +199,7 @@ final class Configuration implements ConfigurationInterface
                         ->isRequired()
                         ->cannotBeEmpty()
                         ->validate()
-                            ->ifTrue(function($v) {
+                            ->ifTrue(static function($v) {
                                 try {
                                     new CronExpression($v, 'context');
                                 } catch (\InvalidArgumentException $e) {
@@ -239,7 +239,7 @@ final class Configuration implements ConfigurationInterface
                         ->canBeEnabled()
                         ->beforeNormalization()
                             ->ifString()
-                            ->then(function($v) {
+                            ->then(static function($v) {
                                 [$start, $end] = \explode('-', $v);
 
                                 return [
@@ -265,7 +265,7 @@ final class Configuration implements ConfigurationInterface
                         ->canBeEnabled()
                         ->beforeNormalization()
                             ->ifString()
-                            ->then(function($v) {
+                            ->then(static function($v) {
                                 [$start, $end] = \explode('-', $v);
 
                                 return [
@@ -311,7 +311,7 @@ final class Configuration implements ConfigurationInterface
             ->canBeEnabled()
             ->beforeNormalization()
                 ->ifString()
-                ->then(fn($v) => [
+                ->then(static fn($v) => [
                     'enabled' => true,
                     'to' => $v,
                     'subject' => null,
@@ -374,7 +374,7 @@ final class Configuration implements ConfigurationInterface
             ->canBeEnabled()
             ->beforeNormalization()
                 ->ifString()
-                ->then(fn($v) => [
+                ->then(static fn($v) => [
                     'enabled' => true,
                     'url' => $v,
                     'method' => 'GET',

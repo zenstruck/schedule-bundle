@@ -118,7 +118,7 @@ final class CommandTaskTest extends TestCase
             return;
         }
         $dummyCommand = new LazyDummyCommand();
-        $command = new LazyCommand($dummyCommand->getName(), $dummyCommand->getAliases(), $dummyCommand->getDescription(), $dummyCommand->isHidden(), fn() => $dummyCommand);
+        $command = new LazyCommand($dummyCommand->getName(), $dummyCommand->getAliases(), $dummyCommand->getDescription(), $dummyCommand->isHidden(), static fn() => $dummyCommand);
 
         $application = new Application();
         $application->addCommands([$command]);

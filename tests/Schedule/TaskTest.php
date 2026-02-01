@@ -95,62 +95,62 @@ final class TaskTest extends TestCase
     public static function frequencyProvider(): array
     {
         return [
-            [fn() => self::task(), '* * * * *'],
-            [fn() => self::task()->minutes(37)->cron('0 0,12 1 */2 *'), '0 0,12 1 */2 *'],
-            [fn() => self::task()->weekly()->everyMinute(), '* * * * *'],
-            [fn() => self::task()->weekly()->everyFiveMinutes(), '*/5 * * * *'],
-            [fn() => self::task()->weekly()->everyTenMinutes(), '*/10 * * * *'],
-            [fn() => self::task()->weekly()->everyFifteenMinutes(), '*/15 * * * *'],
-            [fn() => self::task()->weekly()->everyTwentyMinutes(), '*/20 * * * *'],
-            [fn() => self::task()->weekly()->everyThirtyMinutes(), '0,30 * * * *'],
-            [fn() => self::task()->minutes(37)->hourly(), '0 * * * *'],
-            [fn() => self::task()->minutes(37)->hourlyAt(2), '2 * * * *'],
-            [fn() => self::task()->minutes(37)->hourlyAt(2, 3, '4-5'), '2,3,4-5 * * * *'],
-            [fn() => self::task()->minutes(37)->daily(), '0 0 * * *'],
-            [fn() => self::task()->minutes(37)->dailyOn(2, 3, '4-5'), '0 2,3,4-5 * * *'],
-            [fn() => self::task()->minutes(37)->dailyBetween(9, 17), '0 9-17 * * *'],
-            [fn() => self::task()->minutes(37)->twiceDaily(), '0 1,13 * * *'],
-            [fn() => self::task()->minutes(37)->twiceDaily(2, 14), '0 2,14 * * *'],
-            [fn() => self::task()->minutes(37)->dailyAt(2), '0 2 * * *'],
-            [fn() => self::task()->minutes(37)->dailyAt('1:34'), '34 1 * * *'],
-            [fn() => self::task()->minutes(37)->weekly(), '0 0 * * 0'],
-            [fn() => self::task()->minutes(37)->weeklyOn(2, 3, '4-5'), '0 0 * * 2,3,4-5'],
-            [fn() => self::task()->minutes(37)->monthly(), '0 0 1 * *'],
-            [fn() => self::task()->minutes(37)->monthlyOn(2, 3, '4-5'), '0 0 2,3,4-5 * *'],
-            [fn() => self::task()->minutes(37)->twiceMonthly(), '0 0 1,16 * *'],
-            [fn() => self::task()->minutes(37)->twiceMonthly(3, 17), '0 0 3,17 * *'],
-            [fn() => self::task()->minutes(37)->quarterly(), '0 0 1 */3 *'],
-            [fn() => self::task()->minutes(37)->yearly(), '0 0 1 1 *'],
-            [fn() => self::task()->weekly()->minutes(2, 3, '4-5'), '2,3,4-5 0 * * 0'],
-            [fn() => self::task()->weekly()->hours(2, 3, '4-5'), '0 2,3,4-5 * * 0'],
-            [fn() => self::task()->weekly()->daysOfMonth(2, 3, '4-5'), '0 0 2,3,4-5 * 0'],
-            [fn() => self::task()->weekly()->months(2, 3, '4-5'), '0 0 * 2,3,4-5 0'],
-            [fn() => self::task()->monthly()->daysOfWeek(2, 3, '4-5'), '0 0 1 * 2,3,4-5'],
-            [fn() => self::task()->minutes(37)->weekdays(), '37 * * * 1-5'],
-            [fn() => self::task()->minutes(37)->weekends(), '37 * * * 0,6'],
-            [fn() => self::task()->minutes(37)->mondays(), '37 * * * 1'],
-            [fn() => self::task()->minutes(37)->tuesdays(), '37 * * * 2'],
-            [fn() => self::task()->minutes(37)->wednesdays(), '37 * * * 3'],
-            [fn() => self::task()->minutes(37)->thursdays(), '37 * * * 4'],
-            [fn() => self::task()->minutes(37)->fridays(), '37 * * * 5'],
-            [fn() => self::task()->minutes(37)->saturdays(), '37 * * * 6'],
-            [fn() => self::task()->minutes(37)->sundays(), '37 * * * 0'],
-            [fn() => self::task()->weekly()->at(1), '0 1 * * 0'],
-            [fn() => self::task()->weekly()->at('2:45'), '45 2 * * 0'],
+            [static fn() => self::task(), '* * * * *'],
+            [static fn() => self::task()->minutes(37)->cron('0 0,12 1 */2 *'), '0 0,12 1 */2 *'],
+            [static fn() => self::task()->weekly()->everyMinute(), '* * * * *'],
+            [static fn() => self::task()->weekly()->everyFiveMinutes(), '*/5 * * * *'],
+            [static fn() => self::task()->weekly()->everyTenMinutes(), '*/10 * * * *'],
+            [static fn() => self::task()->weekly()->everyFifteenMinutes(), '*/15 * * * *'],
+            [static fn() => self::task()->weekly()->everyTwentyMinutes(), '*/20 * * * *'],
+            [static fn() => self::task()->weekly()->everyThirtyMinutes(), '0,30 * * * *'],
+            [static fn() => self::task()->minutes(37)->hourly(), '0 * * * *'],
+            [static fn() => self::task()->minutes(37)->hourlyAt(2), '2 * * * *'],
+            [static fn() => self::task()->minutes(37)->hourlyAt(2, 3, '4-5'), '2,3,4-5 * * * *'],
+            [static fn() => self::task()->minutes(37)->daily(), '0 0 * * *'],
+            [static fn() => self::task()->minutes(37)->dailyOn(2, 3, '4-5'), '0 2,3,4-5 * * *'],
+            [static fn() => self::task()->minutes(37)->dailyBetween(9, 17), '0 9-17 * * *'],
+            [static fn() => self::task()->minutes(37)->twiceDaily(), '0 1,13 * * *'],
+            [static fn() => self::task()->minutes(37)->twiceDaily(2, 14), '0 2,14 * * *'],
+            [static fn() => self::task()->minutes(37)->dailyAt(2), '0 2 * * *'],
+            [static fn() => self::task()->minutes(37)->dailyAt('1:34'), '34 1 * * *'],
+            [static fn() => self::task()->minutes(37)->weekly(), '0 0 * * 0'],
+            [static fn() => self::task()->minutes(37)->weeklyOn(2, 3, '4-5'), '0 0 * * 2,3,4-5'],
+            [static fn() => self::task()->minutes(37)->monthly(), '0 0 1 * *'],
+            [static fn() => self::task()->minutes(37)->monthlyOn(2, 3, '4-5'), '0 0 2,3,4-5 * *'],
+            [static fn() => self::task()->minutes(37)->twiceMonthly(), '0 0 1,16 * *'],
+            [static fn() => self::task()->minutes(37)->twiceMonthly(3, 17), '0 0 3,17 * *'],
+            [static fn() => self::task()->minutes(37)->quarterly(), '0 0 1 */3 *'],
+            [static fn() => self::task()->minutes(37)->yearly(), '0 0 1 1 *'],
+            [static fn() => self::task()->weekly()->minutes(2, 3, '4-5'), '2,3,4-5 0 * * 0'],
+            [static fn() => self::task()->weekly()->hours(2, 3, '4-5'), '0 2,3,4-5 * * 0'],
+            [static fn() => self::task()->weekly()->daysOfMonth(2, 3, '4-5'), '0 0 2,3,4-5 * 0'],
+            [static fn() => self::task()->weekly()->months(2, 3, '4-5'), '0 0 * 2,3,4-5 0'],
+            [static fn() => self::task()->monthly()->daysOfWeek(2, 3, '4-5'), '0 0 1 * 2,3,4-5'],
+            [static fn() => self::task()->minutes(37)->weekdays(), '37 * * * 1-5'],
+            [static fn() => self::task()->minutes(37)->weekends(), '37 * * * 0,6'],
+            [static fn() => self::task()->minutes(37)->mondays(), '37 * * * 1'],
+            [static fn() => self::task()->minutes(37)->tuesdays(), '37 * * * 2'],
+            [static fn() => self::task()->minutes(37)->wednesdays(), '37 * * * 3'],
+            [static fn() => self::task()->minutes(37)->thursdays(), '37 * * * 4'],
+            [static fn() => self::task()->minutes(37)->fridays(), '37 * * * 5'],
+            [static fn() => self::task()->minutes(37)->saturdays(), '37 * * * 6'],
+            [static fn() => self::task()->minutes(37)->sundays(), '37 * * * 0'],
+            [static fn() => self::task()->weekly()->at(1), '0 1 * * 0'],
+            [static fn() => self::task()->weekly()->at('2:45'), '45 2 * * 0'],
 
-            [fn() => self::task()->cron('invalid...')->mondays(), '* * * * 1'],
+            [static fn() => self::task()->cron('invalid...')->mondays(), '* * * * 1'],
 
-            [fn() => self::task()->cron('@hourly'), '@hourly'],
-            [fn() => self::task()->cron('@daily'), '@daily'],
-            [fn() => self::task()->cron('@weekly'), '@weekly'],
-            [fn() => self::task()->cron('@monthly'), '@monthly'],
-            [fn() => self::task()->cron('@yearly'), '@yearly'],
-            [fn() => self::task()->cron('@annually'), '@annually'],
+            [static fn() => self::task()->cron('@hourly'), '@hourly'],
+            [static fn() => self::task()->cron('@daily'), '@daily'],
+            [static fn() => self::task()->cron('@weekly'), '@weekly'],
+            [static fn() => self::task()->cron('@monthly'), '@monthly'],
+            [static fn() => self::task()->cron('@yearly'), '@yearly'],
+            [static fn() => self::task()->cron('@annually'), '@annually'],
 
-            [fn() => self::task('my task')->cron('# 0 * * *'), '56 0 * * *'],
-            [fn() => self::task('my task')->cron('#daily'), '56 20 * * *'],
-            [fn() => self::task('my task')->cron('#midnight'), '56 2 * * *'],
-            [fn() => self::task('my task')->cron('#midnight')->daily(), '0 0 * * *'],
+            [static fn() => self::task('my task')->cron('# 0 * * *'), '56 0 * * *'],
+            [static fn() => self::task('my task')->cron('#daily'), '56 20 * * *'],
+            [static fn() => self::task('my task')->cron('#midnight'), '56 2 * * *'],
+            [static fn() => self::task('my task')->cron('#midnight')->daily(), '0 0 * * *'],
         ];
     }
 
@@ -183,7 +183,7 @@ final class TaskTest extends TestCase
     public function can_add_email_after_extension($method)
     {
         $task = self::task();
-        $task->{$method}('kevin@example.com', 'my subject', function(Email $email) {
+        $task->{$method}('kevin@example.com', 'my subject', static function(Email $email) {
             $email->cc('emily@example.com');
         });
 
@@ -207,7 +207,7 @@ final class TaskTest extends TestCase
     public function can_add_email_on_failure_extension()
     {
         $task = self::task();
-        $task->emailOnFailure('kevin@example.com', 'my subject', function(Email $email) {
+        $task->emailOnFailure('kevin@example.com', 'my subject', static function(Email $email) {
             $email->cc('emily@example.com');
         });
 
