@@ -2,7 +2,7 @@
 
 ## ScheduleBuilder Service
 
-You can define one or more services that implement
+You can define one or more* services that implement
 [`ScheduleBuilder`](../src/Schedule/ScheduleBuilder.php):
 
 ```php
@@ -29,7 +29,12 @@ class MyScheduleBuilder implements ScheduleBuilder
 **NOTE:** If *autoconfiguration* is not enabled, add the `schedule.builder` tag to
 the service.
 
-## Your Kernel
+***NOTE:** Defining extensions in _multiple ScheduleBuilder Services_ may not work
+as expected. For example, using the `on_single_server` extension in more than
+one Schedule running simultaneously may **lock** one schedule out while the other
+runs. In these cases, using yaml to configure the extension globally, may work better.
+
+## OR Build the schedule in your Kernel
 
 Have your application's `Kernel` implement
 [`ScheduleBuilder`](../src/Schedule/ScheduleBuilder.php):
@@ -66,8 +71,12 @@ class Kernel extends BaseKernel implements ScheduleBuilder
 ## Bundle Configuration
 
 Most [tasks](define-tasks.md#task-types), [task extensions](define-tasks.md#task-extensions)
-and [schedule extensions](#schedule-extensions) can be configured:
+and [schedule extensions](#schedule-extensions) can be configured via bundle configuration in yaml.
+Some of these can also be configured directly within the ScheduleBuilder in PHP. You can also use
+PHP Attributes to auto-configure tasks (see the next section). You can instead use self-scheduling
+Commands if you want to directly configure a Command from its own class.
 
+Sample bundle configuration:
 ```yaml
 # config/packages/zenstruck_schedule.yaml
 
@@ -180,7 +189,7 @@ You may optionally define the *schedule* timezone for all tasks to use. If none 
 it will use PHP's default timezone. [Tasks can override](define-tasks.md#timezone)
 the *schedule* timezone.
 
-**Define in [PHP](#schedulebuilder-service):**
+**Define in [PHP ScheduleBuilder](#schedulebuilder-service):**
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -188,7 +197,7 @@ the *schedule* timezone.
 $schedule->timezone('America/New_York');
 ```
 
-**Define in [Configuration](#bundle-configuration):**
+**OR define in [Configuration](#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -203,7 +212,7 @@ The following extensions are available when defining your schedule:
 
 ### Filters
 
-*These extensions can only be defined in [PHP](#schedulebuilder-service).*
+*These extensions can only be defined in [PHP ScheduleBuilder](#schedulebuilder-service).*
 
 ```php
 use Zenstruck\ScheduleBundle\Schedule\Exception\SkipSchedule;
@@ -229,7 +238,7 @@ $schedule->skip('skipped because...', function () { // skips if return value is 
 
 ### Callbacks
 
-*These extensions can only be defined in [PHP](#schedulebuilder-service).*
+*These extensions can only be defined in [PHP ScheduleBuilder](#schedulebuilder-service).*
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -260,7 +269,7 @@ $schedule->onFailure(function () {
 This extension is useful for Cron health monitoring tools like [Oh Dear](https://ohdear.app/),
 [Cronitor](https://cronitor.io/) and [Healthchecks](https://healthchecks.io/).
 
-**Define in [PHP](#schedulebuilder-service):**
+**Define in [PHP ScheduleBuilder](#schedulebuilder-service):**
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -279,7 +288,7 @@ $schedule->pingOnSuccess('https://example.com/all-tasks-succeeded');
 $schedule->pingOnFailure('https://example.com/some-tasks-failed');
 ```
 
-**Define in [Configuration](#bundle-configuration):**
+**OR define in [Configuration](#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -318,7 +327,7 @@ zenstruck_schedule:
 This extension can be used to notify site administrators via email
 when tasks fail.
 
-**Define in [PHP](#schedulebuilder-service):**
+**Define in [PHP ScheduleBuilder](#schedulebuilder-service):**
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -335,7 +344,7 @@ $schedule->emailOnFailure('admin@example.com', 'my email subject', function (\Sy
 });
 ```
 
-**Define in [Configuration](#bundle-configuration):**
+**OR define in [Configuration](#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -411,7 +420,7 @@ zenstruck_schedule:
 This extension can be used to notify site administrators via any notification
 when tasks fail.
 
-**Define in [PHP](#schedulebuilder-service):**
+**Define in [PHP ScheduleBuilder](#schedulebuilder-service):**
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -427,7 +436,7 @@ $schedule->notifyOnFailure('chat/slack', null, null, null, function (\Symfony\Co
 });
 ```
 
-**Define in [Configuration](#bundle-configuration):**
+**OR define in [Configuration](#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -507,7 +516,7 @@ schedule will have their schedule skip. Be sure to configure this extension (see
 below) with a **[remote store](https://symfony.com/doc/current/components/lock.html#remote-stores)**.
 If you use a *local store* it will not be able to lock other servers.
 
-**Define in [PHP](#schedulebuilder-service):**
+**Define in [PHP ScheduleBuilder](#schedulebuilder-service):**
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -515,7 +524,7 @@ If you use a *local store* it will not be able to lock other servers.
 $schedule->onSingleServer();
 ```
 
-**Define in [Configuration](#bundle-configuration):**
+**OR define in [Configuration](#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
@@ -545,7 +554,7 @@ zenstruck_schedule:
 
 ### Limit to specific environment(s)
 
-**Define in [PHP](#schedulebuilder-service):**
+**Define in [PHP ScheduleBuilder](#schedulebuilder-service):**
 
 ```php
 /* @var $schedule \Zenstruck\ScheduleBundle\Schedule */
@@ -553,7 +562,7 @@ zenstruck_schedule:
 $schedule->environments('prod');
 ```
 
-**Define in [Configuration](#bundle-configuration):**
+**OR define in [Configuration](#bundle-configuration):**
 
 ```yaml
 # config/packages/zenstruck_schedule.yaml
