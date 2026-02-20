@@ -36,7 +36,7 @@ abstract class LockingExtension
             throw new \LogicException('A lock is already in place.');
         }
 
-        $this->lock = $lockFactory->createLock('symfony-schedule-'.$mutex, $this->ttl);
+        $this->lock = $lockFactory->createLock('symfony-schedule-'.$mutex, $this->ttl, false);
 
         if ($this->lock->acquire()) {
             return true;
