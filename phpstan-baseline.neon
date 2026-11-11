@@ -16,31 +16,6 @@ parameters:
 			path: src/Command/ScheduleListCommand.php
 
 		-
-			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:createEmailExtension\\(\\) return type with generic class Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition does not specify its types\\: TParent$#"
-			count: 1
-			path: src/DependencyInjection/Configuration.php
-
-		-
-			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:createNotifyExtension\\(\\) return type with generic class Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition does not specify its types\\: TParent$#"
-			count: 1
-			path: src/DependencyInjection/Configuration.php
-
-		-
-			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:createPingExtension\\(\\) return type with generic class Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition does not specify its types\\: TParent$#"
-			count: 1
-			path: src/DependencyInjection/Configuration.php
-
-		-
-			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:getConfigTreeBuilder\\(\\) return type with generic class Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\TreeBuilder does not specify its types\\: T$#"
-			count: 1
-			path: src/DependencyInjection/Configuration.php
-
-		-
-			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\Configuration\\:\\:taskConfiguration\\(\\) return type with generic class Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\ArrayNodeDefinition does not specify its types\\: TParent$#"
-			count: 1
-			path: src/DependencyInjection/Configuration.php
-
-		-
 			message: "#^Method Zenstruck\\\\ScheduleBundle\\\\DependencyInjection\\\\ZenstruckScheduleExtension\\:\\:loadInternal\\(\\) has parameter \\$mergedConfig with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: src/DependencyInjection/ZenstruckScheduleExtension.php
